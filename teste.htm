@@ -1,0 +1,11 @@
+<script>
+   var arr = ["/", "/login", "/signup", "/[a-z]+/g"];
+var url = "/maga";
+
+var matches = arr.filter(function(pattern) {
+  return new RegExp(pattern).test(url);
+})
+
+console.log(matches);
+
+</script>
