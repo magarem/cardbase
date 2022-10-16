@@ -13,20 +13,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeveIcon from '@mui/icons-material/DeleteForever';
 import CardDataService from "../services/services";
 import { Router, useRouter } from "next/router";
+import { DragIndicator } from '@material-ui/icons';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
 }));
 
 
@@ -44,7 +45,7 @@ export default function CardItem({item, user, currentState, setCurrentState}){
   };
   
   const delete_card = (user: string, id: string) => {
-    if (window.confirm("Delete the item?")) {
+    if (window.confirm("Confirma exclusão?")) {
       CardDataService.delete(user, id)
       handleRemove(id)
     }
@@ -56,14 +57,28 @@ export default function CardItem({item, user, currentState, setCurrentState}){
 
   return (  
     <Card sx={{ maxWidth: 345 }} key={item.key}>
+    
+    
       <CardActions disableSpacing>
-        <IconButton aria-label="Edit" onClick={() => callLink("/"+user.displayName+"/adm/create?card_id="+item.id)}>
-          <EditIcon />
-        </IconButton>
-        <IconButton aria-label="Delete" onClick={() => delete_card(user.displayName, item.id)}>
-          <DeleteForeveIcon />
-        </IconButton>
+        <Grid container m={0}>
+          <Grid item xs={6} sm={6} md={6}>
+          <IconButton aria-label="Edit" onClick={() => callLink("/"+user.displayName+"/adm/create?card_id="+item.id)}>
+            <EditIcon onClick={() => callLink("/"+user.displayName+"/adm/create?card_id="+item.id)}/>
+          </IconButton>
+          <IconButton aria-label="Delete" onClick={() => delete_card(user.displayName, item.id)}>
+            <DeleteForeveIcon  onClick={() => delete_card(user.displayName, item.id)}/>
+          </IconButton>
+          </Grid>
+          <Grid item  xs={6} sm={6} md={6} style={{textAlign: "right"}}>
+          <IconButton>
+            <DragIndicator className="handle"/>
+          </IconButton>
+          </Grid>
+        </Grid>
       </CardActions>
+     
+     
+     
       <CardMedia height={300} component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
       <CardContent>
         <Grid container rowSpacing={2} columnSpacing={2}>

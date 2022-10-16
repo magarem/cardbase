@@ -18,6 +18,7 @@ function CardsGrid(props){
   }
   return (
     <ReactSortable 
+      handle=".handle"
       className="grid-container"
       list={props.currentState} 
       setList={(newlist) => props.setCurrentState(newlist)}

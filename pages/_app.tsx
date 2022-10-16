@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Navbar from '../components/Navbar'
-import NavbarPublic from '../components/NavbarPublic'
 import { AuthContextProvider } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 import ProtectedRoute from '../components/ProtectedRoute'
@@ -39,8 +38,6 @@ const darkTheme = createTheme({
 const main = {"margin": "100px;"}
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
-  
-  // if (!["/adm"].includes(router.asPath)){
     return (
       <AuthContextProvider>
         <ThemeProvider theme={darkTheme}>
