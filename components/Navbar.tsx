@@ -125,9 +125,7 @@ const NavbarComp = () => {
   const { user, logout } = useAuth()
   const router = useRouter()
   const AuthRequired = ['/', '/adm']
-  
   return (
-
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="static">
       <Toolbar>
