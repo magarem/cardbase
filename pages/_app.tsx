@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <CssBaseline />
         <Navbar />
         <Container fixed>
-          <Box><br/>
+          <Box mt={10}>
         {(noAuthRequired.includes(router.pathname)||router.pathname.indexOf("/adm/")==-1) ? (
           <Component {...pageProps} />
         ) : (

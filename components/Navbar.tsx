@@ -21,6 +21,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
+import { AddAPhoto } from '@mui/icons-material';
+import { PhotoLibrary } from '@material-ui/icons/';
 
 const PageMenu = ({user}) => {
   const router = useRouter()
@@ -35,7 +37,17 @@ const PageMenu = ({user}) => {
         {/* <IconButton color="primary"  > */}
      
         {/* </IconButton> */}
-        <Link
+        <IconButton size="small" aria-label="delete" onClick={() => {
+            router.push('/' + user.displayName + '/adm/create')
+            }}>
+          <AddAPhoto />
+        </IconButton>
+        <IconButton size="small" aria-label="delete" onClick={() => {
+            router.push('/'+user.displayName +'/adm/list')
+            }}>
+          <PhotoLibrary />
+        </IconButton>
+        {/* <Link
           component="button"
           onClick={() => {
             router.push('/' + user.displayName + '/adm/create')
@@ -43,8 +55,8 @@ const PageMenu = ({user}) => {
           <ListItemIcon>
             {React.createElement(Icons["AddAPhoto"])}
           </ListItemIcon>
-        </Link> 
-        <Link
+        </Link>  */}
+        {/* <Link
           component="button"
           onClick={() => {
             router.push('/'+user.displayName +'/adm/list')
@@ -52,7 +64,7 @@ const PageMenu = ({user}) => {
           <ListItemIcon>
             {React.createElement(Icons["PhotoLibrary"])}
           </ListItemIcon>
-        </Link>
+        </Link> */}
       </div>
     )
   }else{
@@ -127,7 +139,7 @@ const NavbarComp = () => {
   const AuthRequired = ['/', '/adm']
   return (
     <Box sx={{ flexGrow: 1 }}>
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Toolbar>
         {/* <IconButton
           size="large"
@@ -140,15 +152,15 @@ const NavbarComp = () => {
         </IconButton> */}
 
         <Grid container rowSpacing={2} columnSpacing={2}>
-          <Grid item xs={4} sm={4} md={4} >
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          CardBase
-        </Typography>
-        </Grid>
-            <Grid item xs={4} sm={4} md={4}  >
+          <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>
+            <Typography variant="h6" component="div" >
+              CardBase
+            </Typography>
+          </Grid>
+          <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
             <PageMenu user={user}/>
           </Grid>
-          <Grid item xs={4} sm={4} md={4}  >
+          <Grid item xs={4} sm={4} md={4} style={{textAlign: "right"}} >
             <UserOptions user={user}/>
           </Grid>
         </Grid>
