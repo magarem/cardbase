@@ -10,10 +10,7 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useAuth } from '../../../context/AuthContext'
-
-// import {
-//   getAuth
-// } from "firebase/auth";
+import Box from '@mui/material/Box';
 
 interface Props {
   setuser: Function,
@@ -81,7 +78,7 @@ const Create: NextPage<Props> = (props) => {
         setUploadRefresh(uploadRefresh + 1)
         const timeId = setTimeout(() => {
           // After 3 seconds set the show value to false
-          setSaved({opened: false})
+          setSaved({opened: false, txt: ""})
         }, 3000)
       })
       .catch((e) => {
@@ -101,65 +98,48 @@ const Create: NextPage<Props> = (props) => {
       })
     }
   }, [])
-
-  // if (props.user.uid) {
   if (true) {
     return (
       <div>
-        <Head>
-          <title>File uploader</title>
-          <meta name="description" content="File uploader" />
-        </Head>
         <main className="py-10">
           <div className="w-full max-w-3xl px-3 mx-auto">
+          {state.id?<h1>Editar</h1>:<h1>Criar</h1>}
             {saved.opened && (<h4>{saved.txt}</h4>)}
-            <Grid container spacing={0} sx={{ padding: 2 }}>
-              <Grid item={true} md={4} sx={{ padding: 2 }}>
-                <img
-                  style={{maxWidth: 300}}
-                  src={state.img||"https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/YFxIwZAdyaVpmpNKnDwiv0GyUMR2%2Fthumb_noun-picture-1198149.png.png?alt=media&token=93a229d7-3ae3-46db-b403-1948cc76e4c3"}
-                /><br/>
+            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+              <Grid item={true} xs={12} sm={12} md={4} sx={{ padding: 2 }} style={{textAlign: "center"}} >
                 <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br />
               </Grid>
-              <Grid item={true} xs={8} sx={{ padding: 2 }}>
+              <Grid item={true} xs={12} sm={12} md={8} sx={{ padding: 2 }}>
                 {/* <Typography gutterBottom variant="h5" component="div"> */}
-                  
-                <TextField
-                    id="outlined-basic"
-                    name="img"
-                    label="img"
-                    variant="outlined"
-                    style={{width: "100%"}}
-                    value={state.img}
-                  />
+                <Box >
                   <TextField
                     id="outlined-basic"
                     name="id"
                     label="id"
                     variant="outlined"
-                    style={{width: "100%"}}
                     onChange={handleChange}
                     value={state.id}
+                    hidden
                   />
                   {/* </Typography> */}
                   {/* <Typography gutterBottom variant="h5" component="div"> */}
-                  <TextField
+                  <TextField 
                     id="outlined-basic"
+                    fullWidth
                     name="title"
                     label="Titulo"
                     variant="outlined"
-                    style={{width: "100%"}}
                     onChange={handleChange}
                     value={state.title}
-                  />
+                  /><br/><br/>
                   {/* </Typography>
                   <Typography variant="body2" color="text.secondary"> */}
                     <TextField
+                    fullWidth
                     name="body"
                     label="Descrição"
                     multiline
-                    rows={10}
-                    style={{width: "100%"}}
+                    rows={13}
                     onChange={handleChange}
                     value={state.body}
                   />
@@ -170,9 +150,13 @@ const Create: NextPage<Props> = (props) => {
                     label="Order"
                     onChange={handleChange}
                     value={state.order}
-                  />
+                    hidden
+                  /><br/><br/>
                   {/* </Typography> */}
-                  <Button onClick={state.id?updateCard:saveCard} >Save</Button>
+                  <Button variant="contained" fullWidth component="label"  onClick={state.id?updateCard:saveCard}>
+                    Salvar
+                  </Button>
+                </Box>
               </Grid>
             </Grid><br/>
           </div>

@@ -25,6 +25,7 @@ function CardsGrid(props){
       onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}>
       {props.currentState.map((item) => (
         <CardItem 
+          handleOpen={props.handleOpen}
           key={item.id} 
           user={props.user} 
           item={item} 

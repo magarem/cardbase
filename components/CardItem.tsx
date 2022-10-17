@@ -31,7 +31,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 
-export default function CardItem({item, user, currentState, setCurrentState}){
+export default function CardItem({item, user, currentState, setCurrentState, handleOpen}){
    
   const [expanded, setExpanded] =  React.useState(false);
   const router =  useRouter()

@@ -18,6 +18,7 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import { useAuth } from '../context/AuthContext'
+import Box from '@mui/material/Box';
 
 const resizeFile = (file) =>
   new Promise((resolve) => {
@@ -139,8 +140,7 @@ const resizeFile = (file) =>
       );
     };
   return (
-    <div className="App">
-      <header className="App-header">
+    <>
         {/* <form onSubmit={handleSubmit}> */}
           {/* <input type="file" onChange={onChange}/> */}
           {/* <Button
@@ -155,19 +155,37 @@ const resizeFile = (file) =>
               hidden
             />
           </Button> */}
-          <IconButton color="primary" aria-label="upload picture" component="label">
+          {/* <IconButton color="primary" aria-label="upload picture" component="label">
           <input hidden accept="image/*" type="file" onChange={(e) => handleUpload(e.target.files[0])}
               hidden/>
           <PhotoCamera />
-        </IconButton>
+        </IconButton> */}
+        
+              <img
+                  style={{width: "100%"}}
+                  src={props.state.img||"https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/YFxIwZAdyaVpmpNKnDwiv0GyUMR2%2Fthumb_noun-picture-1198149.png.png?alt=media&token=93a229d7-3ae3-46db-b403-1948cc76e4c3"}
+                /><br/>
+               
+              
+               <br/>      
+        <Button variant="contained" component="label" style={{width: "100%"}} onChange={(e) => handleUpload(e.target.files[0])}>
+          Anexar imagem
+          <input hidden accept="image/*" multiple type="file" />
+        </Button>
+        <br/><br/>
+        <TextField
+                    id="outlined-basic"
+                    name="img"
+                    label="img"
+                    variant="outlined"
+                    style={{width: "100%"}}
+                    value={props.state.img}
+                  />
+                  {spin && (<span><br /><CircularProgress /></span>)}
+       
           {/* <button>Enviar</button> */}
         <br/>
-        {spin && (<span><br /><CircularProgress /></span>)}
-        {/*   {!imgURL && <p>{progressPorcent}%</p>} */}
-        {/* {imgURL && (<span><br /><img src={imgURL} alt="Imagem" height={200} /></span>)} */}
-        {/* </form> */}
-      </header>
-    </div>
+    </>
   );
 }
 

@@ -87,6 +87,9 @@ const UserOptions = ({user}) => {
     return (
       <div>
         <Typography variant="h7" noWrap component="div" align="right">
+
+
+
               <Button
                 startIcon={<AccountCircleIcon />}
                 id="basic-button"
@@ -107,15 +110,11 @@ const UserOptions = ({user}) => {
                   'aria-labelledby': 'basic-button',
                 }}
               >
-               <Link
-                component="button"
-                onClick={() => {
+                <MenuItem  onClick={() => {
                   logout()
                   router.push('/login')
-                  }}
-                >
-                Logout
-              </Link>
+                  }}>Logout</MenuItem>
+              
             </Menu>
         </Typography>
       </div>)
@@ -154,7 +153,7 @@ const NavbarComp = () => {
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
-              CardBase
+              ZenSite
             </Typography>
           </Grid>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >

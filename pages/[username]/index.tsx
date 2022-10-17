@@ -19,16 +19,29 @@ import Modal from '@mui/material/Modal';
 import Container from "@mui/material/Container";
 import CssBaseline from '@mui/material/CssBaseline';
 
+// const style = {
+//   position: 'absolute',
+//   top: '50%',
+//   left: '50%',
+//   transform: 'translate(-50%, -50%)',
+//   width: 400,
+//   bgcolor: 'background.paper',
+//   border: '1px solid #000',
+//   boxShadow: 24,
+//   p: 4,
+// };
+
 const style = {
-  position: 'absolute',
+  position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 700,
   bgcolor: 'background.paper',
-  border: '1px solid #000',
+  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  display: 'flex'
 };
 
 interface Props {
@@ -90,9 +103,11 @@ const Show: NextPage<Props> = (props) => {
   const CardItem = ({item}) => {
     const [expanded, setExpanded] =  useState(false);
     const handleOpen = (obj) => {
-      console.log(obj);
-      setCurrentState2(obj)
-      setOpen(true)
+      if (window.innerWidth > 700){
+        console.log(obj);
+        setCurrentState2(obj)
+        setOpen(true)
+      }
     }
     const handleExpandClick = () => {
       setExpanded(!expanded);
@@ -104,7 +119,7 @@ const Show: NextPage<Props> = (props) => {
         <BrowserView>
           <CardMedia
             height={300} 
-            // onClick = {() => {handleOpen({...item})}}
+            onClick = {() => {handleOpen({...item})}}
             component="img"
             image={item.img}
           />
@@ -150,7 +165,39 @@ const Show: NextPage<Props> = (props) => {
   return (
     <>
     <CssBaseline />
-      <Modal
+    <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        {/* <Box sx={style}> */}
+
+
+
+        <Card sx={style}>
+        <CardMedia
+        component="img"
+        sx={{ width: 350}}
+        image={currentState2.img}
+      />
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <CardContent sx={{ flex: '1 0 auto' }}>
+          <Typography component="div" variant="h5">
+          {currentState2.title}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary" component="div">
+          {currentState2.body}
+          </Typography>
+        </CardContent>
+      </Box>
+      
+    </Card>
+      
+    
+      </Modal>
+
+      {/* <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -175,7 +222,7 @@ const Show: NextPage<Props> = (props) => {
             </CardActions>
           </Card>
         </Box>
-      </Modal>
+      </Modal> */}
       <Container maxWidth="95%"><br/>
         <Grid container rowSpacing={2} columnSpacing={2}>
           {

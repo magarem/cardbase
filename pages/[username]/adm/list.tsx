@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
+import Theme from '@mui/material/Theme';
 import CardDataService from "../../../services/services";
 import Container from '@mui/material/Container';
 import { useRouter } from "next/router";
@@ -20,7 +21,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import {
   getAuth
 } from "firebase/auth";
-
+import { useTheme } from '@mui/material/styles';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -61,9 +62,11 @@ const List: NextPage<Props> = (props) => {
   };
   const [open, setOpen] = useState(false);
   const handleOpen = (obj) => {
-    console.log(obj);
-    setCurrentState2(obj)
-    setOpen(true)
+    if (window.innerWidth > 700){
+      console.log(obj);
+      setCurrentState2(obj)
+      setOpen(true)
+    }
   }
   const handleClose = () => setOpen(false);
 
@@ -107,64 +110,57 @@ const List: NextPage<Props> = (props) => {
   const call_link = (link: string) =>{
     router.push(link)
   }
-
+  const theme = useTheme();
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    display: 'flex'
+  };
+  // const size = useWindowSize();
   return (
-    <div>
-      <Head>
-        <title>list</title>
-        <meta name="description" content="File uploader" />
-      </Head>
-      <main>
-       
+    <>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-
-        <Card>
-                <CardMedia 
-                  component="img"
-                  image={currentState2.img}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                  {currentState2.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                  {currentState2.body}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => setOpen(false)}>Fechar</Button>
-                </CardActions>
-              </Card>
+        {/* <Box sx={style}> */}
 
 
-          {/* <Typography id="modal-modal-title" variant="h6" component="h2">
-            <img src={currentState2.img}/>
-           
-            {currentState2.title}
+
+        <Card sx={style}>
+        <CardMedia
+        component="img"
+        sx={{ width: 350}}
+        image={currentState2.img}
+      />
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <CardContent sx={{ flex: '1 0 auto' }}>
+          <Typography component="div" variant="h5">
+          {currentState2.title}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {currentState2.body} 
-          </Typography> */}
-          {/* <Button size="small" onClick={() => setOpen(false)}>Fechar</Button> */}
-        </Box>
-     
+          <Typography variant="subtitle1" color="text.secondary" component="div">
+          {currentState2.body}
+          </Typography>
+        </CardContent>
+      </Box>
+      
+    </Card>
+      
+    
       </Modal>
-      <CardsGrid user={user} currentState={currentState} setCurrentState={setCurrentState}/>
+      <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState}/>
        
-      </main>
-
-      <footer>
-        <div className="w-full max-w-3xl px-3 mx-auto">
-          <p>All right reserved</p>
-        </div>
-      </footer>
-    </div>
+     
+     </>
   );
 };
 export default List;
