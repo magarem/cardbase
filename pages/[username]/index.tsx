@@ -18,6 +18,7 @@ import { useRouter } from 'next/router'
 import Modal from '@mui/material/Modal';
 import Container from "@mui/material/Container";
 import CssBaseline from '@mui/material/CssBaseline';
+import { Dialog, DialogContent, Link } from "@mui/material";
 
 // const style = {
 //   position: 'absolute',
@@ -100,6 +101,41 @@ const Show: NextPage<Props> = (props) => {
     }
   }, [])
 
+  const PhotoZoonCard = () => {
+    return (
+      <Box>
+          <Grid container>
+            <Grid item md={6}>
+              <img src={currentState2.img} style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}/>
+            </Grid>
+            <Grid item md={6}>
+              <Typography component="div" variant="h5" pb={1}>
+                {currentState2.title}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                {currentState2.body}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+    )
+  }
+
+  function Copyright(props: any) {
+    return (
+      <>
+        <Typography mt={15} mb={10} variant="body2" color="text.secondary" align="center" {...props}>
+          {'Copyright © '}
+          <Link color="inherit" href="">
+            ZenSite
+          </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+        </Typography>
+      </>
+    );
+  }
+
   const CardItem = ({item}) => {
     const [expanded, setExpanded] =  useState(false);
     const handleOpen = (obj) => {
@@ -126,14 +162,13 @@ const Show: NextPage<Props> = (props) => {
         </BrowserView>
         <MobileView>
           <CardMedia
-            // onClick = {() => {handleOpen({...item})}}
             component="img"
             image={item.img}
           />
         </MobileView>
         
-        <CardContent>
-          <Grid container rowSpacing={2} columnSpacing={2}>
+        <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
+          <Grid container rowSpacing={1} columnSpacing={1}>
             <Grid item md={10} xs={10}>
               <Typography variant="h6" color="text.secondary">
                 {item.title}
@@ -145,18 +180,18 @@ const Show: NextPage<Props> = (props) => {
                 onClick={handleExpandClick}
                 aria-expanded={expanded}
                 aria-label="show more">
-                <ExpandMoreIcon />
+                <ExpandMoreIcon fontSize="small"/>
               </ExpandMore>
             </Grid>
           </Grid>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-       <CardContent>
-         <Typography paragraph>
-           {item.body}
-         </Typography>
-       </CardContent>
-     </Collapse>
+          <CardContent  sx={{ pt:0, '&:last-child': { pb: 0 }}}>
+            <Typography paragraph>
+              {item.body}
+            </Typography>
+          </CardContent>
+        </Collapse>
       </Card>
     </Box>
     )
@@ -165,64 +200,18 @@ const Show: NextPage<Props> = (props) => {
   return (
     <>
     <CssBaseline />
-    <Modal
+       <Dialog 
+        fullWidth
+        maxWidth="md"
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        {/* <Box sx={style}> */}
-
-
-
-        <Card sx={style}>
-        <CardMedia
-        component="img"
-        sx={{ width: 350}}
-        image={currentState2.img}
-      />
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography component="div" variant="h5">
-          {currentState2.title}
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary" component="div">
-          {currentState2.body}
-          </Typography>
-        </CardContent>
-      </Box>
-      
-    </Card>
-      
-    
-      </Modal>
-
-      {/* <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Card>
-            <CardMedia
-              component="img"
-              image={currentState2.img}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-              {currentState2.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-              {currentState2.body}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={() => setOpen(false)}>Fechar</Button>
-            </CardActions>
-          </Card>
-        </Box>
-      </Modal> */}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        >
+      <DialogContent>
+        <PhotoZoonCard/>
+      </DialogContent>
+    </Dialog>
       <Container maxWidth="95%"><br/>
         <Grid container rowSpacing={2} columnSpacing={2}>
           {
@@ -234,6 +223,7 @@ const Show: NextPage<Props> = (props) => {
           }
         </Grid>
       </Container>
+      <Copyright/>
     </>
   );
 };

@@ -22,6 +22,7 @@ import {
   getAuth
 } from "firebase/auth";
 import { useTheme } from '@mui/material/styles';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid } from "@mui/material";
 const style = {
   position: 'absolute',
   top: '50%',
@@ -80,6 +81,7 @@ const List: NextPage<Props> = (props) => {
     const user_ = auth.currentUser;
     console.log(user_)
   }
+  
   useEffect(() => {
     if (user.displayName) {
       console.log(user);
@@ -89,7 +91,6 @@ const List: NextPage<Props> = (props) => {
        })
     }
   }, [user])
-
 
   const styles = {
     width: 300,
@@ -110,6 +111,44 @@ const List: NextPage<Props> = (props) => {
   const call_link = (link: string) =>{
     router.push(link)
   }
+
+  const PhotoZoonCard = () => {
+    return (
+      <Box>
+          <Grid container>
+            <Grid item md={6}>
+              <img src={currentState2.img} style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}/>
+            </Grid>
+            <Grid item md={6}>
+              <Typography component="div" variant="h5" pb={1}>
+                {currentState2.title}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                {currentState2.body}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+  //     <Card sx={style} >
+  //   <CardMedia
+  //     component="img"
+  //     sx={{ width: 350}}
+  //     image={currentState2.img}/>
+  //   <Box sx={{ display: 'flex', flexDirection: 'column' }} >
+  //     <CardContent sx={{ flex: '1 0 auto', verticalAlign: 'top', paddingTop: 0 }}  >
+  //       <Typography component="div" variant="h5">
+  //       {currentState2.title}
+  //       </Typography>
+  //       <Typography variant="subtitle1" color="text.secondary" component="div">
+  //       {currentState2.body}
+  //       </Typography>
+  //     </CardContent>
+  //   </Box>
+  // </Card>
+    )
+  }
+
+
   const theme = useTheme();
   const style = {
     position: 'absolute' as 'absolute',
@@ -123,44 +162,27 @@ const List: NextPage<Props> = (props) => {
     p: 4,
     display: 'flex'
   };
-  // const size = useWindowSize();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        {/* <Box sx={style}> */}
+    <Dialog 
+     fullWidth
+     maxWidth="md"
+     open={open}
+     onClose={handleClose}
+     aria-labelledby="alert-dialog-title"
+     aria-describedby="alert-dialog-description"
+    >
+      <DialogContent>
+        <PhotoZoonCard/>
+      </DialogContent>
+      {/* <DialogActions>
+        <Button onClick={handleClose} autoFocus>fechar</Button>
+      </DialogActions> */}
+    </Dialog>
 
-
-
-        <Card sx={style}>
-        <CardMedia
-        component="img"
-        sx={{ width: 350}}
-        image={currentState2.img}
-      />
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography component="div" variant="h5">
-          {currentState2.title}
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary" component="div">
-          {currentState2.body}
-          </Typography>
-        </CardContent>
-      </Box>
-      
-    </Card>
-      
-    
-      </Modal>
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState}/>
-       
-     
-     </>
+    </>
   );
 };
 export default List;

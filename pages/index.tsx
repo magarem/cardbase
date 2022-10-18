@@ -17,10 +17,9 @@ import { useRouter } from 'next/router'
 const Home: NextPage = () => {
   const { user } = useAuth()
   const router = useRouter()
-  router.push(user.displayName + "/adm/list" )
+  router.push(user?.displayName + "/adm/list" )
   return (
     <div className={styles.container}>
-      <h1>CardBase</h1>
     </div>
   )
 }

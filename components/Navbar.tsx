@@ -24,6 +24,12 @@ import MenuItem from '@mui/material/MenuItem';
 import { AddAPhoto } from '@mui/icons-material';
 import { PhotoLibrary } from '@material-ui/icons/';
 
+const SiteTitle = (props) => {
+  const title = (props.user?"ZenSite":location.pathname.substring(1))
+  return (
+    <>{title}</>
+  )
+}
 const PageMenu = ({user}) => {
   const router = useRouter()
   if (user) {
@@ -87,9 +93,6 @@ const UserOptions = ({user}) => {
     return (
       <div>
         <Typography variant="h7" noWrap component="div" align="right">
-
-
-
               <Button
                 startIcon={<AccountCircleIcon />}
                 id="basic-button"
@@ -121,9 +124,9 @@ const UserOptions = ({user}) => {
   } else {
     return (
       <>
-        <Link href="/signup" >
+        {/* <Link href="/signup" >
         <Button color="inherit">Registrar</Button>
-        </Link>
+        </Link> */}
         <Link href="/login" >
         <Button color="inherit">Login</Button>
         </Link>
@@ -153,7 +156,7 @@ const NavbarComp = () => {
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
-              ZenSite
+              <SiteTitle user={user}/>
             </Typography>
           </Grid>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >

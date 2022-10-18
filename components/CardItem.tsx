@@ -57,30 +57,25 @@ export default function CardItem({item, user, currentState, setCurrentState, han
 
   return (  
     <Card sx={{ maxWidth: 345 }} key={item.key}>
-    
-    
-      <CardActions disableSpacing>
+      <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
         <Grid container m={0}>
           <Grid item xs={6} sm={6} md={6}>
           <IconButton aria-label="Edit" onClick={() => callLink("/"+user.displayName+"/adm/create?card_id="+item.id)}>
-            <EditIcon onClick={() => callLink("/"+user.displayName+"/adm/create?card_id="+item.id)}/>
+            <EditIcon fontSize="small"/>
           </IconButton>
           <IconButton aria-label="Delete" onClick={() => delete_card(user.displayName, item.id)}>
-            <DeleteForeveIcon  onClick={() => delete_card(user.displayName, item.id)}/>
+            <DeleteForeveIcon fontSize="small"/>
           </IconButton>
           </Grid>
-          <Grid item  xs={6} sm={6} md={6} style={{textAlign: "right"}}>
+          <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
           <IconButton>
-            <DragIndicator className="handle"/>
+            <DragIndicator className="handle" fontSize="small"/>
           </IconButton>
           </Grid>
         </Grid>
       </CardActions>
-     
-     
-     
       <CardMedia height={300} component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
-      <CardContent>
+      <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid item md={10}  >
             <Typography variant="h6" color="text.secondary">
@@ -93,13 +88,13 @@ export default function CardItem({item, user, currentState, setCurrentState, han
               onClick={handleExpandClick}
               aria-expanded={expanded}
               aria-label="show more">
-              <ExpandMoreIcon />
+              <ExpandMoreIcon fontSize="small" />
             </ExpandMore>
           </Grid>
         </Grid>
       </CardContent>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
+        <CardContent sx={{ pt:1, '&:last-child': { pb: 0 }}}>
           <Typography paragraph>
             {item.body}
           </Typography>
