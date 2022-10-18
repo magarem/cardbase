@@ -11,6 +11,12 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useAuth } from '../../../context/AuthContext'
 import Box from '@mui/material/Box';
+import AlertDialog from '../../../components/AlertDialog'
+import Image from 'next/image'
+
+function ShowOk() {
+  return <Image src="/ok.png" alt="me" width="64" height="64" />
+}
 
 interface Props {
   setuser: Function,
@@ -29,6 +35,7 @@ const Create: NextPage<Props> = (props) => {
 
   const cardObj = {id: "", img: "", title: "", body: "", order: -1 };
   const [state, setState] = useState(cardObj)
+  const [mostra, setMostra] = useState(false)
   
   const handleChange = e => {
     const { name, value } = e.target;
@@ -46,12 +53,8 @@ const Create: NextPage<Props> = (props) => {
         console.log("Created new item successfully!");
         console.log(x)
         // setState({ ...state, submitted: true });
-        setSaved({opened: true, txt: "Registro salvo com sucesso"})
         setUploadRefresh(uploadRefresh + 1)
-        const timeId = setTimeout(() => {
-          // After 3 seconds set the show value to false
-          setSaved({opened: false})
-        }, 3000)
+        setMostra(true)
         setState(cardObj)
       })
       .catch((e) => {
@@ -74,12 +77,8 @@ const Create: NextPage<Props> = (props) => {
         console.log("Update item successfully!");
         console.log(x)
         // setState({...state, submitted: true });
-        setSaved({opened: true, txt: "Registro alterado com sucesso"})
         setUploadRefresh(uploadRefresh + 1)
-        const timeId = setTimeout(() => {
-          // After 3 seconds set the show value to false
-          setSaved({opened: false, txt: ""})
-        }, 3000)
+        setMostra(true)
       })
       .catch((e) => {
         console.log(e);
@@ -98,13 +97,21 @@ const Create: NextPage<Props> = (props) => {
       })
     }
   }, [])
+
+  const ActionLink = () => {
+    console.log(11);
+    setMostra(true)
+  }
   if (true) {
     return (
       <div>
         <main className="py-10">
+        <AlertDialog time title="" body="" img="/ok.png" mostra={mostra} setMostra={setMostra}/>
+
           <div className="w-full max-w-3xl px-3 mx-auto">
-          {state.id?<h1>Editar</h1>:<h1>Criar</h1>}
+          {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
             {saved.opened && (<h4>{saved.txt}</h4>)}
+            {/* <Button onClick={ActionLink}>mostra</Button> */}
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
               <Grid item={true} xs={12} sm={12} md={4} sx={{ padding: 2 }} style={{textAlign: "center"}} >
                 <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br />

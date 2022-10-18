@@ -22,7 +22,7 @@ import {
   getAuth
 } from "firebase/auth";
 import { useTheme } from '@mui/material/styles';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link } from "@mui/material";
 const style = {
   position: 'absolute',
   top: '50%',
@@ -50,6 +50,21 @@ interface ss {
   img: string,
   title: string,
   body: string
+}
+
+function Copyright(props: any) {
+  return (
+    <>
+      <Typography mt={15} mb={10} variant="body2" color="text.secondary" align="center" {...props}>
+        {'Copyright © '}
+        <Link color="inherit" href="">
+          ZenSite
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    </>
+  );
 }
 
 const List: NextPage<Props> = (props) => {
@@ -182,6 +197,7 @@ const List: NextPage<Props> = (props) => {
     </Dialog>
 
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState}/>
+      <Copyright/>
     </>
   );
 };

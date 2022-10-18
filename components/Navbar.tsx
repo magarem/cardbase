@@ -25,11 +25,17 @@ import { AddAPhoto } from '@mui/icons-material';
 import { PhotoLibrary } from '@material-ui/icons/';
 
 const SiteTitle = (props) => {
-  const title = (props.user?"ZenSite":location.pathname.substring(1))
+  let title = "ZenSite"
+  const path = location.pathname.substring(1)
+  title = (props.user?"ZenSite":path)
+  if (['', 'login', 'signup'].includes(path)){
+    title = "ZenSite"
+  }
   return (
     <>{title}</>
   )
 }
+
 const PageMenu = ({user}) => {
   const router = useRouter()
   if (user) {

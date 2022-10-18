@@ -52,8 +52,8 @@ const Signup = () => {
         width: '40%',
         margin: 'auto',
       }}
-    >
-      <h1 className="text-center my-3 ">Registrar</h1>
+    ><br/>
+      <h3 className="text-center my-3">Registrar</h3>
       <Form onSubmit={handleSignup}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
