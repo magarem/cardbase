@@ -21,12 +21,12 @@ const Signup = () => {
     
     try {
 
-      registerUser(data.email, data.displayName, data.password).then((user) => {
+      registerUser(data.email, data.displayName, data.password).then((user: any) => {
         console.log("User created")
         //  user.reload();
         //  user = useAuth().currentUser;
         logout()
-        login(data.email, data.password).then((ret)=>{
+        login(data.email, data.password).then((ret: { user: { displayName: string } })=>{
           console.log(ret.user.displayName);
           router.push(ret.user.displayName + '/adm/list')
         })

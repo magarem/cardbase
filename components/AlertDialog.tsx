@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SetStateAction } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,10 +11,24 @@ import { useEffect } from 'react';
 // FcOk
 import Image from 'next/image'
 
-function ShowOk(props) {
+interface a {
+  img: string
+}
+
+interface main {
+  img: string;
+  title: string;
+  body: string;
+  time: boolean;
+  mostra: boolean;
+  setMostra: (mostra: boolean) => void;
+}
+
+function ShowOk(props: a) {
   return <Image src={props.img}  />
 }
-export default function AlertDialog(props) {
+
+export default function AlertDialog(props: main) {
  
   const handleClose = () => {
     props.setMostra(false)

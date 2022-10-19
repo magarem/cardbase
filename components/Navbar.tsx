@@ -25,7 +25,12 @@ import { AddAPhoto } from '@mui/icons-material';
 import { PhotoLibrary } from '@material-ui/icons/';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NoteIcon from '@mui/icons-material/Note';
-const SiteTitle = (props) => {
+
+interface obj1 {
+  user: string
+}
+
+const SiteTitle = (props: obj1) => {
   let title = "ZenSite"
   const path = location.pathname.substring(1)
   title = (props.user?"ZenSite":path)
@@ -36,9 +41,15 @@ const SiteTitle = (props) => {
     <>{title}</>
   )
 }
+interface obj2 {
+  user: {
+    displayName: string;
+  }
+}
 
-const PageMenu = ({user}) => {
+const PageMenu = (props: obj2) => {
   const router = useRouter()
+  const user = props.user
   if (user) {
     return (
       <div>
@@ -90,12 +101,13 @@ const PageMenu = ({user}) => {
   }
 }
 
-const UserOptions = ({user}) => {
+const UserOptions = (props: obj2) => {
+  const user = props.user
   const { logout } = useAuth()
   const router = useRouter()
   const [anchorEl, setAnchorEl] = useState(null);
   const open_ = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -104,14 +116,14 @@ const UserOptions = ({user}) => {
   if (user) {
     return (
       <div>
-        <Typography variant="h7" noWrap component="div" align="right">
+        <Typography variant="h6" noWrap component="div" align="right">
               <Button
                 startIcon={<AccountCircleIcon />}
                 id="basic-button"
                 variant="text"
-                aria-controls={open ? 'basic-menu' : undefined}
+                aria-controls={'basic-menu'}
                 aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
+                aria-expanded={'true'}
                 onClick={handleClick}
               >
               {user.displayName} 

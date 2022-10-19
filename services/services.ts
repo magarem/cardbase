@@ -6,7 +6,7 @@ class CardDataService {
     return db;
   }
 
-  async readById (user, id){
+  async readById (user: string, id: string){
 
 
     const docRef = doc(db, user, id);
@@ -21,32 +21,48 @@ class CardDataService {
       }
   }
   
-  async read (user, type){
-console.log(user,type);
-
+  async read (user: string, type: string){
+    console.log(user,type);
     const citiesCol = query(collection(db, user), orderBy('order'))
     const citySnapshot = await getDocs(citiesCol);
+    
+
+    // citySnapshot.docs.flatMap(o => o.type==type ? [o.name] : []);
+
+    // var reduced = citySnapshot.docs.reduce(function(filtered, option) {
+    //   if (option.type == type) {
+    //      var someNewValue = { name: option.name, newProperty: 'Foo' }
+    //      filtered.push(someNewValue);
+    //   }
+    //   return filtered;
+    // }, [])
+    
+    
+    //  const cityList = [{id:'', title:'', body:'', order:0, type:''}]
     const cityList = citySnapshot.docs.map(doc => {
-        return {id:doc.id, ...doc.data()}
+        // return { id: doc.id, ...doc.data()}
+        return {id: doc.id, type: doc.data().type, ...doc.data()}
     });
     console.log(cityList);
-    if (type == "card"){
-      return cityList.filter(item => item.type == type || item.type == undefined);
-    }else{
-      return cityList.filter(item => item.type == type);
-    }
+    return cityList.filter(item => item.type == type);
+    // if (type == "card"){
+    //   return cityList.filter(item => item.type == type || item.type == undefined);
+    // }else{
+    //   return cityList.filter(item => item.type == type);
+    // }
   }
 
-  async create (user, data) {
+  async create (user: string, data: { img: string; title: string; body: string; type: any; order: number; }) {
     try {
         await addDoc(collection(db, user), data)
-        onClose()
+        // onClose()
       } catch (err) {
+
         console.log(err)
       }
   }
 
-  async update (user, id, data) {
+  async update (user: string, id: string, data: { img: string; title: string; body: string; type: any; order: number; }) {
     console.log(user, id, data)
     const docRef = doc(db, user, id);
     await updateDoc(docRef, data)
@@ -59,7 +75,7 @@ console.log(user,type);
     return "ok"
   }
 
-  async delete (user, id) {
+  async delete (user: string, id: string) {
     console.log(id)
      await deleteDoc(doc(db, user, id));
   }

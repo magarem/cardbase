@@ -38,7 +38,7 @@ export const AuthContextProvider = ({
     return () => unsubscribe()
   }, [])
 
-  const registerUser = async (email, name, password) => {
+  const registerUser = async (email: string, displayName: string, password: string) => {
     try {
       console.log("> Registering user")
       const {
@@ -47,7 +47,7 @@ export const AuthContextProvider = ({
   
       console.log("> Updating profile")
       await updateProfile(user, {
-        displayName: name,
+        displayName
       });
      
       return user
@@ -67,22 +67,22 @@ export const AuthContextProvider = ({
         })
        
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
     }
   }
 
 
-  const signupRes = (email: string, displayName: string, password: string) => {
-     createUserWithEmailAndPassword(auth, email, password)
-    .then((res) => {
-      console.log(res.user.uid);
-      const user = auth.currentUser;
-      console.log(user);
-      return updateProfile(user, {
-        displayName: displayName
-        })
-    })
-  }
+  // const signupRes = (email: string, displayName: string, password: string) => {
+  //    createUserWithEmailAndPassword(auth, email, password)
+  //   .then((res) => {
+  //     console.log(res.user.uid);
+  //     const user = auth.currentUser;
+  //     console.log(user);
+  //     return updateProfile(user, {
+  //       displayName: displayName
+  //       })
+  //   })
+  // }
 
   const login = (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password)

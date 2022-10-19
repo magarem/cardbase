@@ -41,7 +41,7 @@ const Login = () => {
 
     console.log(user)
     try {
-      login(data.email, data.password).then((ret)=>{
+      login(data.email, data.password).then((ret: { user: { displayName: string; }; })=>{
         console.log(ret.user.displayName);
         
         router.push(ret.user.displayName + '/adm/list')

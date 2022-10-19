@@ -1,23 +1,11 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useState, useEffect } from "react";
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Modal from '@mui/material/Modal';
-import Theme from '@mui/material/Theme';
 import CardDataService from "../../../services/services";
-import Container from '@mui/material/Container';
 import { useRouter } from "next/router";
 import CardsGrid from '../../../components/CardsGrid'
 import { useAuth } from '../../../context/AuthContext'
-import { collection, query, where, getDocs } from "firebase/firestore";
 import {
   getAuth
 } from "firebase/auth";
@@ -46,10 +34,13 @@ interface Props {
     displayName: string
   }
 }
-interface ss {
-  img: string,
-  title: string,
-  body: string
+type ss = {
+  id?: any;
+  img?: string;
+  title?: string;
+  body?: string;
+  type?: string;
+  order?: number
 }
 
 function Copyright(props: any) {
@@ -79,7 +70,7 @@ const List: NextPage<Props> = (props) => {
     setExpanded(!expanded);
   };
   const [open, setOpen] = useState(false);
-  const handleOpen = (obj) => {
+  const handleOpen = (obj: ss) => {
     if (window.innerWidth > 700){
       console.log(obj);
       setCurrentState2(obj)
@@ -87,10 +78,11 @@ const List: NextPage<Props> = (props) => {
     }
   }
   const handleClose = () => setOpen(false);
-
-  const [currentState, setCurrentState] = useState([]);
-  const [currentState2, setCurrentState2] = useState<ss>({img:'', title:'', body:''});
-  const [singleReg, setSingleReg] = useState({})
+  const [employees, setEmployees] = useState<{salary: number; name: string}[]>(
+    [],
+  );
+  const [currentState, setCurrentState] = useState<ss[]>([]);
+  const [currentState2, setCurrentState2] = useState<ss>();
 
 //   const [user, setUser] = useState({});
   const mostra = () => {
@@ -102,7 +94,7 @@ const List: NextPage<Props> = (props) => {
   useEffect(() => {
     if (user.displayName) {
       console.log({type});
-      const data = CardDataService.read(user.displayName, type).then((data)=>{
+      const data = CardDataService.read(user.displayName, type as string).then((data)=>{
         setCurrentState(data)
         console.log(data)
        })
@@ -119,7 +111,7 @@ const List: NextPage<Props> = (props) => {
     }
   };
   
-  function removeObjectWithId(arr, id) {
+  function removeObjectWithId(arr: any[], id: any) {
     const objWithIdIndex = arr.findIndex((obj) => obj.id === id);
     arr.splice(objWithIdIndex, 1);
     return arr;
@@ -134,14 +126,14 @@ const List: NextPage<Props> = (props) => {
       <Box>
           <Grid container>
             <Grid item md={6}>
-              <img src={currentState2.img} style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}/>
+              <img src={currentState2?.img} style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}/>
             </Grid>
             <Grid item md={6}>
               <Typography component="div" variant="h5" pb={1}>
-                {currentState2.title}
+                {currentState2?.title}
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" component="div">
-                {currentState2.body}
+                {currentState2?.body}
               </Typography>
             </Grid>
           </Grid>

@@ -30,8 +30,40 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
+interface obj1 {
+  id: string;
+}
+interface obj2 {
+  key: string;
+}
 
-export default function CardItem({item, user, currentState, setCurrentState, handleOpen}){
+interface main0 {
+    id: string;
+    type: string;
+    img: string;
+    title: string;
+    body: string;
+    order: number;
+  }
+interface main {
+  key: string;
+  item: {
+    id: string;
+    type: string;
+    img: string;
+    title: string;
+    body: string;
+    order: number;
+  }
+  user: {
+    displayName: string;
+  }
+  currentState: Array<obj1>;
+  setCurrentState: (currentState: Array<obj1>) => void;
+  handleOpen: (item: object) => void;
+}
+
+export default function CardItem({key, item, user, currentState, setCurrentState, handleOpen}: main){
    
   const [expanded, setExpanded] =  React.useState(false);
   const router =  useRouter()
@@ -56,7 +88,7 @@ export default function CardItem({item, user, currentState, setCurrentState, han
   };
 
   return (  
-    <Card sx={{ maxWidth: 345 }} key={item.key}>
+    <Card sx={{ maxWidth: 345 }} key={item.id}>
       <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
         <Grid container m={0}>
           <Grid item xs={6} sm={6} md={6}>

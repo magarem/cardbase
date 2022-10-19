@@ -25,6 +25,14 @@ interface Props {
     email: string
   }
 }
+interface Obj1 {
+  id: any;
+  img: string; 
+  title: string;
+  body: string;
+  type: any;
+  order: number;
+}
 
 const Create: NextPage<Props> = (props) => {
   const { user } = useAuth()
@@ -34,10 +42,10 @@ const Create: NextPage<Props> = (props) => {
   const [saved, setSaved] = useState({opened: false, txt: ""});
 
   const cardObj = {id: "", img: "", title: "", body: "", type: "card", order: -1 };
-  const [state, setState] = useState(cardObj)
+  const [state, setState] = useState<Obj1>(cardObj)
   const [mostra, setMostra] = useState(false)
   
-  const handleChange = e => {
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     console.log(name, value)
     setState(prevState => ({
@@ -68,7 +76,7 @@ const Create: NextPage<Props> = (props) => {
       img: state.img,
       title: state.title,
       body: state.body,
-      type: state.type,
+      type: state.type||"card",
       order: state.order
     };
 
@@ -90,9 +98,11 @@ const Create: NextPage<Props> = (props) => {
   useEffect(() => {
     if (router.query.card_id) {
       console.log(user.displayName);
-      CardDataService.readById(router.query.username, router.query.card_id).then((data) => {
+      // CardDataService.readById(router.query.username, router.query.card_id).then((data) => {
+      CardDataService.readById(user.displayName, router.query.card_id as string).then((data) => {
         console.log(data)
         if (data) {
+          if (data.type == undefined) data.type="card"
           setState({ id: router.query.card_id, title: data.title, body: data.body, img: data.img, type: data.type, order: data.order })
           console.log(state);
         }

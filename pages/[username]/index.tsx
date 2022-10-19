@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { styled } from '@mui/material/styles';
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import CardDataService from "../../services/services";
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -56,9 +56,12 @@ interface Props {
   }
 }
 interface ss {
-  img: string,
-  title: string,
-  body: string
+  id?: any,
+  img?: string,
+  title?: string,
+  body?: string
+  type?: string,
+  order?: number
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -83,8 +86,8 @@ const Show: NextPage<Props> = (props) => {
   
   const [open, setOpen] = useState(false);
 
-  const [currentState, setCurrentState] = useState([]);
-  const [currentState2, setCurrentState2] = useState<ss>({img:'', title:'', body:''});
+  const [currentState, setCurrentState] = useState<ss[]>([]);
+  const [currentState2, setCurrentState2] = useState<ss>({id:'', img:'', title:'', body:'', type:'', order: -1});
   
   const [user, setUser] = useState({});
   const handleClose = () => setOpen(false);
@@ -136,9 +139,10 @@ const Show: NextPage<Props> = (props) => {
     );
   }
 
-  const CardItem = ({item}) => {
+  const CardItem = (props: { item: any; }) => {
+    const item = props.item
     const [expanded, setExpanded] =  useState(false);
-    const handleOpen = (obj) => {
+    const handleOpen = (obj: SetStateAction<ss>) => {
       if (window.innerWidth > 700){
         console.log(obj);
         setCurrentState2(obj)
@@ -211,7 +215,7 @@ const Show: NextPage<Props> = (props) => {
         <PhotoZoonCard/>
       </DialogContent>
     </Dialog>
-      <Container maxWidth="95%"><br/>
+      <Container maxWidth="lg"><br/>
         <Grid container rowSpacing={2} columnSpacing={2}>
           {
             currentState.map((item, key) => (
