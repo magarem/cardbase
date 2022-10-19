@@ -37,6 +37,7 @@ console.log(user,type);
     }
   }
 
+  
   async create (user, data) {
     try {
         await addDoc(collection(db, user), data)
