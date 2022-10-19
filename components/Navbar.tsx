@@ -23,7 +23,8 @@ import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { AddAPhoto } from '@mui/icons-material';
 import { PhotoLibrary } from '@material-ui/icons/';
-
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import NoteIcon from '@mui/icons-material/Note';
 const SiteTitle = (props) => {
   let title = "ZenSite"
   const path = location.pathname.substring(1)
@@ -52,12 +53,17 @@ const PageMenu = ({user}) => {
         <IconButton size="small" aria-label="delete" onClick={() => {
             router.push('/' + user.displayName + '/adm/create')
             }}>
-          <AddAPhoto />
+          <AddCircleOutlineIcon />
         </IconButton>
         <IconButton size="small" aria-label="delete" onClick={() => {
-            router.push('/'+user.displayName +'/adm/list')
+            router.push('/'+user.displayName +'/adm/list?type=card')
             }}>
           <PhotoLibrary />
+        </IconButton>
+        <IconButton size="small" aria-label="delete" onClick={() => {
+            router.push('/'+user.displayName +'/adm/list?type=section')
+            }}>
+          <NoteIcon />
         </IconButton>
         {/* <Link
           component="button"

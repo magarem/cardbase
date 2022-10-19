@@ -94,7 +94,7 @@ const Show: NextPage<Props> = (props) => {
     // console.log(window.location.href.lastIndexOf("/"))
     if (owner) {
       console.log(router.pathname)
-      const data = CardDataService.read(owner).then((data)=>{
+      const data = CardDataService.read(owner, 'card').then((data)=>{
         setCurrentState(data)
         console.log(data)
       })
@@ -196,7 +196,6 @@ const Show: NextPage<Props> = (props) => {
     </Box>
     )
   }
-
   return (
     <>
     <CssBaseline />

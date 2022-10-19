@@ -69,8 +69,10 @@ function Copyright(props: any) {
 
 const List: NextPage<Props> = (props) => {
   const router = useRouter()
+  const type = router.query.type||"card"
+
   const { user } = useAuth()
-  console.log(user);
+  console.log(type);
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -99,13 +101,13 @@ const List: NextPage<Props> = (props) => {
   
   useEffect(() => {
     if (user.displayName) {
-      console.log(user);
-      const data = CardDataService.read(user.displayName).then((data)=>{
+      console.log({type});
+      const data = CardDataService.read(user.displayName, type).then((data)=>{
         setCurrentState(data)
         console.log(data)
        })
     }
-  }, [user])
+  }, [user, type])
 
   const styles = {
     width: 300,

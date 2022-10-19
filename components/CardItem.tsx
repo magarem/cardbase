@@ -74,14 +74,18 @@ export default function CardItem({item, user, currentState, setCurrentState, han
           </Grid>
         </Grid>
       </CardActions>
+      {item.img&&
       <CardMedia height={300} component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
-      <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
+      }
+      <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid item md={10}  >
-            <Typography variant="h6" color="text.secondary">
+            <Typography variant="h6" color="text.secondary" >
               {item.title}
+              {!item.img && <div>{item.body.substring(0, 178)}</div>}
             </Typography>
           </Grid>
+          {item.img &&
           <Grid item md={2}  >
             <ExpandMore
               expand={expanded}
@@ -91,6 +95,7 @@ export default function CardItem({item, user, currentState, setCurrentState, han
               <ExpandMoreIcon fontSize="small" />
             </ExpandMore>
           </Grid>
+          }
         </Grid>
       </CardContent>
       <Collapse in={expanded} timeout="auto" unmountOnExit>

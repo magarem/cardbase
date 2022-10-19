@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router'
-import { Button } from "@mui/material";
+import { Button, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -33,7 +33,7 @@ const Create: NextPage<Props> = (props) => {
   const [uploadRefresh, setUploadRefresh] = useState(0);
   const [saved, setSaved] = useState({opened: false, txt: ""});
 
-  const cardObj = {id: "", img: "", title: "", body: "", order: -1 };
+  const cardObj = {id: "", img: "", title: "", body: "", type: "card", order: -1 };
   const [state, setState] = useState(cardObj)
   const [mostra, setMostra] = useState(false)
   
@@ -44,10 +44,11 @@ const Create: NextPage<Props> = (props) => {
       ...prevState,
       [name]: value
     }));
+    console.log(state)
   };
 
   const saveCard = () => {
-    let data = { img: state.img, title: state.title, body: state.body, order: -1 };
+    let data = { img: state.img, title: state.title, body: state.body, type: state.type, order: -1 };
     CardDataService.create(user.displayName, data)
       .then((x) => {
         console.log("Created new item successfully!");
@@ -67,6 +68,7 @@ const Create: NextPage<Props> = (props) => {
       img: state.img,
       title: state.title,
       body: state.body,
+      type: state.type,
       order: state.order
     };
 
@@ -91,7 +93,7 @@ const Create: NextPage<Props> = (props) => {
       CardDataService.readById(router.query.username, router.query.card_id).then((data) => {
         console.log(data)
         if (data) {
-          setState({ id: router.query.card_id, title: data.title, body: data.body, img: data.img, order: data.order })
+          setState({ id: router.query.card_id, title: data.title, body: data.body, img: data.img, type: data.type, order: data.order })
           console.log(state);
         }
       })
@@ -107,7 +109,6 @@ const Create: NextPage<Props> = (props) => {
       <div>
         <main className="py-10">
         <AlertDialog time title="" body="" img="/ok.png" mostra={mostra} setMostra={setMostra}/>
-
           <div className="w-full max-w-3xl px-3 mx-auto">
           {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
             {saved.opened && (<h4>{saved.txt}</h4>)}
@@ -149,7 +150,18 @@ const Create: NextPage<Props> = (props) => {
                     rows={13}
                     onChange={handleChange}
                     value={state.body}
-                  />
+                  /><br/><br/>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      defaultValue="card"
+                      name="type"
+                      value={state.type}
+                      onChange={handleChange}
+                    >
+                      <FormControlLabel value="card" control={<Radio />} label="Cartão" />
+                      <FormControlLabel value="section" control={<Radio />} label="Seção" />
+                    </RadioGroup>
                   {/* </Typography><br/>
                   <Typography variant="body2" color="text.secondary"> */}
                     <TextField
@@ -158,7 +170,7 @@ const Create: NextPage<Props> = (props) => {
                     onChange={handleChange}
                     value={state.order}
                     hidden
-                  /><br/><br/>
+                  /><br/>
                   {/* </Typography> */}
                   <Button variant="contained" fullWidth component="label"  onClick={state.id?updateCard:saveCard}>
                     Salvar

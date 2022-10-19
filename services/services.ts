@@ -21,7 +21,8 @@ class CardDataService {
       }
   }
   
-  async read (user){
+  async read (user, type){
+console.log(user,type);
 
     const citiesCol = query(collection(db, user), orderBy('order'))
     const citySnapshot = await getDocs(citiesCol);
@@ -29,8 +30,11 @@ class CardDataService {
         return {id:doc.id, ...doc.data()}
     });
     console.log(cityList);
-    
-    return cityList;
+    if (type == "card"){
+      return cityList.filter(item => item.type == type || item.type == undefined);
+    }else{
+      return cityList.filter(item => item.type == type);
+    }
   }
 
   async create (user, data) {
