@@ -64,6 +64,9 @@ const Create: NextPage<Props> = (props) => {
         // setState({ ...state, submitted: true });
         setUploadRefresh(uploadRefresh + 1)
         setMostra(true)
+        setTimeout(() => {
+          setMostra(false)
+        }, 1000)
         setState(cardObj)
       })
       .catch((e) => {
@@ -89,6 +92,9 @@ const Create: NextPage<Props> = (props) => {
         // setState({...state, submitted: true });
         setUploadRefresh(uploadRefresh + 1)
         setMostra(true)
+        setTimeout(() => {
+          setMostra(false)
+        }, 1000)
       })
       .catch((e) => {
         console.log(e);

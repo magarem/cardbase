@@ -1,17 +1,15 @@
 import {db} from "../config/firebase";
 import { getFirestore, getDoc, deleteDoc, where, collection, getDocs, updateDoc, addDoc, doc, query, orderBy, onSnapshot} from 'firebase/firestore'
-
+// import { route } from "next/dist/server/router";
+import { NextRouter, useRouter } from 'next/router'
 class CardDataService {
   getAll() {
     return db;
   }
 
   async readById (user: string, id: string){
-
-
     const docRef = doc(db, user, id);
     const docSnap = await getDoc(docRef);
-
     if (docSnap.exists()) {
         return docSnap.data()
         console.log("Document data:", docSnap.data());
@@ -21,6 +19,37 @@ class CardDataService {
       }
   }
   
+  async check_displayName(userNameToCheck: string) {
+    console.log(location.origin);
+    try {
+      const res = await fetch(`${location.origin}/api/User?displayName=${userNameToCheck}`);
+      const data = await res.json();
+      return data[0].uid
+    } catch (err) {
+      console.log(err);
+      return null
+    }
+    // console.log("check_displayName")
+    // const q = query(collection(db, "users"), where("displayName", "==", userNameToCheck));
+    // const querySnapshot = await getDocs(q);
+    // querySnapshot.forEach((doc) => {
+    //   console.log(doc.id, " => ", doc.data());
+    // });
+
+    // const usersRef = collection(db, "users").whereEqualTo("displayName", userNameToCheck).get()
+    //   .then((snapshot: { empty: any }) => {
+    //       if (snapshot.empty) {
+    //           console.log('displayName is unique', snapshot.empty);
+    //           return false;
+    //       } else {
+    //           console.log('displayName already exists');
+    //           return true;
+    //       }
+    //   });
+  }
+
+
+
   async read (user: string, type: string){
     console.log(user,type);
     const citiesCol = query(collection(db, user), orderBy('order'))

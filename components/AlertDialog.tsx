@@ -33,15 +33,17 @@ export default function AlertDialog(props: main) {
   const handleClose = () => {
     props.setMostra(false)
   };
+ 
 
-  useEffect(() => {
-    if (props.time && !props.mostra){
-      console.log('time to close')
-      setTimeout(() => {
-        props.setMostra(false)
-      }, 4000)
-    }
-  }, [props])
+
+  // useEffect(() => {
+  //   if (props.time && !props.mostra){
+  //     console.log('time to close')
+  //     setTimeout(() => {
+  //       props.setMostra(false)
+  //     }, 4000)
+  //   }
+  // }, [props.mostra])
 
   return (
     <div>

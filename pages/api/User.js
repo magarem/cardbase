@@ -1,6 +1,4 @@
 import admin from '../../lib/firebase'
-import { auth } from "../../lib/firebase.js";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 export default async function handler(req, res) {
   console.log(10, req.cookies)
     const firebase = admin.firestore()

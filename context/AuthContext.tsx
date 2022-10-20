@@ -7,7 +7,8 @@ import {
   updateProfile,
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
-
+import dataServices from '../services/services'
+import { useRouter } from 'next/router'
 const AuthContext = createContext<any>({})
 
 export const useAuth = () => useContext(AuthContext)
@@ -38,24 +39,41 @@ export const AuthContextProvider = ({
     return () => unsubscribe()
   }, [])
 
-  const registerUser = async (email: string, displayName: string, password: string) => {
-    try {
-      console.log("> Registering user")
-      const {
-        user
-      } = await createUserWithEmailAndPassword(auth, email, password)
   
-      console.log("> Updating profile")
-      await updateProfile(user, {
-        displayName
-      });
-     
-      return user
-      console.log(11)
-      // window.location.pathname = `/subscriptions`;
-    } catch (e) {
-      console.log(e)
-    }
+
+  const registerUser = async (email: string, displayName: any, password: string) => {
+      console.log("1> Check user displayName")
+      const et1 = await dataServices.check_displayName(displayName)
+      console.log(et1);
+      console.log("2> registra user")
+      if (!et1) {
+        try {
+          const ret = await createUserWithEmailAndPassword(auth, email, password)
+          console.log("ok", ret.user)
+          await updateProfile(ret.user, {displayName: displayName})
+          console.log("ok", ret.user.uid)
+          return ret.user.uid
+        } catch (error) {
+          return null// Only runs when there is an error/exception
+        }
+      }else{
+        console.log("esse username já existe")
+      }
+      
+      
+      // console.log("ok", ret2)
+        // console.log("ok", ret.user)
+        // console.log("3> Updating profile to save displayName")
+        //   updateProfile(ret.user, {displayName: displayName}).then((data)=>{
+        //     console.log("ok", ret.user.uid)
+        //    // return ret.user.uid
+        //   })
+        //   // return true
+      //  },(error) => {
+      //   console.log({error});
+      //   return error
+      // })
+      // return true
   }
 
   const signup = async (email: string, displayName: string, password: string) => {
