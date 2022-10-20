@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "zenbase",
-    "short_name": "zenbase",
+    "name": "zensite",
+    "short_name": "zensite",
     "description": "publish",
     "icons": [
         {
