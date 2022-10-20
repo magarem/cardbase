@@ -65,7 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           sizes="32x32"
         />
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
-        <meta name="theme-color" content="#317EFB" />
+        <meta name="theme-color" content="#080808" />
       </Head>
         <AuthContextProvider>
           <ThemeProvider theme={darkTheme}>
