@@ -1,32 +1,39 @@
 {
     "theme_color": "#252322",
     "background_color": "#201f1d",
-    "display": "standalone",
+    "display": "fullscreen",
     "scope": "/",
     "start_url": "/",
-    "name": "zensite",
-    "short_name": "zensite",
-    "description": "publish",
+    "name": "zenbase",
+    "short_name": "zenbase",
+    "description": "A app to store your private data with the option to share to friends",
     "icons": [
-        {
-            "src": "/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/icon-256x256.png",
-            "sizes": "256x256",
-            "type": "image/png"
-        },
-        {
-            "src": "/icon-384x384.png",
-            "sizes": "384x384",
-            "type": "image/png"
-        },
-        {
-            "src": "/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
+      {
+        "src": "/192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/256.png",
+        "sizes": "256x256",
+        "type": "image/png"
+      },
+      {
+        "src": "/512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "orientation": "any",
+    "lang": "pt",
+    "display_override": [
+      "fullscreen"
+    ],
+    "dir": "auto",
+    "categories": [
+      "business",
+      "photo",
+      "productivity",
+      "utilities"
     ]
-}
+  }
