@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/styles.scss'
 import type { AppProps } from 'next/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -49,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta name="description" content="Description" />
         <meta name="keywords" content="Keywords" />
-        <title>Next.js PWA Example</title>
+        <title>ZenSite</title>
 
         <link rel="manifest" href="/manifest.json" />
         <link

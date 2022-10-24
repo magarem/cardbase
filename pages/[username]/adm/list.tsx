@@ -25,7 +25,7 @@ const style = {
 
 interface Props {
   setuser: Function,
-  currentState2:{
+  currentState2?:{
     img: string
   },
   user: {
@@ -125,17 +125,33 @@ const List: NextPage<Props> = (props) => {
     return (
       <Box>
           <Grid container>
-            <Grid item md={6}>
-              <img src={currentState2?.img} style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}/>
-            </Grid>
-            <Grid item md={6}>
-              <Typography component="div" variant="h5" pb={1}>
-                {currentState2?.title}
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary" component="div">
-                {currentState2?.body}
-              </Typography>
-            </Grid>
+            {(currentState2?.img)?
+            <>
+              <Grid item md={6}>
+                <img src={currentState2?.img} style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}/>
+              </Grid>
+              <Grid item md={6}>
+                <Typography component="div" variant="h5" pb={1}>
+                  {currentState2?.title}
+                </Typography>
+                {currentState2&&
+                  <Typography variant="subtitle1" color="text.secondary"  dangerouslySetInnerHTML={{ __html: currentState2?.body as string }}>
+                  </Typography>
+                }
+                
+              </Grid>
+            </>
+            :
+            <>
+              <Grid item md={12}>
+                <Typography component="div" variant="h5" pb={1}>
+                  {currentState2?.title}
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary" component="div" dangerouslySetInnerHTML={{ __html: currentState2?.body as string}}>
+                </Typography>
+              </Grid>
+            </>
+            }
           </Grid>
         </Box>
   //     <Card sx={style} >
@@ -172,11 +188,12 @@ const List: NextPage<Props> = (props) => {
     display: 'flex'
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const mw = currentState2?.img?"md":"sm"
   return (
     <>
     <Dialog 
      fullWidth
-     maxWidth="md"
+     maxWidth={mw}
      open={open}
      onClose={handleClose}
      aria-labelledby="alert-dialog-title"

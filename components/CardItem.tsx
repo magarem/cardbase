@@ -88,7 +88,7 @@ export default function CardItem({key, item, user, currentState, setCurrentState
   };
 
   return (  
-    <Card sx={{ maxWidth: 345 }} key={item.id}>
+    <Card  key={item.id}>
       <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
         <Grid container m={0}>
           <Grid item xs={6} sm={6} md={6}>
@@ -112,9 +112,11 @@ export default function CardItem({key, item, user, currentState, setCurrentState
       <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid item md={10}  >
-            <Typography variant="h6" color="text.secondary" >
+            <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
               {item.title}
-              {!item.img && <div>{item.body.substring(0, 178)}</div>}
+            </Typography>
+             <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+              {!item.img && <div dangerouslySetInnerHTML={{ __html: item.body.substring(0, 178) }}></div>}
             </Typography>
           </Grid>
           {item.img &&
@@ -132,9 +134,9 @@ export default function CardItem({key, item, user, currentState, setCurrentState
       </CardContent>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent sx={{ pt:1, '&:last-child': { pb: 0 }}}>
-          <Typography paragraph>
-            {item.body}
-          </Typography>
+          {/* <Typography paragraph> */}
+          <div dangerouslySetInnerHTML={{ __html: item.body }}/>
+          {/* </Typography> */}
         </CardContent>
       </Collapse>
     </Card>

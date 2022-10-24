@@ -1,9 +1,9 @@
 import styles from '../../../styles/data.module.scss'
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { Button, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
+import { Button, Container, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -12,10 +12,26 @@ import Typography from '@mui/material/Typography';
 import { useAuth } from '../../../context/AuthContext'
 import Box from '@mui/material/Box';
 import AlertDialog from '../../../components/AlertDialog'
-import Image from 'next/image'
+// import Image from 'next/image'
+import Image from 'mui-image'
+import React from 'react';
+const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
+
+// import 'react-quill/dist/quill.snow.css';
+// Import the Slate editor factory.
+
+
+// Import the Slate components and React plugin.
+import { Slate, Editable, withReact } from 'slate-react'
+import dynamic from "next/dynamic";
+import PropTypes from "prop-types";
+import { Padding } from '@mui/icons-material';
+import { margin } from '@mui/system';
+//import the component lazily (not module itself)
+
 
 function ShowOk() {
-  return <Image src="/ok.png" alt="me" width="64" height="64" />
+  return <img src="/ok.png" alt="me" width="64" height="64" />
 }
 
 interface Props {
@@ -34,9 +50,17 @@ interface Obj1 {
   order: number;
 }
 
+type CustomElement = { type: 'paragraph'; children: CustomText[] }
+type CustomText = { text: string }
+
+
 const Create: NextPage<Props> = (props) => {
+  const [value, setValue] = useState('');
+  const [desableSaveButton, setDesableSaveButton] = useState(false);
+  const [bodyValue, setBodyValue] = useState('');
   const { user } = useAuth()
   const router = useRouter()
+  const editor = useRef()
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
   const [saved, setSaved] = useState({opened: false, txt: ""});
@@ -44,7 +68,14 @@ const Create: NextPage<Props> = (props) => {
   const cardObj = {id: "", img: "", title: "", body: "", type: "card", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [mostra, setMostra] = useState(false)
-  
+  const save = (data: string) => {
+    console.log(data)
+}
+
+  // const [value, setValue] = useState('');
+
+
+ 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     console.log(name, value)
@@ -54,9 +85,15 @@ const Create: NextPage<Props> = (props) => {
     }));
     console.log(state)
   };
-
+  const initialValue = [
+    {
+      type: 'paragraph',
+      children: [{ text: 'A line of text in a paragraph.' }],
+    },
+  ]
   const saveCard = () => {
-    let data = { img: state.img, title: state.title, body: state.body, type: state.type, order: -1 };
+    setDesableSaveButton(true)
+    let data = { img: state.img, title: state.title, body: bodyValue, type: state.type, order: -1 };
     CardDataService.create(user.displayName, data)
       .then((x) => {
         console.log("Created new item successfully!");
@@ -68,6 +105,7 @@ const Create: NextPage<Props> = (props) => {
           setMostra(false)
         }, 1000)
         setState(cardObj)
+        setDesableSaveButton(false)
       })
       .catch((e) => {
         console.log(e);
@@ -75,10 +113,11 @@ const Create: NextPage<Props> = (props) => {
   }
   
   const updateCard = () => {
+    setDesableSaveButton(true)
     let data = {
       img: state.img,
       title: state.title,
-      body: state.body,
+      body: bodyValue,
       type: state.type||"card",
       order: state.order
     };
@@ -95,6 +134,7 @@ const Create: NextPage<Props> = (props) => {
         setTimeout(() => {
           setMostra(false)
         }, 1000)
+        setDesableSaveButton(false)
       })
       .catch((e) => {
         console.log(e);
@@ -110,6 +150,7 @@ const Create: NextPage<Props> = (props) => {
         if (data) {
           if (data.type == undefined) data.type="card"
           setState({ id: router.query.card_id, title: data.title, body: data.body, img: data.img, type: data.type, order: data.order })
+          setBodyValue(data.body)
           console.log(state);
         }
       })
@@ -124,16 +165,35 @@ const Create: NextPage<Props> = (props) => {
     return (
       <div>
         <main className="py-10">
-        <AlertDialog time title="" body="" img="/ok.png" mostra={mostra} setMostra={setMostra}/>
+          <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
           <div className="w-full max-w-3xl px-3 mx-auto">
-          {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
-            {saved.opened && (<h4>{saved.txt}</h4>)}
-            {/* <Button onClick={ActionLink}>mostra</Button> */}
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-              <Grid item={true} xs={12} sm={12} md={4} sx={{ padding: 2 }} style={{textAlign: "center"}} >
-                <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br />
+            <Grid container spacing={{ xs: 2, md: 1 }} columns={{ xs: 12, sm: 12, md: 12 }}>
+              <Grid item xs={12} sm={12} md={12} style={{textAlign: "left"}} >
+                {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
               </Grid>
-              <Grid item={true} xs={12} sm={12} md={8} sx={{ padding: 2 }}>
+              <Grid item xs={12} sm={12} md={12}  style={{textAlign: "center"}} >
+              <Container maxWidth="xs" >
+               {state.img&&
+               <>
+               {/* <div className="mt-3" height="24" width="24"  style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}>
+                  <Image
+                      data-testid="close-icon"
+                      src={state.img}
+                      alt="Close Nav Bar"
+                      layout="fill"
+                  />
+              </div> */}
+              <div className="mt-3" >
+               <Image
+                  src={state.img}
+                />
+                </div>
+                <Box sx={{ m: 1 }} />
+               </>
+               }
+              </Container>
+              </Grid>
+              <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "center"}}>
                 {/* <Typography gutterBottom variant="h5" component="div"> */}
                 <Box >
                   <TextField
@@ -147,6 +207,8 @@ const Create: NextPage<Props> = (props) => {
                   />
                   {/* </Typography> */}
                   {/* <Typography gutterBottom variant="h5" component="div"> */}
+                  <Grid mb={2} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 12, sm: 12, md: 12 }}>
+              <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
                   <TextField 
                     id="outlined-basic"
                     fullWidth
@@ -155,10 +217,26 @@ const Create: NextPage<Props> = (props) => {
                     variant="outlined"
                     onChange={handleChange}
                     value={state.title}
-                  /><br/><br/>
-                  {/* </Typography>
+                  /></Grid>
+              <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
+              <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/>
+
+    </Grid>
+    </Grid>
+                    <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
+                    {/* {JSON.stringify(bodyValue[1])} */}
+                    {/* <TextField
+                    fullWidth
+                    name="body"
+                    label="Descrição"
+                    multiline
+                    rows={13}
+                    onChange={setBodyValue}
+                    value={bodyValue}/> */}
+    
+                      {/* </Typography>
                   <Typography variant="body2" color="text.secondary"> */}
-                    <TextField
+                    {/* <TextField
                     fullWidth
                     name="body"
                     label="Descrição"
@@ -166,7 +244,20 @@ const Create: NextPage<Props> = (props) => {
                     rows={13}
                     onChange={handleChange}
                     value={state.body}
-                  /><br/><br/>
+                  /> */}
+                 
+                  {/* </Typography><br/>
+                  <Typography variant="body2" color="text.secondary"> */}
+                    <TextField
+                    name="order"
+                    label="Order"
+                    onChange={handleChange}
+                    value={state.order}
+                    hidden
+                  />
+                   <Grid sx={{marginTop: "10px"}} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                      <Grid item xs={12} sm={12} md={12} style={{textAlign: "center"}} >
+                      <Box sx={{ m: 1 }} />
                     <RadioGroup
                       row
                       aria-labelledby="demo-radio-buttons-group-label"
@@ -178,22 +269,22 @@ const Create: NextPage<Props> = (props) => {
                       <FormControlLabel value="card" control={<Radio />} label="Cartão" />
                       <FormControlLabel value="section" control={<Radio />} label="Seção" />
                     </RadioGroup>
-                  {/* </Typography><br/>
-                  <Typography variant="body2" color="text.secondary"> */}
-                    <TextField
-                    name="order"
-                    label="Order"
-                    onChange={handleChange}
-                    value={state.order}
-                    hidden
-                  /><br/>
-                  {/* </Typography> */}
-                  <Button variant="contained" fullWidth component="label"  onClick={state.id?updateCard:saveCard}>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} style={{textAlign: "left"}} >
+                    <Button disabled={desableSaveButton} variant="contained" fullWidth component="label"  onClick={state.id?updateCard:saveCard}>
                     Salvar
                   </Button>
+                    </Grid>
+                    </Grid>
+                  {/* </Typography> */}
+                  {/* <Button variant="contained" fullWidth component="label"  onClick={(e)=>alert(editor.current)}>
+                    ver
+                  </Button> */}
+                 
                 </Box>
               </Grid>
-            </Grid><br/>
+             
+            </Grid><br/><br/>
           </div>
         </main>
       </div>

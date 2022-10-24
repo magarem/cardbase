@@ -15,10 +15,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import HighlightOff from '@mui/icons-material/HighlightOff';
 import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import { useAuth } from '../context/AuthContext'
 import Box from '@mui/material/Box';
+import { Grid } from "@mui/material";
+import InputAdornment from '@mui/material/InputAdornment';
+import Link from "next/link";
 
 const resizeFile = (file) =>
   new Promise((resolve) => {
@@ -85,6 +89,11 @@ const resizeFile = (file) =>
       }
     };
     
+                           
+    const deleteImage = () => {
+      props.setState({...props.state, img: ''})
+    }
+   
     const onChange = async (e) => {
       var file_ = e.target.files[0]
       console.log(file_);
@@ -161,30 +170,51 @@ const resizeFile = (file) =>
           <PhotoCamera />
         </IconButton> */}
         
-              <img
+              {/* <img
+                  style={{width: "100%"}}
+                  src={props.state.img}
+                /><br/>   */}
+                
+                  {/* <img
                   style={{width: "100%"}}
                   src={props.state.img||"https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/YFxIwZAdyaVpmpNKnDwiv0GyUMR2%2Fthumb_noun-picture-1198149.png.png?alt=media&token=93a229d7-3ae3-46db-b403-1948cc76e4c3"}
-                /><br/>
+                /><br/> */}
                
               
-               <br/>      
-        <Button variant="contained" component="label" style={{width: "100%"}} onChange={(e) => handleUpload(e.target.files[0])}>
-          Anexar imagem
-          <input hidden accept="image/*" multiple type="file" />
-        </Button>
-        <br/><br/>
-        <TextField
-                    id="outlined-basic"
-                    name="img"
-                    label="img"
-                    variant="outlined"
-                    style={{width: "100%"}}
-                    value={props.state.img}
-                  />
-                  {spin && (<span><br /><CircularProgress /></span>)}
+               <TextField
+                  id="outlined-basic"
+                  name="img"
+                  label="img"
+                  variant="outlined"
+                  style={{width: "100%"}}
+                  value={props.state.img}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+
+                        {spin?
+                        <>
+                        <CircularProgress/>
+                        </>
+                        :
+                        <>
+                          <IconButton color="primary" aria-label="upload picture" component="label">
+                            <input hidden accept="image/*" type="file" onChange={(e) => handleUpload(e.target.files[0])} />
+                            <PhotoCamera />
+                          </IconButton> 
+                          <IconButton color="primary" aria-label="upload picture" component="label" onClick={() => deleteImage()}>
+                            <HighlightOff />
+                          </IconButton>
+                        </>
+                        }
+                      </InputAdornment>
+                  )}}
+                />
+              
+       
        
           {/* <button>Enviar</button> */}
-        <br/>
+        {/* <br/> */}
     </>
   );
 }

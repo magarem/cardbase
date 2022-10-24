@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 // import { IconName } from "react-icons/fc";
 import { useEffect } from 'react';
 // FcOk
-import Image from 'next/image'
+import Image from 'mui-image'
 
 interface a {
   img: string
@@ -25,7 +25,7 @@ interface main {
 }
 
 function ShowOk(props: a) {
-  return <Image src={props.img}  />
+  return <img src="/ok.png"  />
 }
 
 export default function AlertDialog(props: main) {
@@ -58,7 +58,7 @@ export default function AlertDialog(props: main) {
         <DialogContent>
           {props.img &&
           <DialogContentText id="alert-dialog-description">
-            <Image src={props.img} width="100" height="100"/>
+            <img src={props.img} width={100} height={100} />
           </DialogContentText>
           }
           {props.body &&
