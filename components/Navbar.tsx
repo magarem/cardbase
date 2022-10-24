@@ -31,11 +31,11 @@ interface obj1 {
 }
 
 const SiteTitle = (props: obj1) => {
-  let title = "ZenSite"
+  let title = "ZenBase"
   const path = location.pathname.substring(1)
-  title = (props.user?"ZenSite":path)
+  title = (props.user?"ZenBase":path)
   if (['', 'login', 'signup'].includes(path)){
-    title = "ZenSite"
+    title = "ZenBase"
   }
   return (
     <>{title}</>
