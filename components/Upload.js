@@ -210,9 +210,6 @@ const resizeFile = (file) =>
                       </InputAdornment>
                   )}}
                 />
-              
-       
-       
           {/* <button>Enviar</button> */}
         {/* <br/> */}
     </>
