@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { Button, Container, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
+import { Button, Card, CardMedia, Container, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -167,32 +167,27 @@ const Create: NextPage<Props> = (props) => {
         <main className="py-10">
           <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
           <div className="w-full max-w-3xl px-3 mx-auto">
-            <Grid container spacing={{ xs: 2, md: 1 }} columns={{ xs: 12, sm: 12, md: 12 }}>
+            <Grid container alignItems="center"
+  justifyContent="center" spacing={{ xs: 2, md: 1 }}>
               <Grid item xs={12} sm={12} md={12} style={{textAlign: "left"}} >
                 {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
               </Grid>
-              <Grid item xs={12} sm={12} md={12}  style={{textAlign: "center"}} >
-              <Container maxWidth="xs" >
+              {/* <Grid item xs={12} sm={12} md={12}  style={{textAlign: "center"}} > */}
+              {/* <Container maxWidth="xs" >
                {state.img&&
                <>
-               {/* <div className="mt-3" height="24" width="24"  style={{ maxWidth: 410, borderRadius:4, border: '1px solid #302D2C'  }}>
-                  <Image
-                      data-testid="close-icon"
-                      src={state.img}
-                      alt="Close Nav Bar"
-                      layout="fill"
+                <div className="mt-3" >
+                <Box sx={{ width: 200 }}>
+                <Image
+                    src={state.img}
                   />
-              </div> */}
-              <div className="mt-3" >
-               <Image
-                  src={state.img}
-                />
-                </div>
-                <Box sx={{ m: 1 }} />
+                  </Box>
+                  </div>
+                  <Box sx={{ m: 1 }} />
                </>
                }
-              </Container>
-              </Grid>
+              </Container> */}
+              {/* </Grid> */}
               <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "center"}}>
                 {/* <Typography gutterBottom variant="h5" component="div"> */}
                 <Box >
@@ -207,8 +202,21 @@ const Create: NextPage<Props> = (props) => {
                   />
                   {/* </Typography> */}
                   {/* <Typography gutterBottom variant="h5" component="div"> */}
-                  <Grid mb={2} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 12, sm: 12, md: 12 }}>
-              <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
+                  <Grid mb={2} container spacing={{ xs: 2, md: 1 }} alignItems="center"
+  justifyContent="center">
+              <Grid item xs={12} sm={12} md={8} lg={9} style={{textAlign: "center"}} >
+              <TextField
+                    id="outlined-basic"
+                    name="id"
+                    label="id"
+                    variant="outlined"
+                    onChange={handleChange}
+                    value={state.id}
+                    fullWidth
+                    inputProps={
+                      { readOnly: true }
+                    }
+                  /><br/><br/>
                   <TextField 
                     id="outlined-basic"
                     fullWidth
@@ -217,11 +225,50 @@ const Create: NextPage<Props> = (props) => {
                     variant="outlined"
                     onChange={handleChange}
                     value={state.title}
-                  /></Grid>
-              <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
+                  /><br/><br/>
               <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/>
-
-    </Grid>
+                  
+                  </Grid>
+              {/* <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} > */}
+              {/* <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/> */}
+              <Grid item xs={12} sm={12} md={4} lg={3} style={{textAlign: "right"}} >
+              {/* <Container maxWidth="xs" > */}
+               {state.img?
+               <>
+                <Card sx={{ width: 215, margin: 'auto', maxHeight: 215 }}>
+                  <CardMedia
+                    component="img"
+                    height="100%"
+                    width="100%"
+                    image={state.img}
+                  />
+                </Card>
+              </>
+              
+                :
+                <>
+                <Box
+      sx={{
+        display: { xs: 'none', xl: 'none', md: 'block', lg: 'block' },
+        borderRadius: '4px',
+        margin: 'auto',
+        width: "98%",
+        height: 215,
+        backgroundColor: 'darkslategray',
+        '&:hover': {
+          backgroundColor: 'primary.main',
+          opacity: [0.9, 0.8, 0.7],
+        },
+      }}
+    />
+              
+                  {/* <Box sx={{ m: 1 }} /> */}
+               </>
+               }
+              {/* </Container> */}
+              </Grid>
+    {/* </Grid> */}
+    <Box sx={{ m: 0 }} />
     </Grid>
                     <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
                     {/* {JSON.stringify(bodyValue[1])} */}
@@ -280,10 +327,8 @@ const Create: NextPage<Props> = (props) => {
                   {/* <Button variant="contained" fullWidth component="label"  onClick={(e)=>alert(editor.current)}>
                     ver
                   </Button> */}
-                 
                 </Box>
               </Grid>
-             
             </Grid><br/><br/>
           </div>
         </main>
