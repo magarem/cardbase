@@ -50,48 +50,30 @@ class CardDataService {
 
 
 
-  async read (user: string, type: string){
-    console.log(user,type);
-    const citiesCol = query(collection(db, user), orderBy('order'))
-    const citySnapshot = await getDocs(citiesCol);
-    
-
-    // citySnapshot.docs.flatMap(o => o.type==type ? [o.name] : []);
-
-    // var reduced = citySnapshot.docs.reduce(function(filtered, option) {
-    //   if (option.type == type) {
-    //      var someNewValue = { name: option.name, newProperty: 'Foo' }
-    //      filtered.push(someNewValue);
-    //   }
-    //   return filtered;
-    // }, [])
-    
-    
-    //  const cityList = [{id:'', title:'', body:'', order:0, type:''}]
-    const cityList = citySnapshot.docs.map(doc => {
-        // return { id: doc.id, ...doc.data()}
-        return {id: doc.id, type: doc.data().type, ...doc.data()}
+  async read (user: string, cardSession: string){
+    console.log(user, cardSession);
+    const col = query(collection(db, user), orderBy('order'))
+    const snap = await getDocs(col);
+    const list = snap.docs.map(doc => {
+        return {id: doc.id, cardSession: doc.data().cardSession, ...doc.data()}
     });
-    console.log(cityList);
-    return cityList.filter(item => item.type == type);
-    // if (type == "card"){
-    //   return cityList.filter(item => item.type == type || item.type == undefined);
-    // }else{
-    //   return cityList.filter(item => item.type == type);
-    // }
+    console.log(list);
+    if (cardSession == "all") {
+      return list
+    }else{
+      return list.filter(item => item.cardSession == cardSession);
+    }
   }
 
-  async create (user: string, data: { img: string; title: string; body: string; type: any; order: number; }) {
+  async create (user: string, data: { img: string; title: string; body: string; cardSession: string; type: any; order: number; }) {
     try {
         await addDoc(collection(db, user), data)
-        // onClose()
       } catch (err) {
-
         console.log(err)
       }
   }
 
-  async update (user: string, id: string, data: { img: string; title: string; body: string; type: any; order: number; }) {
+  async update (user: string, id: string, data: { img: string; title: string; body: string; cardSession?: string|undefined; type: any; order: number; }) {
     console.log(user, id, data)
     const docRef = doc(db, user, id);
     await updateDoc(docRef, data)

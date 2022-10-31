@@ -4,13 +4,13 @@ import { getFirestore } from 'firebase/firestore'
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD5DJ3iMKgZD0EOC01Qs-AzE9Vvwn9xiLU",
-  authDomain: "receitas-5968d.firebaseapp.com",
-  projectId: "receitas-5968d",
-  storageBucket: "receitas-5968d.appspot.com",
-  messagingSenderId: "40238569100",
-  appId: "1:40238569100:web:1aed03605a177708dc4da9",
-  measurementId: "G-Q1SY3V6NJ7",
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID
 }
 
 const app = initializeApp(firebaseConfig)

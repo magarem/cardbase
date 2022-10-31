@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { Button, Card, CardMedia, Container, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
+import { Button, Card, CardMedia, Container, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -42,8 +42,10 @@ interface Props {
   }
 }
 interface Obj1 {
+  [x: string]: any;
   id: any;
   img: string; 
+  cardSession: string,
   title: string;
   body: string;
   type: any;
@@ -64,18 +66,9 @@ const Create: NextPage<Props> = (props) => {
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
   const [saved, setSaved] = useState({opened: false, txt: ""});
-
-  const cardObj = {id: "", img: "", title: "", body: "", type: "card", order: -1 };
+  const cardObj = {id: "", img: "", cardSession: "", title: "", body: "", type: "card", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [mostra, setMostra] = useState(false)
-  const save = (data: string) => {
-    console.log(data)
-}
-
-  // const [value, setValue] = useState('');
-
-
- 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     console.log(name, value)
@@ -93,7 +86,7 @@ const Create: NextPage<Props> = (props) => {
   ]
   const saveCard = () => {
     setDesableSaveButton(true)
-    let data = { img: state.img, title: state.title, body: bodyValue, type: state.type, order: -1 };
+    let data = { img: state.img, cardSession: state.cardSession, title: state.title, body: bodyValue, type: state.type, order: -1 };
     CardDataService.create(user.displayName, data)
       .then((x) => {
         console.log("Created new item successfully!");
@@ -117,6 +110,7 @@ const Create: NextPage<Props> = (props) => {
     let data = {
       img: state.img,
       title: state.title,
+      cardSession: state.cardSession,
       body: bodyValue,
       type: state.type||"card",
       order: state.order
@@ -149,7 +143,7 @@ const Create: NextPage<Props> = (props) => {
         console.log(data)
         if (data) {
           if (data.type == undefined) data.type="card"
-          setState({ id: router.query.card_id, title: data.title, body: data.body, img: data.img, type: data.type, order: data.order })
+          setState({ id: router.query.card_id, cardSession: data.cardSession, title: data.title, body: data.body, img: data.img, type: data.type, order: data.order })
           setBodyValue(data.body)
           console.log(state);
         }
@@ -167,109 +161,80 @@ const Create: NextPage<Props> = (props) => {
         <main className="py-10">
           <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
           <div className="w-full max-w-3xl px-3 mx-auto">
-            <Grid container alignItems="center"
-  justifyContent="center" spacing={{ xs: 2, md: 1 }}>
+            <Grid container alignItems="center" justifyContent="center" spacing={{ xs: 2, md: 1 }}>
               <Grid item xs={12} sm={12} md={12} style={{textAlign: "left"}} >
                 {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
               </Grid>
-              {/* <Grid item xs={12} sm={12} md={12}  style={{textAlign: "center"}} > */}
-              {/* <Container maxWidth="xs" >
-               {state.img&&
-               <>
-                <div className="mt-3" >
-                <Box sx={{ width: 200 }}>
-                <Image
-                    src={state.img}
-                  />
-                  </Box>
-                  </div>
-                  <Box sx={{ m: 1 }} />
-               </>
-               }
-              </Container> */}
-              {/* </Grid> */}
               <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "center"}}>
-                {/* <Typography gutterBottom variant="h5" component="div"> */}
                 <Box >
-                  <TextField
-                    id="outlined-basic"
-                    name="id"
-                    label="id"
-                    variant="outlined"
-                    onChange={handleChange}
-                    value={state.id}
-                    hidden
-                  />
-                  {/* </Typography> */}
-                  {/* <Typography gutterBottom variant="h5" component="div"> */}
-                  <Grid mb={2} container spacing={{ xs: 2, md: 1 }} alignItems="center"
-  justifyContent="center">
-              <Grid item xs={12} sm={12} md={8} lg={9} style={{textAlign: "center"}} >
-              <TextField
-                    id="outlined-basic"
-                    name="id"
-                    label="id"
-                    variant="outlined"
-                    onChange={handleChange}
-                    value={state.id}
-                    fullWidth
-                    inputProps={
-                      { readOnly: true }
-                    }
-                  /><br/><br/>
-                  <TextField 
-                    id="outlined-basic"
-                    fullWidth
-                    name="title"
-                    label="Titulo"
-                    variant="outlined"
-                    onChange={handleChange}
-                    value={state.title}
-                  /><br/><br/>
-              <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/>
-                  
+                  <Grid mb={2} container spacing={{ xs: 2, md: 1 }} alignItems="center" justifyContent="center">
+                    <Grid item xs={12} sm={12} md={8} lg={9} style={{textAlign: "left"}} >
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">Seção</InputLabel>
+                      <Select
+                        fullWidth
+                        name="cardSession"
+                        defaultValue="general"
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={state.cardSession}
+                        label="Seção"
+                        onChange={handleChange}>
+                        <MenuItem value="general">Geral</MenuItem>
+                        <MenuItem value="session1">Seção 1</MenuItem>
+                      </Select>
+                    </FormControl>
+                        <br/><br/>
+                        <TextField 
+                          id="outlined-basic"
+                          fullWidth
+                          name="title"
+                          label="Titulo"
+                          variant="outlined"
+                          onChange={handleChange}
+                          value={state.title}
+                        /><br/><br/>
+                        <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/>
+                    </Grid>
+                    {/* <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} > */}
+                    {/* <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/> */}
+                    <Grid item xs={12} sm={12} md={4} lg={3} style={{textAlign: "right"}} >
+                    {/* <Container maxWidth="xs" > */}
+                      {state.img?
+                      <>
+                        <Card sx={{ width: 200, margin: 'auto', maxHeight: 500 }}>
+                          <CardMedia
+                            component="img"
+                            height="100%"
+                            width="100%"
+                            image={state.img}
+                          />
+                        </Card>
+                      </>
+                      :
+                      <>
+                        <Box
+                          sx={{
+                            display: { xs: 'none', xl: 'none', md: 'block', lg: 'block' },
+                            borderRadius: '4px',
+                            margin: 'auto',
+                            width: "98%",
+                            height: 215,
+                            backgroundColor: 'darkslategray',
+                            '&:hover': {
+                              backgroundColor: 'primary.main',
+                              opacity: [0.9, 0.8, 0.7],
+                            },
+                          }}
+                        />
+                        {/* <Box sx={{ m: 1 }} /> */}
+                      </>
+                      }
+                    {/* </Container> */}
                   </Grid>
-              {/* <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} > */}
-              {/* <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/> */}
-              <Grid item xs={12} sm={12} md={4} lg={3} style={{textAlign: "right"}} >
-              {/* <Container maxWidth="xs" > */}
-               {state.img?
-               <>
-                <Card sx={{ width: 215, margin: 'auto', maxHeight: 215 }}>
-                  <CardMedia
-                    component="img"
-                    height="100%"
-                    width="100%"
-                    image={state.img}
-                  />
-                </Card>
-              </>
-              
-                :
-                <>
-                <Box
-      sx={{
-        display: { xs: 'none', xl: 'none', md: 'block', lg: 'block' },
-        borderRadius: '4px',
-        margin: 'auto',
-        width: "98%",
-        height: 215,
-        backgroundColor: 'darkslategray',
-        '&:hover': {
-          backgroundColor: 'primary.main',
-          opacity: [0.9, 0.8, 0.7],
-        },
-      }}
-    />
-              
-                  {/* <Box sx={{ m: 1 }} /> */}
-               </>
-               }
-              {/* </Container> */}
-              </Grid>
-    {/* </Grid> */}
-    <Box sx={{ m: 0 }} />
-    </Grid>
+                  {/* </Grid> */}
+                  <Box sx={{ m: 0 }} />
+                </Grid>
                     <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
                     {/* {JSON.stringify(bodyValue[1])} */}
                     {/* <TextField
@@ -304,23 +269,28 @@ const Create: NextPage<Props> = (props) => {
                   />
                    <Grid sx={{marginTop: "10px"}} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                       <Grid item xs={12} sm={12} md={12} style={{textAlign: "center"}} >
-                      <Box sx={{ m: 1 }} />
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="card"
-                      name="type"
-                      value={state.type}
-                      onChange={handleChange}
-                    >
-                      <FormControlLabel value="card" control={<Radio />} label="Cartão" />
-                      <FormControlLabel value="section" control={<Radio />} label="Seção" />
-                    </RadioGroup>
+                        <Box sx={{ m: 1 }} />
+                        {/* <RadioGroup
+                          row
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue="card"
+                          name="type"
+                          value={state.type}
+                          onChange={handleChange}
+                        >
+                          <FormControlLabel value="card" control={<Radio />} label="Cartão" />
+                          <FormControlLabel value="section" control={<Radio />} label="Seção" />
+                        </RadioGroup> */}
                     </Grid>
-                    <Grid item xs={12} sm={12} md={12} style={{textAlign: "left"}} >
-                    <Button disabled={desableSaveButton} variant="contained" fullWidth component="label"  onClick={state.id?updateCard:saveCard}>
-                    Salvar
-                  </Button>
+                    <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
+                      <Button color="success" disabled={desableSaveButton} variant="contained" fullWidth component="label"  onClick={state.id?updateCard:saveCard}>
+                        Salvar
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
+                      <Button color="warning" variant="contained" fullWidth component="label" onClick={() => router.back()}>
+                        Cancelar
+                      </Button>
                     </Grid>
                     </Grid>
                   {/* </Typography> */}

@@ -12,6 +12,7 @@ function CardsGrid(props){
   // Drag and Drop Handler
   const onDragDropEnds = (oldIndex, newIndex) => {
     props.currentState.map((item, index) => {
+      if (item.cardSession == undefined) item.cardSession = ""
       const objToUpdate = {id: item.id, ...item, order: index}
       CardDataService.update(props.user.displayName, item.id, objToUpdate)
     })

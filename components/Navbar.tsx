@@ -52,49 +52,29 @@ const PageMenu = (props: obj2) => {
   const user = props.user
   if (user) {
     return (
-      <div>
-        {/* <ButtonGroup size="small" aria-label="small button group">
-          <Button>Criar</Button>
-          <Button>Listar</Button>
-        </ButtonGroup> */}
-
-        {/* <IconButton color="primary"  > */}
-     
-        {/* </IconButton> */}
-        <IconButton size="small" aria-label="delete" onClick={() => {
-            router.push('/' + user.displayName + '/adm/create')
-            }}>
-          <AddCircleOutlineIcon />
-        </IconButton>
-        <IconButton size="small" aria-label="delete" onClick={() => {
-            router.push('/'+user.displayName +'/adm/list?type=card')
-            }}>
-          <PhotoLibrary />
-        </IconButton>
-        <IconButton size="small" aria-label="delete" onClick={() => {
+      <Container sx={{width:120}}>
+        <Grid container  direction="row" spacing={2} justifyContent="center" alignItems="center" >
+          <Grid item md={6}>
+            <IconButton size="small" aria-label="delete" onClick={() => {
+                router.push('/' + user.displayName + '/adm/create')
+                }}>
+              <AddCircleOutlineIcon />
+            </IconButton>
+          </Grid>
+          <Grid item md={6}>
+            <IconButton size="small" aria-label="delete" onClick={() => {
+                router.push('/'+user.displayName +'/adm/list?cardSession=all')
+                }}>
+              <PhotoLibrary />
+            </IconButton>
+          </Grid>
+        {/* <IconButton size="small" aria-label="delete" onClick={() => {
             router.push('/'+user.displayName +'/adm/list?type=section')
             }}>
           <NoteIcon />
-        </IconButton>
-        {/* <Link
-          component="button"
-          onClick={() => {
-            router.push('/' + user.displayName + '/adm/create')
-            }} >
-          <ListItemIcon>
-            {React.createElement(Icons["AddAPhoto"])}
-          </ListItemIcon>
-        </Link>  */}
-        {/* <Link
-          component="button"
-          onClick={() => {
-            router.push('/'+user.displayName +'/adm/list')
-            }}>
-          <ListItemIcon>
-            {React.createElement(Icons["PhotoLibrary"])}
-          </ListItemIcon>
-        </Link> */}
-      </div>
+        </IconButton> */}
+        </Grid>
+      </Container>
     )
   }else{
     return null
