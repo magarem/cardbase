@@ -104,7 +104,7 @@ const List: NextPage<Props> = (props) => {
 
   useEffect(() => {
     if (user) {
-      const data = CardDataService.readById(user.displayName, "settings").then((data: []) => {
+      const data = CardDataService.readById(user.displayName, "settings").then((data: any) => {
         console.log(data)
         console.log(Object.values(data))
         // const map1 = new Map(Object.values(data))
@@ -229,7 +229,7 @@ const List: NextPage<Props> = (props) => {
           onChange={handleCardSessionState}
         >
           <MenuItem value="all">Todas</MenuItem>
-          {stateFolder.map((item)=>{
+          {stateFolder.map((item: any)=>{
             return (
               <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>
             )

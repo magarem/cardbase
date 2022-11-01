@@ -45,7 +45,7 @@ const Useraccount: NextPage = () => {
 
   useEffect(() => {
     if (user) {
-      const data = CardDataService.readById(user.displayName, "settings").then((data: []) => {
+      const data = CardDataService.readById(user.displayName, "settings").then((data: any) => {
         console.log(data)
         console.log(Object.values(data))
         // const map1 = new Map(Object.values(data))
@@ -132,7 +132,7 @@ const Useraccount: NextPage = () => {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
-                    onClick={(event) => itemEdit(index, event)}
+                    onClick={() => itemEdit(index)}
                     primaryTypographyProps={{
                       fontSize: 16
                     }}
