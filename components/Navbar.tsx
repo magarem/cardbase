@@ -117,7 +117,10 @@ const UserOptions = (props: obj2) => {
                   'aria-labelledby': 'basic-button',
                 }}
               >
-                <MenuItem  onClick={() => {
+                <MenuItem onClick={() => {
+                  router.push("/" + user.displayName + '/adm/usersettings')
+                  }}>Definições</MenuItem>
+                  <MenuItem  onClick={() => {
                   logout()
                   router.push('/login')
                   }}>Logout</MenuItem>

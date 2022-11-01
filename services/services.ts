@@ -1,8 +1,17 @@
 import {db} from "../config/firebase";
-import { getFirestore, getDoc, deleteDoc, where, collection, getDocs, updateDoc, addDoc, doc, query, orderBy, onSnapshot} from 'firebase/firestore'
+import { getFirestore, getDoc, deleteDoc, where, collection, getDocs, updateDoc, addDoc, doc, query, orderBy, onSnapshot, setDoc} from 'firebase/firestore'
 // import { route } from "next/dist/server/router";
 import { NextRouter, useRouter } from 'next/router'
 class CardDataService {
+  async add(user: string, data: object) {
+    try {
+      console.log(data);
+      
+      await setDoc(doc(db, user, "settings"), {...data});
+    } catch (err) {
+      console.log(err)
+    }
+  }
   getAll() {
     return db;
   }
@@ -47,8 +56,6 @@ class CardDataService {
     //       }
     //   });
   }
-
-
 
   async read (user: string, cardSession: string){
     console.log(user, cardSession);

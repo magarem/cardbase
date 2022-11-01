@@ -90,6 +90,7 @@ const List: NextPage<Props> = (props) => {
   const handleClose = () => setOpen(false);
   const [currentState, setCurrentState] = useState<ss[]>([]);
   const [currentState2, setCurrentState2] = useState<ss>();
+  const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
 
   useEffect(() => {
     if (user.displayName) {
@@ -100,6 +101,19 @@ const List: NextPage<Props> = (props) => {
       })
     }
   }, [user, cardSessionState])
+
+  useEffect(() => {
+    if (user) {
+      const data = CardDataService.readById(user.displayName, "settings").then((data: []) => {
+        console.log(data)
+        console.log(Object.values(data))
+        // const map1 = new Map(Object.values(data))
+        // console.log(map1);
+        
+        setStateFolder(Object.values(data))
+      })
+    }
+  }, [])
 
   const styles = {
     width: 300,
@@ -215,8 +229,11 @@ const List: NextPage<Props> = (props) => {
           onChange={handleCardSessionState}
         >
           <MenuItem value="all">Todas</MenuItem>
-          <MenuItem value="general">Geral</MenuItem>
-          <MenuItem value="session1">Seção 1</MenuItem>
+          {stateFolder.map((item)=>{
+            return (
+              <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>
+            )
+          })}
         </Select>
       </FormControl><br/><br/>
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} />

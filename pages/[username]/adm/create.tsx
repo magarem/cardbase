@@ -68,6 +68,7 @@ const Create: NextPage<Props> = (props) => {
   const [saved, setSaved] = useState({opened: false, txt: ""});
   const cardObj = {id: "", img: "", cardSession: "", title: "", body: "", type: "card", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
+  const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
@@ -151,6 +152,19 @@ const Create: NextPage<Props> = (props) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (user) {
+      const data = CardDataService.readById(user.displayName, "settings").then((data: []) => {
+        console.log(data)
+        console.log(Object.values(data))
+        // const map1 = new Map(Object.values(data))
+        // console.log(map1);
+        
+        setStateFolder(Object.values(data))
+      })
+    }
+  }, [])
+
   const ActionLink = () => {
     console.log(11);
     setMostra(true)
@@ -171,6 +185,7 @@ const Create: NextPage<Props> = (props) => {
                     <Grid item xs={12} sm={12} md={8} lg={9} style={{textAlign: "left"}} >
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">Seção</InputLabel>
+                     
                       <Select
                         fullWidth
                         name="cardSession"
@@ -180,8 +195,12 @@ const Create: NextPage<Props> = (props) => {
                         value={state.cardSession}
                         label="Seção"
                         onChange={handleChange}>
-                        <MenuItem value="general">Geral</MenuItem>
-                        <MenuItem value="session1">Seção 1</MenuItem>
+                          
+                          {stateFolder.map((item)=>{
+                            return (
+                              <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>
+                            )
+                          })}
                       </Select>
                     </FormControl>
                         <br/><br/>
