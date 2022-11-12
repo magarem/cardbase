@@ -21,6 +21,7 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/lab": "^5.0.0-alpha.103",
     "@mui/material": "^5.10.9",
+    "@nextui-org/react": "^1.0.0-beta.10",
     "@tiptap/react": "^2.0.0-beta.199",
     "@tiptap/starter-kit": "^2.0.0-beta.199",
     "bootstrap": "^5.1.3",

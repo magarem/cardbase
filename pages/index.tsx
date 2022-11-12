@@ -6,7 +6,11 @@ import { useRouter } from 'next/router'
 const Home: NextPage = () => {
   const { user } = useAuth()
   const router = useRouter()
-  router.push(user?.displayName + "/adm/list" )
+  if (user) {
+    router.push("/login  ")
+  } else {
+    router.push("/login")
+  }
   return (
     <div className={styles.container}>
     </div>

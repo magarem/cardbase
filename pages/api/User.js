@@ -49,7 +49,6 @@ export default async function handler(req, res) {
         const email = req.query.email
         console.log(2, email)
         console.log(2,req.query)
-        
           admin.auth().getUserByEmail(email)
           .then((userRecord) => {
             res.status(200).json(userRecord)

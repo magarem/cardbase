@@ -1,11 +1,7 @@
-import React, {useState} from 'react'
-// import { Container, Nav, Navbar } from 'react-bootstrap'
+import React, {useEffect, useState} from 'react'
 import Link from '@mui/material/Link';
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
-
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import AppBar from '@mui/material/AppBar';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,29 +10,36 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import * as Icons from '@material-ui/icons/'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
-import { AddAPhoto } from '@mui/icons-material';
 import { PhotoLibrary } from '@material-ui/icons/';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import NoteIcon from '@mui/icons-material/Note';
 
 interface obj1 {
   user: string
 }
 
 const SiteTitle = (props: obj1) => {
+  const { user } = useAuth()
+  console.log({user});
   let title = "ZenBase"
-  const path = location.pathname.substring(1)
-  title = (props.user?"ZenBase":path)
-  if (['', 'login', 'signup'].includes(path)){
-    title = "ZenBase"
-  }
+  // if (user) {
+  //    title = "ZenBase"
+  // }else{
+
+  // }
+  
+  // let title = "ZenBase"
+  // const name = location.href.split('.')[0].split('//')[1]
+  // const path = name.substring(0,1).toLocaleUpperCase()+name.substring(1)
+  // title = (props.user?"ZenBase":path)
+  // // console.log(path)
+  // if (['', 'login', 'login2', 'signup'].includes(title.split('/')[1])){
+  //   console.log(title)
+  //   title = "ZenBase"
+  // }
   return (
     <>{title}</>
   )
@@ -49,30 +52,28 @@ interface obj2 {
 
 const PageMenu = (props: obj2) => {
   const router = useRouter()
+  let folder = router.asPath.split('/')[1]
   const user = props.user
   if (user) {
     return (
       <Container sx={{width:120}}>
         <Grid container  direction="row" spacing={2} justifyContent="center" alignItems="center" >
           <Grid item md={6}>
-            <IconButton size="small" aria-label="delete" onClick={() => {
-                router.push('/' + user.displayName + '/adm/create')
+            <IconButton size="small" aria-label="edit" onClick={() => {
+                router.push("/" + folder + "/new/edit")
                 }}>
               <AddCircleOutlineIcon />
             </IconButton>
           </Grid>
           <Grid item md={6}>
-            <IconButton size="small" aria-label="delete" onClick={() => {
-                router.push('/'+user.displayName +'/adm/list?cardSession=all')
+            <IconButton size="small" aria-label="list" onClick={() => {
+                console.log(1);
+                if (folder=='usersettings') folder = 'home'
+                router.push("/" + folder )
                 }}>
               <PhotoLibrary />
             </IconButton>
           </Grid>
-        {/* <IconButton size="small" aria-label="delete" onClick={() => {
-            router.push('/'+user.displayName +'/adm/list?type=section')
-            }}>
-          <NoteIcon />
-        </IconButton> */}
         </Grid>
       </Container>
     )
@@ -82,22 +83,40 @@ const PageMenu = (props: obj2) => {
 }
 
 const UserOptions = (props: obj2) => {
-  const user = props.user
-  const { logout } = useAuth()
+  // const user = props.user
+  const { user, logout, userReadData } = useAuth()
   const router = useRouter()
   const [anchorEl, setAnchorEl] = useState(null);
+  const [userName, setUserName] = useState(null);
   const open_ = Boolean(anchorEl);
+
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    if (user){
+      console.log(user);
+      setUserName(user.username)
+    }
+  },[user])
+
+  const goHome = () => {
+    // const url1 = window.location.protocol + '://' + window.location.origin.replace(/^[^.]+\./g, "")
+    // console.log( url1 + '/login');
+    // location.href = url1 + '/login'
+  }
+
   if (user) {
     return (
       <div>
-        <Typography variant="h6" noWrap component="div" align="right">
+        <Typography variant="h6" noWrap component="div" align="right" >
               <Button
+                color='success'
                 startIcon={<AccountCircleIcon />}
                 id="basic-button"
                 variant="text"
@@ -106,59 +125,63 @@ const UserOptions = (props: obj2) => {
                 aria-expanded={'true'}
                 onClick={handleClick}
               >
-              {user.displayName} 
+              {userName} 
               </Button>
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open_}
+                onClick={handleClose}
                 onClose={handleClose}
                 MenuListProps={{
                   'aria-labelledby': 'basic-button',
-                }}
-              >
-                <MenuItem onClick={() => {
-                  router.push("/" + user.displayName + '/adm/usersettings')
+                }}>
+                 <MenuItem onClick={() => {
+                  router.push({
+                    pathname: '/usersettings',
+                    query: { name: 'Someone' }
+                }, '/usersettings');
                   }}>Definições</MenuItem>
-                  <MenuItem  onClick={() => {
+
+                <MenuItem  onClick={() => {
                   logout()
-                  router.push('/login')
+                  goHome()
                   }}>Logout</MenuItem>
-              
             </Menu>
         </Typography>
       </div>)
   } else {
     return (
-      <>
-        {/* <Link href="/signup" >
-        <Button color="inherit">Registrar</Button>
-        </Link> */}
-        <Link href="/login" >
+      <Link href="/login" >
         <Button color="inherit">Login</Button>
-        </Link>
-      </>
+      </Link>
     )
   }
 }
 
-const NavbarComp = () => {
+
+const NavbarComp = (props: any) => {
   const { user, logout } = useAuth()
   const router = useRouter()
   const AuthRequired = ['/', '/adm']
+  console.log(user);
   return (
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="fixed">
       <Toolbar>
-        {/* <IconButton
+      {user&&
+        <IconButton
           size="large"
           edge="start"
           color="inherit"
           aria-label="menu"
           sx={{ mr: 2 }}
+          onMouseOver={props.toggleDrawer('left', true)}
+          // onClick={props.toggleDrawer('left', true)}
         >
           <MenuIcon />
-        </IconButton> */}
+        </IconButton>
+        }
 
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>

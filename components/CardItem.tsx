@@ -14,6 +14,10 @@ import DeleteForeveIcon from '@mui/icons-material/DeleteForever';
 import CardDataService from "../services/services";
 import { Router, useRouter } from "next/router";
 import { DragIndicator } from '@material-ui/icons';
+import { useEffect, useState } from 'react';
+import { SnippetFolder } from '@mui/icons-material';
+import { useAuth } from '../context/AuthContext';
+import { Box } from '@mui/material';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -63,10 +67,13 @@ interface main {
   handleOpen: (item: object) => void;
 }
 
-export default function CardItem({key, item, user, currentState, setCurrentState, handleOpen}: main){
+export default function CardItem({item, currentState, setCurrentState, handleOpen}: main){
    
-  const [expanded, setExpanded] =  React.useState(false);
-  const router =  useRouter()
+  const [expanded, setExpanded] = React.useState(false);
+  const [folder, setFolder] = useState("");
+  const router = useRouter()
+  const { user } = useAuth()
+  console.log(user);
 
   const callLink = (link: string) =>{
     router.push(link)
@@ -87,25 +94,33 @@ export default function CardItem({key, item, user, currentState, setCurrentState
     setExpanded(!expanded);
   };
 
+  useEffect(() => {
+    const folder = router.asPath.split('/')[1]
+    setFolder(folder)
+  }, [])
+
   return (  
-    <Card  key={item.id}>
+    <Box style={{"padding": "0px"}}>
+    <Card raised  >
+      {user&&
       <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
         <Grid container m={0}>
           <Grid item xs={6} sm={6} md={6}>
-          <IconButton aria-label="Edit" onClick={() => callLink("/"+user.displayName+"/adm/create?card_id="+item.id)}>
-            <EditIcon fontSize="small"/>
-          </IconButton>
-          <IconButton aria-label="Delete" onClick={() => delete_card(user.displayName, item.id)}>
-            <DeleteForeveIcon fontSize="small"/>
-          </IconButton>
-          </Grid>
-          <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
-          <IconButton>
-            <DragIndicator className="handle" fontSize="small"/>
-          </IconButton>
+            <IconButton aria-label="Edit" onClick={() => callLink("/" + folder + "/" + item.id + "/edit")}>
+              <EditIcon fontSize="small"/>
+            </IconButton>
+            <IconButton aria-label="Delete" onClick={() => delete_card(user.uid, item.id)}>
+              <DeleteForeveIcon fontSize="small"/>
+            </IconButton>
+            </Grid>
+            <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
+            <IconButton>
+              <DragIndicator className="handle" fontSize="small"/>
+            </IconButton>
           </Grid>
         </Grid>
       </CardActions>
+      }
       {item.img&&
       <CardMedia height={300} component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
       }
@@ -120,7 +135,7 @@ export default function CardItem({key, item, user, currentState, setCurrentState
             </Typography>
           </Grid>
           {item.img &&
-          <Grid item md={2}  >
+          <Grid item md={2}>
             <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
@@ -134,11 +149,11 @@ export default function CardItem({key, item, user, currentState, setCurrentState
       </CardContent>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent sx={{ pt:1, '&:last-child': { pb: 0 }}}>
-          {/* <Typography paragraph> */}
           <div dangerouslySetInnerHTML={{ __html: item.body }}/>
-          {/* </Typography> */}
         </CardContent>
       </Collapse>
     </Card>
+    </Box>
   )
 }
+

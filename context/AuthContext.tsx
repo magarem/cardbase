@@ -6,9 +6,11 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth'
-import { auth } from '../config/firebase'
+import { auth, db } from '../config/firebase'
 import dataServices from '../services/services'
-import { useRouter } from 'next/router'
+import router, { useRouter } from 'next/router'
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import React from 'react'
 const AuthContext = createContext<any>({})
 
 export const useAuth = () => useContext(AuthContext)
@@ -18,18 +20,30 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
+  const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  console.log(user)
+  const [stateFolder, setStateFolder] = React.useState([{key: '', value: ''}])
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("onAuthStateChanged", user);
       if (user) {
-        setUser({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
+        userReadData(user.uid).then((ret)=>{
+          console.log(ret);
+          setUser({
+            uid: user.uid,
+            email: user.email,
+            username: ret?.data.username
+          })
+          // const url = window.location.protocol + '//' + ret?.data.username + '.' + window.location.host + '/home'
+          // const hostname = window.location.host 
+          // const url = window.location.protocol + '//' + hostname + '/home'
+          // console.log(url);
+          // router.push(url)
         })
+       
       } else {
         setUser(null)
       }
@@ -39,71 +53,140 @@ export const AuthContextProvider = ({
     return () => unsubscribe()
   }, [])
 
-  
+  const setFolders = (data: any) => {
+    setStateFolder(data)
+  }
+  const getFolders = () => {
+    return stateFolder
+  }
+  const getFolderKeyByValue = (value: string) => {
+    const ret = stateFolder.find(item => item.value == value)?.key
+    return ret
+  }
+  const folderReload = () => {
+    dataServices.readById(user.uid, "settings").then((data: any) => {
+      console.log(data)
+      console.log(Object.values(data))
+      setStateFolder(Object.values(data))
+      console.log(stateFolder);
+      // return Object.values(data)
+    })
+  }
+
+  React.useEffect(() => {
+    if (user){
+      // setStateFolder(null)
+      console.log(stateFolder[0].key);
+      console.log(user.uid);
+      folderReload()
+    }
+    // return () => getFolders()
+  }, [router.query, user])
 
   const registerUser = async (email: string, displayName: any, password: string) => {
       console.log("1> Check user displayName")
-      const et1 = await dataServices.check_displayName(displayName)
-      console.log(et1);
-      console.log("2> registra user")
-      if (!et1) {
-        try {
-          const ret = await createUserWithEmailAndPassword(auth, email, password)
-          console.log("ok", ret.user)
-          await updateProfile(ret.user, {displayName: displayName})
-          console.log("ok", ret.user.uid)
-          return ret.user.uid
-        } catch (error) {
-          return null// Only runs when there is an error/exception
+      dataServices.check_displayName(displayName).then((ret)=>{
+        if (ret) {
+          try {
+            console.log({email, password});
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              console.log(user);
+              updateProfile(user, {displayName: displayName}).then((ret2)=>{
+                console.log(ret2);
+                return ret2
+              })
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode, errorMessage);
+              return false
+            });
+          } catch (error) {
+            return null// Only runs when there is an error/exception
+          }
+        }else{
+          console.log("erro")
+          return null
         }
-      }else{
-        console.log("esse username já existe")
-      }
-      
-      
-      // console.log("ok", ret2)
-        // console.log("ok", ret.user)
-        // console.log("3> Updating profile to save displayName")
-        //   updateProfile(ret.user, {displayName: displayName}).then((data)=>{
-        //     console.log("ok", ret.user.uid)
-        //    // return ret.user.uid
-        //   })
-        //   // return true
-      //  },(error) => {
-      //   console.log({error});
-      //   return error
-      // })
-      // return true
+      })
   }
 
-  const signup = async (email: string, displayName: string, password: string) => {
+  const userReadData = async (uid: string)=> {
+    console.log(uid);
+    const col = query(collection(db, 'users'), where("uid", "==", uid))
+    const snap = await getDocs(col);
+    const list = snap.docs.map(doc => {
+        return {id: doc.id, data: doc.data()}
+    });
+    console.log(list);
+    return list[0]
+  }
+
+  const userReadDataBy = async (field: string, value: string)=> {
+    console.log({field, value});
+    const col = query(collection(db, 'users'), where(field, "==", value))
+    const snap = await getDocs(col);
+    const list = snap.docs.map(doc => {
+        return {id: doc.id, data: doc.data()}
+    });
+    console.log(list);
+    return list[0]
+  }
+
+  const userReadDataByEmail = async (email: string)=> {
+    console.log(email);
+    const col = query(collection(db, 'users'), where("email", "==", email))
+    const snap = await getDocs(col);
+    const list = snap.docs.map(doc => {
+        return {id: doc.id, data: doc.data()}
+    });
+    console.log(list);
+    return list[0]
+  }
+  
+  const registerWithEmailAndPassword = async (name: any, email: string, password: string) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        name,
+        authProvider: "local",
+        email,
+      });
+    } catch (err) {
+      console.error(err);
+      // alert(err.message);
+    }
+  }
+  
+  const signup = async (email: string, password: string) => {
     try {
       const {user} = await createUserWithEmailAndPassword(auth, email, password)
       console.log(user);
-      return await updateProfile(user, {
-        displayName: displayName
-        })
-       
+      return user
     } catch (error) {
       // console.log(error.message);
     }
   }
 
-
-  // const signupRes = (email: string, displayName: string, password: string) => {
-  //    createUserWithEmailAndPassword(auth, email, password)
-  //   .then((res) => {
-  //     console.log(res.user.uid);
-  //     const user = auth.currentUser;
-  //     console.log(user);
-  //     return updateProfile(user, {
-  //       displayName: displayName
-  //       })
-  //   })
-  // }
-
   const login = (email: string, password: string) => {
+    // return signInWithEmailAndPassword(auth, email, password)
     return signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        return user
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert('Senha não confere')
+        return null
+      });
   }
 
   const logout = async () => {
@@ -111,10 +194,9 @@ export const AuthContextProvider = ({
     await signOut(auth)
   }
 
-  const a = 10
 
   return (
-    <AuthContext.Provider value={{ a, user, login, signup, registerUser, logout }}>
+    <AuthContext.Provider value={{user, folderReload, getFolders, getFolderKeyByValue, setFolders, login, signup,  registerUser, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )

@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-// import { Button, Form } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -8,11 +7,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import { Stack } from 'react-bootstrap';
+import { Logout } from '@mui/icons-material';
 
 function Copyright(props: any) {
   return (
@@ -30,29 +26,45 @@ function Copyright(props: any) {
 
 const Login = () => {
   const router = useRouter()
-  const { a, user, login } = useAuth()
+  const {logout, userReadDataByEmail } = useAuth()
   const [data, setData] = useState({
     email: '',
     password: '',
   })
 
-  const handleLogin = async (e: any) => {
-    e.preventDefault()
-
-    console.log(user)
-    try {
-      login(data.email, data.password).then((ret: { user: { displayName: string; }; })=>{
-        console.log(ret.user.displayName);
-        
-        router.push(ret.user.displayName + '/adm/list')
-      })
-    } catch (err) {
-      console.log(err)
+  const callLogin2 = async () => {
+    if (data.email){
+      // fetch('/api/User?email=' + data.email)
+      // .then((res) => res.json())
+      // .then((data) => {
+      //   console.log(window.location.host);
+      //   const url = window.location.protocol + '//' + data.displayName.toLowerCase() + '.' + window.location.host + '/login2'
+      //   router.push(url)
+      // })
+      
+      const data2 = await userReadDataByEmail(data.email)
+      console.log(data2);
+      const url = window.location.protocol + '//' + data2.data.username.toLowerCase() + '.' + window.location.host + '/login2'
+      console.log(url);
+      router.push(url + '?email=' + data.email)
+      // location.href = url
     }
   }
 
+  const goHome = () => {
+    const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
+    console.log( url1 + '/login');
+    location.href = url1 + '/login'
+    
+  }
+  useEffect(() => {
+    // if (user) logout()
+    if (location.href !== location.href.replace(/^[^.]+\./g, "")){
+      goHome()
+    }
+    console.log(location.href);
+  },[])
   return (
-
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -61,12 +73,11 @@ const Login = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <Typography component="h1" variant="h5" mt={5}>
             Login
           </Typography>
-          <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
+          <Box component="form"  noValidate sx={{ mt: 1 }}>
             <TextField
               variant="filled" 
               margin="normal"
@@ -83,9 +94,8 @@ const Login = () => {
                   email: e.target.value,
                 })
               }
-              value={data.email}
-            />
-            <TextField
+              value={data.email}/>
+            {/* <TextField
               variant="filled"
               margin="normal"
               required
@@ -102,33 +112,26 @@ const Login = () => {
                 })
               }
               value={data.password}
-            />
+            /> */}
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-            >
-              Login
+              onClick={callLogin2}>
+              Próximo
             </Button>
             <Typography align="center">
               <Link href="#" variant="body2">
                   Esqueceu sua senha?
-                </Link>
+              </Link><br/><br/>
+              <Link href="/signup" variant="body2">
+                Criar nova conta
+              </Link>
             </Typography>
-            
-            <Link href="/signup" variant="body2">
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}>
-              Criar nova conta
-            </Button>
-            </Link>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
