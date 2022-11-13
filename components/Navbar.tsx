@@ -106,8 +106,12 @@ const UserOptions = (props: obj2) => {
   },[user])
 
   const goHome = () => {
-    // const url1 = window.location.protocol + '://' + window.location.origin.replace(/^[^.]+\./g, "")
+    // const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
+    // const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
     // console.log( url1 + '/login');
+    // router.push( url1 + '/login')
+    router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
+    
     // location.href = url1 + '/login'
   }
 

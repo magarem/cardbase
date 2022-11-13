@@ -52,18 +52,24 @@ const Login = () => {
   }
 
   const goHome = () => {
-    const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
-    console.log( url1 + '/login');
-    location.href = url1 + '/login'
-    
+    // const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
+    // console.log( url1 + '/login');
+    // location.href = url1 + '/login'
+    router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
+    console.log('gohome');
+  
   }
-  // useEffect(() => {
-  //   // if (user) logout()
-  //   if (location.href !== location.href.replace(/^[^.]+\./g, "")){
-  //     goHome()
-  //   }
-  //   console.log(location.href);
-  // },[])
+  useEffect(() => {
+    // if (user) logout()
+    // if (location.href !== location.href.replace(/^[^.]+\./g, "")){
+    console.log(location.href);
+    console.log(location.origin);
+    
+    if (location.href !== process.env.NEXT_PUBLIC_DOMAIN){
+      goHome()
+    }
+    console.log(location.href);
+  },[])
   
   return (
       <Container component="main" maxWidth="xs">

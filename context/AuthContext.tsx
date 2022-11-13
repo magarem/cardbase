@@ -65,11 +65,13 @@ export const AuthContextProvider = ({
   }
   const folderReload = () => {
     dataServices.readById(user.uid, "settings").then((data: any) => {
-      console.log(data)
-      console.log(Object.values(data))
-      setStateFolder(Object.values(data))
-      console.log(stateFolder);
-      // return Object.values(data)
+      if (data){
+        console.log(data)
+        console.log(Object.values(data))
+        setStateFolder(Object.values(data))
+        console.log(stateFolder);
+        // return Object.values(data)
+      }
     })
   }
 
@@ -191,7 +193,12 @@ export const AuthContextProvider = ({
 
   const logout = async () => {
     setUser(null)
-    await signOut(auth)
+    signOut(auth).then(() => {
+      console.log('logout');
+      // router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
+    }).catch((error) => {
+      console.log('Error logout');
+    });
   }
 
 

@@ -34,7 +34,6 @@ const Signup = () => {
   const router = useRouter()
   const { user, registerUser, signup, registerWithEmailAndPassword, login, logout } = useAuth()
   
-  console.log({user});
   // if (user) logout()
   interface ttt {email:string; password: string; confirmpassword: string}
   const fields = [
@@ -44,7 +43,6 @@ const Signup = () => {
     // {name:'displayName', label: 'Nome de usuário', type: '', autofocus: false}
     ]
 
-  console.log(user)
   const [flgErrorDialog, setFlgErrorDialog] = useState(false)
   const formBegin = {uid: '', email: '', password: '', username: ''}
   const [data, setData] = useState(formBegin)
@@ -60,15 +58,26 @@ const Signup = () => {
     setOpen(false);
   };
 
-  // useEffect(() => {
+  const goHome = () => {
+    // const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
+    // console.log( url1 + '/login');
+    // location.href = url1 + '/login'
+    router.push(process.env.NEXT_PUBLIC_DOMAIN+'/signup');
+    console.log('gohome');
+  
+  }
+
+  useEffect(() => {
+    // if (user) logout()
+    // if (location.href !== location.href.replace(/^[^.]+\./g, "")){
+    console.log(location.href);
+    console.log(location.origin);
     
-  //   if (location.href !== location.href.replace(/^[^.]+\./g, "")){
-  //     const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
-  //     console.log( url1 + '/signup');
-  //     // location.href = url1 + '/signup'
-  //     router.push(url1 + '/signup')
-  //   }
-  // },[])
+    if (location.href !== process.env.NEXT_PUBLIC_DOMAIN){
+      goHome()
+    }
+    console.log(location.href);
+  },[])
   
   const registra = async (email: string, password: string) => {
     console.log(email, password);
@@ -82,24 +91,33 @@ const Signup = () => {
       const data2 = {uid: user, email: data.email, username: data.email.split('@')[0]}
       console.log(data2);
       
-      await CardDataService.userAdd(data2)
+      const r2 = await CardDataService.userAdd(data2)
+
+      console.log({r2});
+      
 
       const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'home', value: 'home'}});
       console.log("User settings with ID: ", docRef2);
+      
+      return userCredential
     }
   }
  
-  useEffect(() => {
-    registra(router.query.email as string, router.query.password as string)
-  },[router.query.email])
+  // useEffect(() => {
+  //   registra(router.query.email as string, router.query.password as string)
+  // },[router.query.email])
 
   const handleSignup = async (e: any) => {
     e.preventDefault()
     // const {user} = await createUserWithEmailAndPassword(auth, data.email, data.password)
     // console.log(user);
-    const hostname = window.location.host
-    const url2 = window.location.protocol + '//' + data.email.split('@')[0] + '.' + hostname + '/signup?email=' + data.email + '&password=' + data.password
-    console.log(url2);
+    registra(data.email, data.password).then(()=>{
+      logout()
+      router.push(process.env.NEXT_PUBLIC_DOMAIN+'/signup2');
+    })
+    // const hostname = window.location.host
+    // const url2 = window.location.protocol + '//' + data.email.split('@')[0] + '.' + hostname + '/signup?email=' + data.email + '&password=' + data.password
+    // console.log(url2);
     // router.push(url2)
     // registra(data.email, data.password)
     // const userCredential = await signup(data.email, data.password)
@@ -123,8 +141,8 @@ const Signup = () => {
     // const url = window.location.protocol + '//' + data2.username + '.' + window.location.host + '/home'
     // const url = window.location.protocol + '//' + window.location.host + '/login'
     // console.log(url);
-      logout()
-      router.push('signup2')
+      
+      // router.push('signup2')
     // location.href = url
       // CardDataService.userAdd()
 
