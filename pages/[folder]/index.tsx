@@ -50,7 +50,7 @@ function Copyright(props: any) {
       <Typography mt={15} mb={10} variant="body2" color="text.secondary" align="center" {...props}>
         {'Copyright © '}
         <Link color="inherit" href="">
-          ZenSite
+          ZenBase
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}
@@ -61,15 +61,11 @@ function Copyright(props: any) {
 
 const List: NextPage<Props> = (props) => {
   const router = useRouter()
-  const { user, userReadDataBy, getFolders, getFolderKeyByValue } = useAuth()
+  const { user, getFolders, getFolderKeyByValue } = useAuth()
   const cardSession = router.query.folder
   const folder = router.query.folder
-  // const user = window.location.href.split('.')[0].split('//')[1]
   console.log({user, folder});
-  const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
-  const [cardSessionState, setCardSessionState] = useState(cardSession);
-  console.log(cardSessionState);
   const handleOpen = (obj: ss) => {
     if (window.innerWidth > 700) {
       console.log(obj);
@@ -83,61 +79,22 @@ const List: NextPage<Props> = (props) => {
   const [currentState2, setCurrentState2] = useState<ss>();
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
 
-
-  useEffect(() => {
+  const loadData = () => {
     setStateFolder(getFolders())
-    // const folder_key = getFolders().find(item => item.value == folder).key
     const folder_key = getFolderKeyByValue(folder)
     CardDataService.read(user.uid, folder_key).then((data3) => {
       setCurrentState(data3)
       console.log(data3)
     })
+  }
 
-  //   if (user) {
-  //     console.log(user);
-  //     // userReadDataBy('uid', user.uid).then((ret)=>{
-  //     //   console.log(ret);
-  //       CardDataService.readById(user.uid, "settings").then((data: any) => {
-  //           console.log(data);
-           
-  //           if (Array.isArray(data)) {
-  //             setStateFolder(Object.values(data))
-  //           }else{
-  //             setStateFolder([Object.values(data)])
-  //           }
-
-           
-  //           console.log(folder);
-            
-  //           // const folder_key = 'home'
-  //           // if (folder !== 'home') {
-  //           const folder_key = stateFolder.find(item => item.value == folder).key
-  //           // } 
-  //           console.log({folder_key});
-          
-  //           CardDataService.read(user.uid, folder_key).then((data3) => {
-  //             setCurrentState(data3)
-  //             console.log(data3)
-  //           })
-  //       })
-  //     // })
-      
-      
-  //     // const data = CardDataService.readById(userData.data.uid, "settings").then((data: any) => {
-  //     //   setStateFolder(Object.values(data))
-  //     //   // const folder_key = 'home'
-  //     //   // if (folder !== 'home') {
-  //     //   const folder_key = Object.values(data).filter(item => item.value == folder)[0].key
-  //     //   // } 
-  //     //   console.log({folder_key});
-      
-  //     //   const data2 = CardDataService.read(user, folder_key).then((data3) => {
-  //     //     setCurrentState(data3)
-  //     //     console.log(data3)
-  //     //   })
-  //     // })
-  //   }
+  useEffect(() => {
+    loadData()
   }, [user, folder])
+
+  // useEffect(() => {
+  //   loadData()
+  // }, [])
 
   const styles = {
     width: 300,

@@ -8,14 +8,13 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { Logout } from '@mui/icons-material';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="">
-        ZenSite
+        ZenBase
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -23,52 +22,30 @@ function Copyright(props: any) {
   );
 }
 
-
 const Login = () => {
+  
   const router = useRouter()
-  const {logout, userReadDataByEmail } = useAuth()
-  const [data, setData] = useState({
-    email: '',
-    password: '',
-  })
+  const { userReadDataByEmail } = useAuth()
+  const [data, setData] = useState({ email: '', password: '', })
 
   const callLogin2 = async () => {
     if (data.email){
-      // fetch('/api/User?email=' + data.email)
-      // .then((res) => res.json())
-      // .then((data) => {
-      //   console.log(window.location.host);
-      //   const url = window.location.protocol + '//' + data.displayName.toLowerCase() + '.' + window.location.host + '/login2'
-      //   router.push(url)
-      // })
-      
       const data2 = await userReadDataByEmail(data.email)
-      console.log(data2);
-      const url = window.location.protocol + '//' + data2.data.username.toLowerCase() + '.' + window.location.host + '/login2'
-      console.log(url);
-      router.push(url + '?email=' + data.email)
-      // location.href = url
+      if (data2) {
+        console.log(data2);
+        const url = window.location.protocol + '//' + data2.data.username.toLowerCase() + '.' + window.location.host + '/login2'
+        console.log(url);
+        router.push(url + '?email=' + data.email)
+      }else{
+        alert('Usuário não existe')
+      }
     }
   }
 
-  const goHome = () => {
-    // const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
-    // console.log( url1 + '/login');
-    // location.href = url1 + '/login'
-    router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
-    console.log('gohome');
-  
-  }
   useEffect(() => {
-    // if (user) logout()
-    // if (location.href !== location.href.replace(/^[^.]+\./g, "")){
-    console.log(location.href);
-    console.log(location.origin);
-    
     if (location.href !== process.env.NEXT_PUBLIC_DOMAIN){
-      goHome()
+      router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
     }
-    console.log(location.href);
   },[])
   
   return (
@@ -82,7 +59,7 @@ const Login = () => {
             alignItems: 'center',
           }}>
           <Typography component="h1" variant="h5" mt={5}>
-            Login
+            Entrar
           </Typography>
           <Box component="form"  noValidate sx={{ mt: 1 }}>
             <TextField
@@ -98,32 +75,10 @@ const Login = () => {
               onChange={(e: any) =>
                 setData({
                   ...data,
-                  email: e.target.value,
+                  email: e.target.value.toLowerCase(),
                 })
               }
               value={data.email}/>
-            {/* <TextField
-              variant="filled"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Senha"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={(e: any) =>
-                setData({
-                  ...data,
-                  password: e.target.value,
-                })
-              }
-              value={data.password}
-            /> */}
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
             <Button
               fullWidth
               variant="contained"

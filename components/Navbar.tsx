@@ -25,21 +25,6 @@ const SiteTitle = (props: obj1) => {
   const { user } = useAuth()
   console.log({user});
   let title = "ZenBase"
-  // if (user) {
-  //    title = "ZenBase"
-  // }else{
-
-  // }
-  
-  // let title = "ZenBase"
-  // const name = location.href.split('.')[0].split('//')[1]
-  // const path = name.substring(0,1).toLocaleUpperCase()+name.substring(1)
-  // title = (props.user?"ZenBase":path)
-  // // console.log(path)
-  // if (['', 'login', 'login2', 'signup'].includes(title.split('/')[1])){
-  //   console.log(title)
-  //   title = "ZenBase"
-  // }
   return (
     <>{title}</>
   )
@@ -97,6 +82,7 @@ const UserOptions = (props: obj2) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   useEffect(() => {
     if (user){
       console.log(user);
@@ -149,14 +135,14 @@ const UserOptions = (props: obj2) => {
                 <MenuItem  onClick={() => {
                   logout()
                   goHome()
-                  }}>Logout</MenuItem>
+                  }}>Sair</MenuItem>
             </Menu>
         </Typography>
       </div>)
   } else {
     return (
       <Link href="/login" >
-        <Button color="inherit">Login</Button>
+        <Button color="inherit">Entrar</Button>
       </Link>
     )
   }
@@ -180,8 +166,7 @@ const NavbarComp = (props: any) => {
           aria-label="menu"
           sx={{ mr: 2 }}
           onMouseOver={props.toggleDrawer('left', true)}
-          // onClick={props.toggleDrawer('left', true)}
-        >
+          onClick={props.toggleDrawer('left', true)}>
           <MenuIcon />
         </IconButton>
         }
