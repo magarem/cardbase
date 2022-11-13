@@ -57,13 +57,13 @@ const Login = () => {
     location.href = url1 + '/login'
     
   }
-  // useEffect(() => {
-  //   // if (user) logout()
-  //   if (location.href !== location.href.replace(/^[^.]+\./g, "")){
-  //     goHome()
-  //   }
-  //   console.log(location.href);
-  // },[])
+  useEffect(() => {
+    // if (user) logout()
+    if (location.href !== location.href.replace(/^[^.]+\./g, "")){
+      goHome()
+    }
+    console.log(location.href);
+  },[])
   return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
