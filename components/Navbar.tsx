@@ -97,7 +97,6 @@ const UserOptions = (props: obj2) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   useEffect(() => {
     if (user){
       console.log(user);
