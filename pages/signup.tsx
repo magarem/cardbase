@@ -60,15 +60,15 @@ const Signup = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    if (location.href !== location.href.replace(/^[^.]+\./g, "")){
-      const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
-      console.log( url1 + '/signup');
-      // location.href = url1 + '/signup'
-      router.push(url1 + '/signup')
-    }
-  },[])
+  //   if (location.href !== location.href.replace(/^[^.]+\./g, "")){
+  //     const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
+  //     console.log( url1 + '/signup');
+  //     // location.href = url1 + '/signup'
+  //     router.push(url1 + '/signup')
+  //   }
+  // },[])
   
   const registra = async (email: string, password: string) => {
     console.log(email, password);
