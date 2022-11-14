@@ -42,7 +42,7 @@ const PageMenu = (props: obj2) => {
   if (user) {
     return (
       <Container sx={{width:120}}>
-        <Grid container  direction="row" spacing={2} justifyContent="center" alignItems="center" >
+        <Grid container  direction="row" spacing={1} justifyContent="center" alignItems="center" >
           <Grid item md={6}>
             <IconButton size="small" aria-label="edit" onClick={() => {
                 router.push("/" + folder + "/new/edit")
@@ -53,7 +53,7 @@ const PageMenu = (props: obj2) => {
           <Grid item md={6}>
             <IconButton size="small" aria-label="list" onClick={() => {
                 console.log(1);
-                if (folder=='usersettings') folder = 'home'
+                if (folder=='usersettings') folder = 'Principal'
                 router.push("/" + folder )
                 }}>
               <PhotoLibrary />
@@ -91,13 +91,7 @@ const UserOptions = (props: obj2) => {
   },[user])
 
   const goHome = () => {
-    // const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
-    // const url1 = window.location.protocol + '//' + window.location.origin.replace(/^[^.]+\./g, "")
-    // console.log( url1 + '/login');
-    // router.push( url1 + '/login')
     router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
-    
-    // location.href = url1 + '/login'
   }
 
   if (user) {
@@ -170,7 +164,6 @@ const NavbarComp = (props: any) => {
           <MenuIcon />
         </IconButton>
         }
-
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >

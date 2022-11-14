@@ -7,8 +7,10 @@ class CardDataService {
     try {
       console.log(data);
       await setDoc(doc(db, user, "settings"), {...data});
+      return true
     } catch (err) {
       console.log(err)
+      return false
     }
   }
   getAll() {

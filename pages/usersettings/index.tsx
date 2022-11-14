@@ -1,13 +1,14 @@
 import { DeleteForever } from "@material-ui/icons";
 import { Create } from "@material-ui/icons";
 import { Folder } from "@material-ui/icons";
-import { Avatar, IconButton, InputAdornment,  List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
+import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputAdornment,  InputLabel,  List, ListItem, ListItemAvatar, ListItemText, MenuItem, Select, TextField } from "@mui/material";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import CardDataService from "../../services/services";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useRouter } from "next/router";
+import React from "react";
 interface a {
   key: string;
   value: string;
@@ -15,12 +16,28 @@ interface a {
 }
 let aa = 0
 
+function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 const Usersettings: NextPage = (props) => {
  
   console.log(props);
   const [cardFolder, setCardFolder] = useState<a>({key:"", value:"", order: 0})
   const [state, setState] = useState<any[]>([])
+  const [operation, setOperation] = useState("Inserir")
   const { user, getFolders, setFolders } = useAuth()
+  const [open2, setOpen2] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setCardFolder({key:"", value:"", order: 0})
+    setOpen2(true);
+  };
+
+  const handleClose = () => {
+    setOpen2(false);
+  };
+  
   const router = useRouter()
 
   const save = (data: object) => {
@@ -46,13 +63,14 @@ const Usersettings: NextPage = (props) => {
         var foundIndex = array.findIndex(x => x.key == cardFolder.key);
         array[foundIndex] = cardFolder;
       }else{
-        var array = [{key:generateId(), value:cardFolder.value, order: new Date().getTime()}, ...state]
+        var array = [{key: generateId(), value: capitalizeFirstLetter(cardFolder.value), order: new Date().getTime()}, ...state]
       }
       console.log(array);
       setState(array);
       setFolders(array)
       save(array)
       setCardFolder({key:"", value:"", order: 0});
+      setOpen2(false)
       router.push({
         pathname: '/usersettings',
         query: { name: 'Someone' }
@@ -65,39 +83,54 @@ const Usersettings: NextPage = (props) => {
   }
 
   const itemRemove = (index: number) => {
-    var array = [...state]; 
-    array.splice(index, 1);
-    setState(array);
-    save(array)
+    if (confirm('Excluir pasta?')){
+      var array = [...state]; 
+      array.splice(index, 1);
+      setState(array);
+      save(array)
+    }
   }
   const itemEdit = (index: number) => {
+    setOpen2(true)
+    setOperation('Alterar')
     setCardFolder({key: state[index].key, value: state[index].value, order: state[index].order})
   }
-  const goHome = () => {
-    window.location.href = "/home/list"
+  const handleAdd = (index: number) => {
+    setOperation('Nova pasta')
+    setCardFolder({key: state[index].key, value: state[index].value, order: state[index].order})
   }
+  
   return (
     <>
-        <h3>Configurações de usuário</h3><br/>
-        <h5>Pastas</h5>
-        <TextField name="cardFolder_key" value={cardFolder.key} hidden></TextField>
-        <TextField
-          name="cardFolder_value"
-          value={cardFolder.value}
-          style={{width:350, marginTop: 5}}
-          placeholder="Nova pasta"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <div color="primary" onClick={()=>folderAdd()}>
-                <IconButton edge="end" color="primary" >
-                  <CheckCircleIcon />
-                </IconButton>
-                </div>
-              </InputAdornment>
-            ),
-          }} onChange={(e)=>{setCardFolder({key: cardFolder.key, value: e.target.value, order: 0})}}
-        />
+    <Dialog
+        open={open2}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Pasta"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <FormControl fullWidth>
+              <TextField name="cardFolder_key" value={cardFolder.key} hidden></TextField>
+              <TextField
+                name="cardFolder_value"
+                value={cardFolder.value}
+                placeholder="Nova pasta"
+                onChange={(e)=>{setCardFolder({key: cardFolder.key, value: e.target.value, order: 0})}}
+              />
+                </FormControl>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={()=>setOpen2(false)}>Cancelar</Button>
+                <Button onClick={()=>folderAdd()}>Salvar</Button>
+              </DialogActions>
+            </Dialog>
+        <h3>{'Configurações de usuário > Pastas'}</h3><br/>
+        <Button onClick={handleClickOpen}>Nova pasta</Button>
         <div style={{width:350}}>
           <List dense={true}>
             {state&&state.map((item, index) => {

@@ -17,19 +17,6 @@ import Image from 'mui-image'
 import React from 'react';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
 
-// Import the Slate components and React plugin.
-import { Slate, Editable, withReact } from 'slate-react'
-import dynamic from "next/dynamic";
-import PropTypes from "prop-types";
-import { Padding } from '@mui/icons-material';
-import { margin } from '@mui/system';
-//import the component lazily (not module itself)
-
-
-function ShowOk() {
-  return <img src="/ok.png" alt="me" width="64" height="64" />
-}
-
 interface Props {
   setuser: Function,
   user: {
@@ -50,10 +37,8 @@ interface Obj1 {
 type CustomElement = { type: 'paragraph'; children: CustomText[] }
 type CustomText = { text: string }
 
-
 const Create: NextPage<Props> = (props) => {
-  const { user, getFolderKeyByValue,  getFolders, signup, registerWithEmailAndPassword, login, logout } = useAuth()
-  const [value, setValue] = useState('');
+  const { user, getFolderKeyByValue,  getFolders } = useAuth()
   const [desableSaveButton, setDesableSaveButton] = useState(false);
   const [bodyValue, setBodyValue] = useState('');
   const [open, setOpen] = React.useState(false);
@@ -149,18 +134,6 @@ const Create: NextPage<Props> = (props) => {
   }
 
   useEffect(() => {
-    // const data = CardDataService.readById(user.uid, "settings").then((data: any) => {
-    //   setStateFolder(Object.values(data))
-    //   // const folder_key = 'home'
-    //   const folder = location.pathname.split('/')[1]
-    //   console.log({folder});
-    //   console.log(data);
-      
-    //   const folder_key = Object.values(data).find(item => item.value == folder).key
-    //   console.log(folder_key)
-    //   setState({cardSession: folder_key})
-    // })
-  
     console.log(getFolders());
     setStateFolder(getFolders())
     console.log(folder);
@@ -170,7 +143,6 @@ const Create: NextPage<Props> = (props) => {
     console.log(folder_key)
     setState({...state, cardSession: folder_key})
     
-
     if (id!=='new'){
       CardDataService.readById(user.uid, router.query.id as string).then((data) => {
         console.log(data)
@@ -183,50 +155,7 @@ const Create: NextPage<Props> = (props) => {
     }
    
   }, [router.query])
-  
 
-  // useEffect(() => {
-  //   console.log(folder);
-  //   if (cardSession) {
-  //     setState({cardSession: folder})
-  //     console.log(state);
-      
-  //   }
-  //   if (router.query.id) {
-  //     console.log(user.username);
-  //     // CardDataService.readById(router.query.username, router.query.card_id).then((data) => {
-  //     CardDataService.readById(user.username, router.query.id as string).then((data) => {
-  //       console.log(data)
-  //       if (data) {
-  //         if (data.type == undefined) data.type = "card"
-  //         setState({ id: router.query.id, cardSession: data.cardSession, title: data.title, body: data.body, img: data.img, order: data.order })
-  //         setBodyValue(data.body)
-  //         console.log(state);
-  //       }
-  //     })
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   if (user) {
-  //     const data = CardDataService.readById(user.username, "settings").then((data: any) => {
-  //       console.log(data)
-  //       console.log(Object.values(data))
-  //       // const map1 = new Map(Object.values(data))
-  //       // console.log(map1);
-        
-  //       setStateFolder(Object.values(data))
-  //       const folder_key = Object.values(data).filter(item => item.value == folder)[0].key
-  //       console.log(folder_key)
-  //       setState({cardSession: folder_key})
-  //     })
-  //   }
-  // }, [])
-
-  const ActionLink = () => {
-    console.log(11);
-    setMostra(true)
-  }
   if (true) {
     return (
       <div>

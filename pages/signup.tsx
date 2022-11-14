@@ -58,9 +58,9 @@ const Signup = () => {
       const user = userCredential.uid
       const data2 = {uid: user, email: data.email, username: data.email.split('@')[0]}
       const r2 = await CardDataService.userAdd(data2)
-      const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'home', value: 'home', order: 0}});
-      // setFolders({0:{key: 'home', value: 'home', order: 0}})
-      console.log("User settings with ID: ", docRef2);
+      // const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'Principal', value: 'Principal', order: 0}});
+      CardDataService.addUserSettings(data2.uid, {0:{key: 'Principal', value: 'Principal', order: 0}})
+      // console.log("User settings with ID: ", docRef2);
       return userCredential
     }
   }
@@ -69,7 +69,7 @@ const Signup = () => {
     e.preventDefault()
     registra(data.email, data.password).then(()=>{
       logout()
-      router.push(process.env.NEXT_PUBLIC_DOMAIN + '/signup2');
+      router.push(process.env.NEXT_PUBLIC_DOMAIN + '/signup2?email=' + data.email + '&username=' + data.email.split('@')[0]);
     })
     setButtonCreateAccount(true)
   } 

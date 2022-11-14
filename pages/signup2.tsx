@@ -1,23 +1,14 @@
-import { route } from 'next/dist/server/router'
-import React, { useEffect, useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import React from 'react'
 import { useRouter } from 'next/router'
-import { Copyright } from '@material-ui/icons'
-import { CssBaseline, Box, Typography, TextField, Button, Container, Dialog, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { CssBaseline, Box, Typography, Button, Container} from '@mui/material'
 import Link from '@mui/material/Link';
-import AlertDialog from '../components/AlertDialog'
-import CardDataService from '../services/services'
-import { displayName } from 'react-quill'
-import { auth, db } from '../config/firebase'
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { doc, setDoc, startAt } from 'firebase/firestore'
 
 function CopyrightFooter(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="">
-        ZenSite
+        ZenBase
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -35,7 +26,10 @@ const Signup2 = () => {
   const router = useRouter()
 
   const goLoginPage = () => {
-    router.push('login');
+    const url = window.location.protocol + '//' + router.query.username + '.' + window.location.host + '/login2'
+    console.log(url);
+    router.push(url + '?email=' + router.query.email)
+    // router.push('login2?email=' + router.query.email);
   };
 
   return (

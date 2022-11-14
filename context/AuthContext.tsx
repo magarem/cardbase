@@ -37,7 +37,6 @@ export const AuthContextProvider = ({
             username: ret?.data.username
           })
         })
-       
       } else {
         setUser(null)
       }
@@ -60,7 +59,7 @@ export const AuthContextProvider = ({
   }
 
   const folderReload = async () => {
-    await dataServices.readById(user.uid, "settings").then((data: any) => {
+    return await dataServices.readById(user.uid, "settings").then((data: any) => {
       if (data){
         console.log(data)
         console.log(Object.values(data))
@@ -138,17 +137,14 @@ export const AuthContextProvider = ({
       console.log(user);
       return user
     } catch (error) {
-      // console.log(error.message);
     }
   }
 
   const login = async (email: string, password: string) => {
-    // return signInWithEmailAndPassword(auth, email, password)
      return await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        // folderReload()
         return user
       })
       .catch((error) => {

@@ -14,6 +14,7 @@ import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router';
 import FolderIcon from '@mui/icons-material/Folder';
 import { query } from 'firebase/firestore';
+import { Button } from '@mui/material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -27,6 +28,8 @@ export default function Layout({ children }: any) {
     bottom: false,
     right: false,
   });
+
+
   function golink(key: string, value: string): void {
     console.log({key, value});
     const path = router.asPath.split('/')[1]
@@ -38,15 +41,21 @@ export default function Layout({ children }: any) {
     router.push('/' + value)
   }
 
-  React.useEffect(() => {
-    if (user){
-      // setStateFolder(null)
-      // console.log(stateFolder[0].key);
-      console.log(user.uid);
-      console.log(getFolders());
-      setStateFolder(getFolders())
-    }
-  }, [router.query, user])
+  // React.useEffect(() => {
+  //   if (user){
+  //     setStateFolder(getFolders())
+  //   }
+  // }, []) 
+  
+  // React.useEffect(() => {
+  //   if (user){
+  //     // setStateFolder(null)
+  //     // console.log(stateFolder[0].key);
+  //     console.log(user.uid);
+  //     console.log(getFolders());
+  //     setStateFolder(getFolders())
+  //   }
+  // }, [router.query, user])
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -59,7 +68,7 @@ export default function Layout({ children }: any) {
         return;
       }
       folderReload()
-      setStateFolder(getFolders())
+      // setStateFolder(getFolders())
       setState({ ...state, [anchor]: open });
     };
 
@@ -73,7 +82,8 @@ export default function Layout({ children }: any) {
         <ListItem>
             <ListItemText primary="Pastas" />
         </ListItem>
-        {stateFolder&&stateFolder.map((item, index) => (
+       
+        {getFolders()&&getFolders().map((item: any, index: any) => (
           <ListItem key={item.value} disablePadding onClick={()=>golink(item.key, item.value)}>
             <ListItemButton>
               <ListItemIcon>
@@ -82,7 +92,10 @@ export default function Layout({ children }: any) {
               <ListItemText primary={item.value} />
             </ListItemButton>
           </ListItem>
-        ))}
+        ))}<br/>
+        {/* <Box textAlign='center'><Button onClick={()=>{handleFolderReload();}}>
+          Atualizar
+        </Button></Box> */}
       </List>
       <Divider/>
     </Box>
