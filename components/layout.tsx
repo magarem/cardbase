@@ -44,26 +44,7 @@ export default function Layout({ children }: any) {
       // console.log(stateFolder[0].key);
       console.log(user.uid);
       console.log(getFolders());
-      
       setStateFolder(getFolders())
-      // CardDataService.readById(user.uid, "settings").then((data: any) => {
-        
-      //   setStateFolder(Object.values(data))
-      //   // if (Array.isArray(data)){
-      //   //   setStateFolder(Object.values(data))
-      //   // }else{
-      //   //   setStateFolder([data])
-      //   // }
-        
-        
-      //   // if (Array.isArray(data)) {
-      //   //   setStateFolder(Object.values(data))
-      //   // }else{
-      //   //   setStateFolder(Object.values(data))
-      //   // }
-        
-      //   console.log(stateFolder);
-      // })
     }
   }, [router.query, user])
 

@@ -61,8 +61,7 @@ function Copyright(props: any) {
 
 const List: NextPage<Props> = (props) => {
   const router = useRouter()
-  const { user, getFolders, getFolderKeyByValue } = useAuth()
-  const cardSession = router.query.folder
+  const { user, folderReload, getFolders, getFolderKeyByValue } = useAuth()
   const folder = router.query.folder
   console.log({user, folder});
   const [open, setOpen] = useState(false);
@@ -79,9 +78,11 @@ const List: NextPage<Props> = (props) => {
   const [currentState2, setCurrentState2] = useState<ss>();
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
 
-  const loadData = () => {
+  const loadData = async () => {
+    
     setStateFolder(getFolders())
-    const folder_key = getFolderKeyByValue(folder)
+    const folder_key = await getFolderKeyByValue(folder)//||'home'
+    console.log({folder_key, folder});
     CardDataService.read(user.uid, folder_key).then((data3) => {
       setCurrentState(data3)
       console.log(data3)
@@ -89,11 +90,12 @@ const List: NextPage<Props> = (props) => {
   }
 
   useEffect(() => {
+    // folderReload()
     loadData()
   }, [user, folder])
 
   // useEffect(() => {
-  //   loadData()
+  //   folderReload()
   // }, [])
 
   const styles = {

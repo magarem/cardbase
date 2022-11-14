@@ -25,18 +25,23 @@ function Copyright(props: any) {
 const Login2 = () => {
   const router = useRouter()
   const email = router.query.email
-  const { login } = useAuth()
+  const { user, login, folderReload, getFolders } = useAuth()
   const [data, setData] = useState({ email: '', password: '' })
   
-  // useEffect(() => {
-  //   if (user) router.push('home')
-  // },[user])
+  useEffect(() => {
+    if (user) {
+      folderReload().then(()=>{
+        router.push('home')
+      })
+    }
+  },[user])
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
     try {
-      const user = await login(email, data.password)
-      if (user) router.push('home')
+      login(email, data.password).then((user: any)=>{
+        // if (user) router.push('home')
+      })
     } catch (err) {
       console.log(err)
     }

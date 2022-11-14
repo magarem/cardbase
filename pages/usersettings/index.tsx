@@ -11,32 +11,17 @@ import { useRouter } from "next/router";
 interface a {
   key: string;
   value: string;
+  order: number;
 }
 let aa = 0
-
-// export async function getServerSideProps() {
-//   const entries = await firestore.collection("blogs").get();
-//   const entriesData = entries.docs.map((entry) => ({
-//   id: entry.id,
-//   ...entry.data()
-//   }))
-//   return {
-//   props : {entries: entriesData}
-//   }
-//   }
 
 const Usersettings: NextPage = (props) => {
  
   console.log(props);
-  const [cardFolder, setCardFolder] = useState<a>({key:"", value:""})
+  const [cardFolder, setCardFolder] = useState<a>({key:"", value:"", order: 0})
   const [state, setState] = useState<any[]>([])
   const { user, getFolders, setFolders } = useAuth()
   const router = useRouter()
-
-  useEffect(() => {
-    console.log(router.query.name); // Alerts 'Someone'
-  }, [router.query]);
-  
 
   const save = (data: object) => {
     CardDataService.addUserSettings(user.uid, data)
@@ -50,27 +35,8 @@ const Usersettings: NextPage = (props) => {
   }
 
   useEffect(() => {
-
     console.log(getFolders());
     setState(getFolders())
-    // if (user) {
-    //   const data = CardDataService.readById(user.uid, "settings").then((data: any) => {
-    //     console.log(data)
-    //     console.log(Object.values(data))
-    //     console.log(Array.isArray(data))
-        
-    //     setState(Object.values(data))
-    //     // if (Array.isArray(data)){
-    //     //   setState(Object.values(data))
-    //     // }else{
-    //     //   setState([data])
-    //     // }
-
-        
-    //     // console.log(Object.values(data))
-        
-    //   })
-    // }
   }, [])
   
   const folderAdd = () => {
@@ -80,20 +46,19 @@ const Usersettings: NextPage = (props) => {
         var foundIndex = array.findIndex(x => x.key == cardFolder.key);
         array[foundIndex] = cardFolder;
       }else{
-        var array = [{key:generateId(), value:cardFolder.value}, ...state]
+        var array = [{key:generateId(), value:cardFolder.value, order: new Date().getTime()}, ...state]
       }
       console.log(array);
       setState(array);
       setFolders(array)
       save(array)
-      setCardFolder({key:"", value:""});
+      setCardFolder({key:"", value:"", order: 0});
       router.push({
         pathname: '/usersettings',
         query: { name: 'Someone' }
     }, '/usersettings');
     }
   }
-  
   
   const generateId = () => {
     return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36)
@@ -106,7 +71,7 @@ const Usersettings: NextPage = (props) => {
     save(array)
   }
   const itemEdit = (index: number) => {
-    setCardFolder({key: state[index].key, value: state[index].value})
+    setCardFolder({key: state[index].key, value: state[index].value, order: state[index].order})
   }
   const goHome = () => {
     window.location.href = "/home/list"
@@ -131,13 +96,10 @@ const Usersettings: NextPage = (props) => {
                 </div>
               </InputAdornment>
             ),
-          }} onChange={(e)=>{setCardFolder({key: cardFolder.key, value: e.target.value})}}
+          }} onChange={(e)=>{setCardFolder({key: cardFolder.key, value: e.target.value, order: 0})}}
         />
-       
-        {/* <Grid container> */}
         <div style={{width:350}}>
           <List dense={true}>
-            {/* {JSON.stringify(state, null, 2)} */}
             {state&&state.map((item, index) => {
               return (
                   <ListItem key={item.key}
@@ -164,14 +126,10 @@ const Usersettings: NextPage = (props) => {
                       primary={item.value}
                     />
                   </ListItem>
-                
               )})
             }
           </List>
-          {/* <Button onClick={goHome}>Salvar</Button> */}
           </div>
-        {/* </Grid> */}
-       
     </>
   )
 }

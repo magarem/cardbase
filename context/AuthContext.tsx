@@ -23,8 +23,7 @@ export const AuthContextProvider = ({
   const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [stateFolder, setStateFolder] = React.useState([{key: '', value: ''}])
-
+  const [stateFolder, setStateFolder] = React.useState([{key: '', value: '', order:0}])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -37,11 +36,6 @@ export const AuthContextProvider = ({
             email: user.email,
             username: ret?.data.username
           })
-          // const url = window.location.protocol + '//' + ret?.data.username + '.' + window.location.host + '/home'
-          // const hostname = window.location.host 
-          // const url = window.location.protocol + '//' + hostname + '/home'
-          // console.log(url);
-          // router.push(url)
         })
        
       } else {
@@ -60,16 +54,20 @@ export const AuthContextProvider = ({
     return stateFolder
   }
   const getFolderKeyByValue = (value: string) => {
+    console.log(stateFolder);
     const ret = stateFolder.find(item => item.value == value)?.key
     return ret
   }
-  const folderReload = () => {
-    dataServices.readById(user.uid, "settings").then((data: any) => {
+
+  const folderReload = async () => {
+    await dataServices.readById(user.uid, "settings").then((data: any) => {
       if (data){
         console.log(data)
         console.log(Object.values(data))
-        setStateFolder(Object.values(data))
+        const aa = Object.values(data) as Array<any>
+        setStateFolder(aa)
         console.log(stateFolder);
+        return true
         // return Object.values(data)
       }
     })
@@ -84,37 +82,6 @@ export const AuthContextProvider = ({
     }
     // return () => getFolders()
   }, [router.query, user])
-
-  const registerUser = async (email: string, displayName: any, password: string) => {
-      console.log("1> Check user displayName")
-      dataServices.check_displayName(displayName).then((ret)=>{
-        if (ret) {
-          try {
-            console.log({email, password});
-            createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              const user = userCredential.user;
-              console.log(user);
-              updateProfile(user, {displayName: displayName}).then((ret2)=>{
-                console.log(ret2);
-                return ret2
-              })
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log(errorCode, errorMessage);
-              return false
-            });
-          } catch (error) {
-            return null// Only runs when there is an error/exception
-          }
-        }else{
-          console.log("erro")
-          return null
-        }
-      })
-  }
 
   const userReadData = async (uid: string)=> {
     console.log(uid);
@@ -175,12 +142,13 @@ export const AuthContextProvider = ({
     }
   }
 
-  const login = (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     // return signInWithEmailAndPassword(auth, email, password)
-    return signInWithEmailAndPassword(auth, email, password)
+     return await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
+        // folderReload()
         return user
       })
       .catch((error) => {
@@ -203,7 +171,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, folderReload, getFolders, getFolderKeyByValue, setFolders, login, signup,  registerUser, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
+    <AuthContext.Provider value={{user, folderReload, getFolders, getFolderKeyByValue, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )

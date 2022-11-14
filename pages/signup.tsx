@@ -58,7 +58,8 @@ const Signup = () => {
       const user = userCredential.uid
       const data2 = {uid: user, email: data.email, username: data.email.split('@')[0]}
       const r2 = await CardDataService.userAdd(data2)
-      const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'home', value: 'home'}});
+      const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'home', value: 'home', order: 0}});
+      // setFolders({0:{key: 'home', value: 'home', order: 0}})
       console.log("User settings with ID: ", docRef2);
       return userCredential
     }

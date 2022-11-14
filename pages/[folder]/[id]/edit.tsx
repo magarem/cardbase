@@ -52,7 +52,7 @@ type CustomText = { text: string }
 
 
 const Create: NextPage<Props> = (props) => {
-  const { user, registerUser, getFolderKeyByValue,  getFolders, signup, registerWithEmailAndPassword, login, logout } = useAuth()
+  const { user, getFolderKeyByValue,  getFolders, signup, registerWithEmailAndPassword, login, logout } = useAuth()
   const [value, setValue] = useState('');
   const [desableSaveButton, setDesableSaveButton] = useState(false);
   const [bodyValue, setBodyValue] = useState('');
