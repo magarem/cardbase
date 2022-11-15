@@ -300,7 +300,7 @@ const Create: NextPage<Props> = (props) => {
                     value={state.order}
                     hidden
                   />
-                   <Grid sx={{marginTop: "10px"}} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                   <Grid sx={{marginBottom: "20px"}} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                       <Grid item xs={12} sm={12} md={12} style={{textAlign: "center"}} >
                         <Box sx={{ m: 1 }} />
                         {/* <RadioGroup
@@ -335,10 +335,10 @@ const Create: NextPage<Props> = (props) => {
             </Grid>
           </div>
         </main>
-        <Paper sx={{  position: 'fixed', bottom: 30, left: 0, right: 0  }} elevation={3}>
+        <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
         
         <BottomNavigation sx={{ 
-   
+   bgcolor: '#121212',
     '& .Mui-selected': {
       '& .MuiBottomNavigationAction-label': {
         fontSize: theme => theme.typography.caption,
@@ -361,7 +361,7 @@ const Create: NextPage<Props> = (props) => {
           <BottomNavigationAction label="Cancelar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
           
         </BottomNavigation>
-        
+        <br/>
       </Paper>
       </div>
     );
