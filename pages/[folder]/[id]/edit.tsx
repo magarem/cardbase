@@ -335,10 +335,10 @@ const Create: NextPage<Props> = (props) => {
             </Grid>
           </div>
         </main>
-        <Paper sx={{ paddingBottom: 'calc(.5rem + env(safe-area-inset-bottom))', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
+        <Paper sx={{  position: 'fixed', bottom: 30, left: 0, right: 0  }} elevation={3}>
         
         <BottomNavigation sx={{ 
-    bgcolor: '#4B0082',
+   
     '& .Mui-selected': {
       '& .MuiBottomNavigationAction-label': {
         fontSize: theme => theme.typography.caption,
