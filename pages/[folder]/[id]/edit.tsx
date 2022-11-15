@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -15,6 +15,8 @@ import AlertDialog from '../../../components/AlertDialog'
 // import Image from 'next/image'
 import Image from 'mui-image'
 import React from 'react';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
 
 interface Props {
@@ -41,6 +43,7 @@ const Create: NextPage<Props> = (props) => {
   const { user, getFolderKeyByValue,  getFolders } = useAuth()
   const [desableSaveButton, setDesableSaveButton] = useState(false);
   const [bodyValue, setBodyValue] = useState('');
+  const [value, setValue] = useState('');
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -195,22 +198,24 @@ const Create: NextPage<Props> = (props) => {
         <main className="py-10">
           <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
           {/* {JSON.stringify(state)} */}
-          <div className="w-full max-w-3xl px-3 mx-auto">
-            <Grid container alignItems="center" justifyContent="center" spacing={{ xs: 2, md: 1 }}>
-              <Grid item xs={12} sm={12} md={12} style={{textAlign: "left"}} >
+          <div className="w-full max-w-3xl px-3 mx-auto"><br/>
+            <Grid container alignItems="center" justifyContent="center" spacing={{ xs: 2, md: 1 }} mb={9}>
+              {/* <Grid item xs={12} sm={12} md={12} style={{textAlign: "left"}} >
                 {state.id?<h2>Editar</h2>:<h2>Criar</h2>} 
-              </Grid>
+              </Grid> */}
               <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "center"}}>
                 <Box >
                   <Grid mb={2} container spacing={{ xs: 2, md: 1 }} alignItems="center" justifyContent="center">
                     <Grid item xs={12} sm={12} md={8} lg={9} style={{textAlign: "left"}} >
-                    <Grid container alignItems="center" justifyContent="center" >
-                    <Grid item md={3} style={{textAlign: "left"}} >
-                      <Button variant="outlined" onClick={handleClickOpen}>
-                        {cardSession}
-                      </Button>
-                    </Grid>
-                    <Grid item md={9} style={{textAlign: "left"}}></Grid>
+                    <Grid container>
+                      <Grid item xs={6} sm={6} md={6} style={{textAlign: "left"}} >
+                      {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
+                        <Button variant="outlined" onClick={handleClickOpen}>
+                          {cardSession}
+                        </Button>
+                      </Grid>
                     </Grid>
                         <br/>
                         <TextField 
@@ -310,7 +315,7 @@ const Create: NextPage<Props> = (props) => {
                           <FormControlLabel value="section" control={<Radio />} label="Seção" />
                         </RadioGroup> */}
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
+                    {/* <Grid item xs={12} sm={12} md={6} style={{textAlign: "left"}} >
                       <Button color="success" disabled={desableSaveButton} variant="contained" fullWidth component="label"  onClick={state.id?updateCard:saveCard}>
                         Salvar
                       </Button>
@@ -319,7 +324,7 @@ const Create: NextPage<Props> = (props) => {
                       <Button color="warning" variant="contained" fullWidth component="label" onClick={() => router.back()}>
                         Cancelar
                       </Button>
-                    </Grid>
+                    </Grid> */}
                     </Grid>
                   {/* </Typography> */}
                   {/* <Button variant="contained" fullWidth component="label"  onClick={(e)=>alert(editor.current)}>
@@ -327,9 +332,34 @@ const Create: NextPage<Props> = (props) => {
                   </Button> */}
                 </Box>
               </Grid>
-            </Grid><br/><br/>
+            </Grid>
           </div>
         </main>
+        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
+        <BottomNavigation sx={{
+    bgcolor: '#4B0082',
+    '& .Mui-selected': {
+      '& .MuiBottomNavigationAction-label': {
+        fontSize: theme => theme.typography.caption,
+        transition: 'none',
+        fontWeight: 'bold',
+        lineHeight: '20px'
+      },
+      '& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label': {
+        color: theme => theme.palette.secondary.main
+      }
+    }
+  }}
+          showLabels
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+        >
+          <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveAltIcon />} />
+          <BottomNavigationAction label="Cancelar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
+        </BottomNavigation>
+      </Paper>
       </div>
     );
   } else {

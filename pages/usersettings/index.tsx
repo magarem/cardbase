@@ -24,7 +24,7 @@ const Usersettings: NextPage = (props) => {
  
   console.log(props);
   const [cardFolder, setCardFolder] = useState<a>({key:"", value:"", order: 0})
-  const [state, setState] = useState<any[]>([])
+  // const [state, setState] = useState<any[]>([])
   const [operation, setOperation] = useState("Inserir")
   const { user, getFolders, setFolders } = useAuth()
   const [open2, setOpen2] = React.useState(false);
@@ -51,22 +51,22 @@ const Usersettings: NextPage = (props) => {
     });
   }
 
-  useEffect(() => {
-    console.log(getFolders());
-    setState(getFolders())
-  }, [])
+  // useEffect(() => {
+  //   console.log(getFolders());
+  //   setState(getFolders())
+  // }, [])
   
   const folderAdd = () => {
     if (cardFolder.value){
-      var array = state
+      var array = getFolders()
       if (cardFolder.key){
-        var foundIndex = array.findIndex(x => x.key == cardFolder.key);
+        var foundIndex = array.findIndex((x: any) => x.key == cardFolder.key);
         array[foundIndex] = cardFolder;
       }else{
-        var array = [{key: generateId(), value: capitalizeFirstLetter(cardFolder.value), order: new Date().getTime()}, ...state]
+        array = [{key: generateId(), value: capitalizeFirstLetter(cardFolder.value), order: new Date().getTime()}, ...getFolders()]
       }
       console.log(array);
-      setState(array);
+      // setState(array);
       setFolders(array)
       save(array)
       setCardFolder({key:"", value:"", order: 0});
@@ -84,20 +84,16 @@ const Usersettings: NextPage = (props) => {
 
   const itemRemove = (index: number) => {
     if (confirm('Excluir pasta?')){
-      var array = [...state]; 
+      var array = [...getFolders()]; 
       array.splice(index, 1);
-      setState(array);
+      setFolders(array);
       save(array)
     }
   }
   const itemEdit = (index: number) => {
     setOpen2(true)
     setOperation('Alterar')
-    setCardFolder({key: state[index].key, value: state[index].value, order: state[index].order})
-  }
-  const handleAdd = (index: number) => {
-    setOperation('Nova pasta')
-    setCardFolder({key: state[index].key, value: state[index].value, order: state[index].order})
+    setCardFolder({key: getFolders()[index].key, value: getFolders()[index].value, order: getFolders()[index].order})
   }
   
   return (
@@ -133,7 +129,7 @@ const Usersettings: NextPage = (props) => {
         <Button onClick={handleClickOpen}>Nova pasta</Button>
         <div style={{width:350}}>
           <List dense={true}>
-            {state&&state.map((item, index) => {
+            {getFolders()&&getFolders().map((item: any, index: any) => {
               return (
                   <ListItem key={item.key}
                     secondaryAction={
