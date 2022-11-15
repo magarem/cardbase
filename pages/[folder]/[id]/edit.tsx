@@ -335,8 +335,9 @@ const Create: NextPage<Props> = (props) => {
             </Grid>
           </div>
         </main>
-        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
-        <BottomNavigation sx={{
+        <Paper sx={{ paddingBottom: 'calc(.5rem + env(safe-area-inset-bottom))', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
+        
+        <BottomNavigation sx={{ 
     bgcolor: '#4B0082',
     '& .Mui-selected': {
       '& .MuiBottomNavigationAction-label': {
@@ -358,7 +359,9 @@ const Create: NextPage<Props> = (props) => {
         >
           <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveAltIcon />} />
           <BottomNavigationAction label="Cancelar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
+          
         </BottomNavigation>
+        
       </Paper>
       </div>
     );
