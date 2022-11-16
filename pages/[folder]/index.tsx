@@ -6,8 +6,9 @@ import CardDataService from "../../services/services";
 import { useRouter } from "next/router";
 import CardsGrid from '../../components/CardsGrid'
 import { useAuth } from '../../context/AuthContext'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem, IconButton } from "@mui/material";
 import React from "react";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const style = {
   position: 'absolute',
@@ -56,6 +57,10 @@ function Copyright(props: any) {
       </Typography>
     </>
   );
+}
+
+function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 const List: NextPage<Props> = (props) => {
@@ -187,7 +192,12 @@ const List: NextPage<Props> = (props) => {
           <PhotoZoonCard />
         </DialogContent>
       </Dialog>
-      {<h2 style={{marginBottom: 15}}>{folder}</h2>}
+      {<h2 style={{marginBottom: 15}}>{capitalizeFirstLetter(folder)}</h2>}
+      <IconButton size="small" aria-label="edit" onClick={() => {
+                router.push("/" + folder + "/new/edit")
+                }}>
+              <AddCircleOutlineIcon />
+            </IconButton>
       {/* {JSON.stringify(currentState)} */}
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} />
       <Copyright />

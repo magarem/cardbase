@@ -35,6 +35,10 @@ export default function Layout({ children }: any) {
     router.push('/' + value)
   }
 
+  function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -64,13 +68,13 @@ export default function Layout({ children }: any) {
             <ListItemButton>
               <ListItemIcon>
               <Avatar>
-                    {(item.key=='')?
+                    {(item.key=='/')?
                     <HomeIcon/>:
                     <FolderIcon />
                     }
                   </Avatar>
               </ListItemIcon>
-              <ListItemText primary={item.value} />
+              <ListItemText primary={capitalizeFirstLetter(item.value)} />
             </ListItemButton>
           </ListItem>
         ))}<br/>

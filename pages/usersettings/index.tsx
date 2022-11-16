@@ -29,7 +29,7 @@ const Usersettings: NextPage = (props) => {
   const [open2, setOpen2] = React.useState(false);
 
   const handleClickOpen = () => {
-    setCardFolder({key:"", value:"", order: 1})
+    // setCardFolder({key:"", value:"", order: 1})
     setOpen2(true);
   };
 
@@ -44,7 +44,7 @@ const Usersettings: NextPage = (props) => {
     .then((x) => {
       console.log("Created new item successfully!");
       console.log(x)
-      setCardFolder({key:"", value:"", order: 1});
+      // setCardFolder({key:"", value:"", order: 1});
     })
     .catch((e) => {
       console.log(e);
@@ -63,7 +63,6 @@ const Usersettings: NextPage = (props) => {
       console.log(array);
       setFolders(array)
       save(array)
-      
       setOpen2(false)
       router.push({
         pathname: '/usersettings',
@@ -76,8 +75,10 @@ const Usersettings: NextPage = (props) => {
     return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36)
   }
 
-  const itemRemove = (index: number) => {
-    if (confirm('Excluir pasta?')){
+  const itemRemove = (index: number, name: string) => {
+    if (confirm('Excluir pasta ' + name + '?')){
+      console.log({name});
+      
       var array = [...getFolders()]; 
       array.splice(index, 1);
       setFolders(array);
@@ -128,17 +129,21 @@ const Usersettings: NextPage = (props) => {
               <ListItem key={item.key}
                 secondaryAction={
                   <>
-                    <IconButton sx={{ margin: 1 }} edge="end" onClick={() => itemEdit(index)} aria-label="edit">
+                    <IconButton sx={{ margin: 1 }} edge="end" onClick={() => itemEdit(index)} aria-label="edit" disabled={item.key=='/'}>
+                    {(item.key!='/')&&
                       <Create />
+                    }
                     </IconButton>
-                    <IconButton edge="end" onClick={() => itemRemove(index)} aria-label="delete">
+                    <IconButton edge="end" onClick={() => itemRemove(index, item.value)} aria-label="delete" disabled={item.key=='/'}>
+                    {(item.key!='/')&&
                       <DeleteForever />
+                    }
                     </IconButton>
                   </>
                 }>
                 <ListItemAvatar >
                   <Avatar>
-                    {(item.key=='')?
+                    {(item.key=='/')?
                     <HomeIcon/>:
                     <Folder />
                     }

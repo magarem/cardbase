@@ -29,6 +29,7 @@ interface Obj1 {
   title: string;
   body: string;
   order: number;
+  tags: string;
 }
 
 const Create: NextPage<Props> = (props) => {
@@ -52,7 +53,7 @@ const Create: NextPage<Props> = (props) => {
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "", img: "", folder: "", title: "", body: "", order: -1 };
+  const cardObj = {id: "", img: "", folder: "", title: "", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
@@ -86,6 +87,7 @@ const Create: NextPage<Props> = (props) => {
         setMostra(true)
         setTimeout(() => { setMostra(false) }, 1000)
         setState(cardObj)
+        setBodyValue('')
         setDesableSaveButton(false)
       })
       .catch((e) => {
@@ -100,7 +102,8 @@ const Create: NextPage<Props> = (props) => {
       title: state.title,
       folder: state.folder,
       body: bodyValue,
-      order: state.order
+      order: state.order,
+      tags: state.tags
     };
 
     console.log(user.uid, data)
@@ -134,7 +137,7 @@ const Create: NextPage<Props> = (props) => {
       CardDataService.readById(user.uid, router.query.id as string).then((data) => {
         console.log(data)
         if (data) {
-          setState({ id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
+          setState({ id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, tags: data.tags, order: data.order })
           setBodyValue(data.body)
           console.log(state);
         }
@@ -236,6 +239,16 @@ const Create: NextPage<Props> = (props) => {
                 <Box sx={{ m: 0 }} />
               </Grid>
                   <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
+                 <br/>
+                  <TextField 
+                        id="outlined-basic"
+                        fullWidth
+                        name="tags"
+                        label="Etiquetas"
+                        variant="outlined"
+                        onChange={handleChange}
+                        value={state.tags}
+                      />
                   <TextField
                   name="order"
                   label="Order"
