@@ -6,11 +6,9 @@ import CardDataService from "../../services/services";
 import { useRouter } from "next/router";
 import CardsGrid from '../../components/CardsGrid'
 import { useAuth } from '../../context/AuthContext'
-import {getAuth} from "firebase/auth";
-import { useTheme } from '@mui/material/styles';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import React from "react";
-import { margin } from "@mui/system";
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -34,6 +32,7 @@ interface Props {
     displayName: string
   }
 }
+
 type ss = {
   id?: any;
   img?: string;
@@ -61,8 +60,8 @@ function Copyright(props: any) {
 
 const List: NextPage<Props> = (props) => {
   const router = useRouter()
-  const { user, folderReload, getFolders, getFolderKeyByValue } = useAuth()
-  const folder = router.query.folder
+  const { user, getFolderKeyByValue, folderReloadByGuest } = useAuth()
+  let folder = router.query.folder
   console.log({user, folder});
   const [open, setOpen] = useState(false);
   const handleOpen = (obj: ss) => {
@@ -76,47 +75,50 @@ const List: NextPage<Props> = (props) => {
   const handleClose = () => setOpen(false);
   const [currentState, setCurrentState] = useState<ss[]>([]);
   const [currentState2, setCurrentState2] = useState<ss>();
-  const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
+  const [userDataByGuest, setUserDataByGuest] = useState({});
 
   const loadData = async () => {
     
-    setStateFolder(getFolders())
-    const folder_key = await getFolderKeyByValue(folder)//||'home'
-    console.log({folder_key, folder});
-    CardDataService.read(user.uid, folder_key).then((data3) => {
-      setCurrentState(data3)
-      console.log(data3)
-    })
+    if (user) {
+      const folderKey = await getFolderKeyByValue(folder)
+      console.log(folder, folderKey)
+      console.log({folderKey, folder});
+      console.log('>>', user.uid);
+      CardDataService.read(user.uid, folderKey).then((data3) => {
+        setCurrentState(data3)
+        console.log(data3)
+      })
+    }else{
+      userByGuest()
+    }
   }
 
+  const userByGuest = async () => {
+    CardDataService.readUserData(location.href.split('//')[1].split('.')[0]).then( async (ret: any)=>{
+      // setUserDataByGuest(ret)
+      // console.log(folder, folderKey)
+      const folderKey = await folderReloadByGuest(ret.uid, folder)
+      console.log(folder, folderKey)
+      CardDataService.read(ret.uid, folderKey).then((data3) => {
+        setCurrentState(data3)
+        console.log(data3)
+      })
+    })
+  }
+  
+  // useEffect(() => {
+  //   loadData()
+  // }, [user, folder])
+  
+
   useEffect(() => {
-    // folderReload()
+    console.log(location.href.split('//')[1].split('.')[0]);
+    CardDataService.readUserData(location.href.split('//')[1].split('.')[0]).then((ret: any)=>{
+      setUserDataByGuest(ret)
+    })
     loadData()
   }, [user, folder])
 
-  // useEffect(() => {
-  //   folderReload()
-  // }, [])
-
-  const styles = {
-    width: 300,
-    card: {
-      margin: 16,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between"
-    }
-  };
-
-  function removeObjectWithId(arr: any[], id: any) {
-    const objWithIdIndex = arr.findIndex((obj) => obj.id === id);
-    arr.splice(objWithIdIndex, 1);
-    return arr;
-  }
-
-  const call_link = (link: string) => {
-    router.push(link)
-  }
 
   const PhotoZoonCard = () => {
     return (
@@ -170,20 +172,6 @@ const List: NextPage<Props> = (props) => {
     )
   }
 
-  const theme = useTheme();
-  const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 700,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-    display: 'flex'
-  };
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const mw = currentState2?.img ? "md" : "sm"
   return (
     <>
@@ -199,7 +187,8 @@ const List: NextPage<Props> = (props) => {
           <PhotoZoonCard />
         </DialogContent>
       </Dialog>
-      {folder!=='home'&&<h2 style={{marginBottom: 15}}>{folder}</h2>}
+      {<h2 style={{marginBottom: 15}}>{folder}</h2>}
+      {/* {JSON.stringify(currentState)} */}
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} />
       <Copyright />
     </>

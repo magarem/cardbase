@@ -6,7 +6,7 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import CardDataService from "../../services/services";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HomeIcon from '@mui/icons-material/Home';
 import { useRouter } from "next/router";
 import React from "react";
 interface a {
@@ -24,13 +24,12 @@ const Usersettings: NextPage = (props) => {
  
   console.log(props);
   const [cardFolder, setCardFolder] = useState<a>({key:"", value:"", order: 0})
-  // const [state, setState] = useState<any[]>([])
   const [operation, setOperation] = useState("Inserir")
   const { user, getFolders, setFolders } = useAuth()
   const [open2, setOpen2] = React.useState(false);
 
   const handleClickOpen = () => {
-    setCardFolder({key:"", value:"", order: 0})
+    setCardFolder({key:"", value:"", order: 1})
     setOpen2(true);
   };
 
@@ -41,21 +40,17 @@ const Usersettings: NextPage = (props) => {
   const router = useRouter()
 
   const save = (data: object) => {
-    CardDataService.addUserSettings(user.uid, data)
+    CardDataService.addUserFolders(user.uid, data)
     .then((x) => {
       console.log("Created new item successfully!");
       console.log(x)
+      setCardFolder({key:"", value:"", order: 1});
     })
     .catch((e) => {
       console.log(e);
     });
   }
 
-  // useEffect(() => {
-  //   console.log(getFolders());
-  //   setState(getFolders())
-  // }, [])
-  
   const folderAdd = () => {
     if (cardFolder.value){
       var array = getFolders()
@@ -63,13 +58,12 @@ const Usersettings: NextPage = (props) => {
         var foundIndex = array.findIndex((x: any) => x.key == cardFolder.key);
         array[foundIndex] = cardFolder;
       }else{
-        array = [{key: generateId(), value: capitalizeFirstLetter(cardFolder.value), order: new Date().getTime()}, ...getFolders()]
+        array = [...getFolders(), {key: generateId(), value: capitalizeFirstLetter(cardFolder.value), order: new Date().getTime()} ]
       }
       console.log(array);
-      // setState(array);
       setFolders(array)
       save(array)
-      setCardFolder({key:"", value:"", order: 0});
+      
       setOpen2(false)
       router.push({
         pathname: '/usersettings',
@@ -90,20 +84,20 @@ const Usersettings: NextPage = (props) => {
       save(array)
     }
   }
+
   const itemEdit = (index: number) => {
     setOpen2(true)
     setOperation('Alterar')
     setCardFolder({key: getFolders()[index].key, value: getFolders()[index].value, order: getFolders()[index].order})
   }
-  
   return (
     <>
-    <Dialog
+      <Dialog
         open={open2}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-      >
+        >
         <DialogTitle id="alert-dialog-title">
           {"Pasta"}
         </DialogTitle>
@@ -115,50 +109,53 @@ const Usersettings: NextPage = (props) => {
                 name="cardFolder_value"
                 value={cardFolder.value}
                 placeholder="Nova pasta"
-                onChange={(e)=>{setCardFolder({key: cardFolder.key, value: e.target.value, order: 0})}}
+                onChange={(e)=>{setCardFolder({key: cardFolder.key, value: e.target.value, order: cardFolder.order})}}
               />
-                </FormControl>
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={()=>setOpen2(false)}>Cancelar</Button>
-                <Button onClick={()=>folderAdd()}>Salvar</Button>
-              </DialogActions>
-            </Dialog>
-        <h3>{'Configurações de usuário > Pastas'}</h3><br/>
-        <Button onClick={handleClickOpen}>Nova pasta</Button>
-        <div style={{width:350}}>
-          <List dense={true}>
-            {getFolders()&&getFolders().map((item: any, index: any) => {
-              return (
-                  <ListItem key={item.key}
-                    secondaryAction={
-                      <>
-                        <IconButton sx={{ margin: 1 }} edge="end" onClick={() => itemEdit(index)} aria-label="edit">
-                          <Create />
-                        </IconButton>
-                        <IconButton edge="end" onClick={() => itemRemove(index)} aria-label="delete">
-                          <DeleteForever />
-                        </IconButton>
-                      </>
-                    }>
-                    <ListItemAvatar >
-                      <Avatar>
-                        <Folder />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText 
-                      onClick={() => itemEdit(index)}
-                      primaryTypographyProps={{
-                        fontSize: 16
-                      }}
-                      primary={item.value}
-                    />
-                  </ListItem>
-              )})
-            }
-          </List>
-          </div>
+            </FormControl>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>setOpen2(false)}>Cancelar</Button>
+          <Button onClick={()=>folderAdd()}>Salvar</Button>
+        </DialogActions>
+      </Dialog>
+      <h3>{'Configurações de usuário > Pastas'}</h3><br/>
+      <Button onClick={handleClickOpen}>Nova pasta</Button>
+      <div style={{width:350}}>
+        <List dense={true}>
+          {getFolders()&&getFolders().map((item: any, index: any) => {
+            return (
+              <ListItem key={item.key}
+                secondaryAction={
+                  <>
+                    <IconButton sx={{ margin: 1 }} edge="end" onClick={() => itemEdit(index)} aria-label="edit">
+                      <Create />
+                    </IconButton>
+                    <IconButton edge="end" onClick={() => itemRemove(index)} aria-label="delete">
+                      <DeleteForever />
+                    </IconButton>
+                  </>
+                }>
+                <ListItemAvatar >
+                  <Avatar>
+                    {(item.key=='')?
+                    <HomeIcon/>:
+                    <Folder />
+                    }
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText 
+                  onClick={() => itemEdit(index)}
+                  primaryTypographyProps={{
+                    fontSize: 16
+                  }}
+                  primary={capitalizeFirstLetter(item.value)}
+                />
+              </ListItem>
+            )})
+          }
+        </List>
+      </div>
     </>
   )
 }

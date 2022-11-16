@@ -43,8 +43,8 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (location.href !== process.env.NEXT_PUBLIC_DOMAIN){
-      router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
+    if ( location.href !== process.env.NEXT_PUBLIC_DOMAIN ){
+      router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
     }
   },[])
   

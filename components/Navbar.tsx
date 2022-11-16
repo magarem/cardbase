@@ -53,7 +53,7 @@ const PageMenu = (props: obj2) => {
           <Grid item md={6}>
             <IconButton size="small" aria-label="list" onClick={() => {
                 console.log(1);
-                if (folder=='usersettings') folder = 'Principal'
+                if (folder=='usersettings') folder = 'home'
                 router.push("/" + folder )
                 }}>
               <PhotoLibrary />

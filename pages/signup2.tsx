@@ -29,7 +29,6 @@ const Signup2 = () => {
     const url = window.location.protocol + '//' + router.query.username + '.' + window.location.host + '/login2'
     console.log(url);
     router.push(url + '?email=' + router.query.email)
-    // router.push('login2?email=' + router.query.email);
   };
 
   return (

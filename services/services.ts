@@ -3,10 +3,10 @@ import { getFirestore, getDoc, deleteDoc, where, collection, getDocs, updateDoc,
 // import { route } from "next/dist/server/router";
 import { NextRouter, useRouter } from 'next/router'
 class CardDataService {
-  async addUserSettings(user: string, data: object) {
+  async addUserFolders(user: string, data: object) {
     try {
       console.log(data);
-      await setDoc(doc(db, user, "settings"), {...data});
+      await setDoc(doc(db, user, "folders"), {...data});
       return true
     } catch (err) {
       console.log(err)
@@ -17,15 +17,25 @@ class CardDataService {
     return db;
   }
 
+  async readUserData(userName: string) {
+    console.log({ userName });
+    // const docRef = doc(db, 'users', user);
+    const docRef = query(collection(db, "users"), where("username", "==", userName));
+    const docSnap = await getDocs(docRef);
+   let a 
+    docSnap.forEach((doc) => {
+      a = doc.data()
+    });
+    return a
+  }
+
   async readById (user: string, id: string) {
     console.log({ user, id });
-    
     const docRef = doc(db, user, id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         return docSnap.data()
       } else {
-        // doc.data() will be undefined in this case
         console.log("No such document!");
       }
   }
@@ -59,54 +69,41 @@ class CardDataService {
     //   });
   }
 
-  // async userReadData (uid: string){
-  //   console.log(uid);
-  //   const col = query(collection(db, 'users'), where("uid", "==", uid))
-  //   const snap = await getDocs(col);
-  //   const list = snap.docs.map(doc => {
-  //       return {id: doc.id, data: doc.data()}
-  //   });
-  //   console.log(list);
-  //   return list[0]
-  // }
-
-
-
-  async read (user: string, cardSession: string){
-    console.log(user, cardSession);
+  async read (user: string, folder: string){
+    console.log(user, folder);
     // if (user.includes("/")) user = user.split("/")[0]
     const col = query(collection(db, user), orderBy('order'))
     const snap = await getDocs(col);
     const list = snap.docs.map(doc => {
-        return {id: doc.id, cardSession: doc.data().cardSession, ...doc.data()}
+        return {id: doc.id, folder: doc.data().folder, ...doc.data()}
     });
     console.log(list);
-    if (cardSession == "all") {
+    if (folder == "all") {
       return list
     }else{
-      return list.filter(item => item.cardSession == cardSession);
+      return list.filter(item => item.folder == folder);
     }
   }
 
-  async readByFolderName (user: string, cardSession: string){
-    console.log(user, cardSession);
-    if (user.includes("/")) user = user.split("/")[0]
+  async readByFolderName (user: string, folder: string){
+    console.log(user, folder);
+    // if (user.includes("/")) user = user.split("/")[0]
     const col = query(collection(db, user), orderBy('order'))
     const snap = await getDocs(col);
     const list = snap.docs.map(doc => {
-        return {id: doc.id, cardSession: doc.data().cardSession, ...doc.data()}
+        return {id: doc.id, folder: doc.data().folder, ...doc.data()}
     });
     console.log(list);
-    if (cardSession == "all") {
+    if (folder == "all") {
       return list
     }else{
-      const snap = await getDoc(doc(db, user, "settings"))
-      const sese = Object.values(snap.data() as any).filter((item: any) => item.value == cardSession)[0]
-      return list.filter((item: any) => item.cardSession == (sese as any).key )
+      const snap = await getDoc(doc(db, user, "folders"))
+      const sese = Object.values(snap.data() as any).filter((item: any) => item.value == folder)[0]
+      return list.filter((item: any) => item.folder == (sese as any).key )
     }
   }
 
-  async create (user: string, data: { img: string; title: string; body: string; cardSession: string; order: number; }) {
+  async create (user: string, data: { img: string; title: string; body: string; folder: string; order: number; }) {
     try {
         await addDoc(collection(db, user), data)
       } catch (err) {

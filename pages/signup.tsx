@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
-import { CssBaseline, Box, Typography, TextField, Button, Container, Dialog, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { CssBaseline, Box, Typography, TextField, Button, Container} from '@mui/material'
 import Link from '@mui/material/Link';
 import AlertDialog from '../components/AlertDialog'
 import CardDataService from '../services/services'
-import { db } from '../config/firebase'
-import { doc, setDoc } from 'firebase/firestore'
 
 function CopyrightFooter(props: any) {
   return (
@@ -59,7 +57,7 @@ const Signup = () => {
       const data2 = {uid: user, email: data.email, username: data.email.split('@')[0]}
       const r2 = await CardDataService.userAdd(data2)
       // const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'Principal', value: 'Principal', order: 0}});
-      CardDataService.addUserSettings(data2.uid, {0:{key: 'Principal', value: 'Principal', order: 0}})
+      CardDataService.addUserFolders(data2.uid, {0:{key: '/', value: 'Home', order: 0}})
       // console.log("User settings with ID: ", docRef2);
       return userCredential
     }

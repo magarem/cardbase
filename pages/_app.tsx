@@ -11,7 +11,7 @@ import { AuthContextProvider } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 import ProtectedRoute from '../components/ProtectedRoute'
 import Head from 'next/head'
-const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2']
+const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]']
 import Layout from '../components/layout'
 const darkTheme = createTheme({
   palette: {
@@ -75,6 +75,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Layout>
             <Container fixed>
               <Box mt={10}>
+                
                 {(noAuthRequired.includes(router.pathname)) ? (
                   <Component {...pageProps} />
                 ) : (

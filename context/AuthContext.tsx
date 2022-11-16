@@ -3,12 +3,11 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
+  signOut
 } from 'firebase/auth'
 import { auth, db } from '../config/firebase'
 import dataServices from '../services/services'
-import router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import React from 'react'
 const AuthContext = createContext<any>({})
@@ -42,24 +41,43 @@ export const AuthContextProvider = ({
       }
       setLoading(false)
     })
-
     return () => unsubscribe()
   }, [])
 
+  function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+  //.sort((a, b) => (a.order > b.order) ? 1 : -1)
   const setFolders = (data: any) => {
     setStateFolder(data)
   }
   const getFolders = () => {
-    return stateFolder
+    return stateFolder.map((item: any)=>{
+      return {...item, value: item.value}
+    }).sort((a, b) => (a.order > b.order) ? 1 : -1)
   }
+  
   const getFolderKeyByValue = (value: string) => {
     console.log(stateFolder);
     const ret = stateFolder.find(item => item.value == value)?.key
     return ret
   }
 
+  const folderReloadByGuest = async (uid: string, folder: string) => {
+    return await dataServices.readById(uid, "folders").then((data: any) => {
+      if (data){
+        console.log(data)
+        console.log(Object.values(data))
+        const aa = Object.values(data) as Array<any>
+        // setStateFolder(aa)
+        // console.log(stateFolder);
+        return aa.find(item => item.value == folder)?.key
+      }
+    })
+  }
+
   const folderReload = async () => {
-    return await dataServices.readById(user.uid, "settings").then((data: any) => {
+    return await dataServices.readById(user.uid, "folders").then((data: any) => {
       if (data){
         console.log(data)
         console.log(Object.values(data))
@@ -67,7 +85,6 @@ export const AuthContextProvider = ({
         setStateFolder(aa)
         console.log(stateFolder);
         return true
-        // return Object.values(data)
       }
     })
   }
@@ -167,7 +184,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, folderReload, getFolders, getFolderKeyByValue, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
+    <AuthContext.Provider value={{user, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )

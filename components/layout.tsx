@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -9,18 +8,16 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Navbar from './Navbar'
-import CardDataService from "../services/services";
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router';
+import HomeIcon from '@mui/icons-material/Home';
 import FolderIcon from '@mui/icons-material/Folder';
-import { query } from 'firebase/firestore';
-import { Button } from '@mui/material';
-
+import { Avatar } from '@mui/material';
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 export default function Layout({ children }: any) {
   const router = useRouter()
-  const { user, folderReload, userReadData, getFolders } = useAuth()
+  const { user, folderReload, getFolders } = useAuth()
   const [stateFolder, setStateFolder] = React.useState([{key: 'home', value: 'home'}])
   const [state, setState] = React.useState({
     top: false,
@@ -31,31 +28,12 @@ export default function Layout({ children }: any) {
 
 
   function golink(key: string, value: string): void {
-    console.log({key, value});
-    const path = router.asPath.split('/')[1]
-    const pos = router.asPath.indexOf('/',1)
-    // const pos2 = router.asPath.indexOf('/',1)
-    const pathRest = (pos>0)?router.asPath.substring(pos):""
-    console.log({pos, pathRest})
-    // router.push('/' + value + pathRest)
+    // console.log({key, value});
+    // const pos = router.asPath.indexOf('/',1)
+    // const pathRest = (pos>0)?router.asPath.substring(pos):""
+    // console.log({pos, pathRest})
     router.push('/' + value)
   }
-
-  // React.useEffect(() => {
-  //   if (user){
-  //     setStateFolder(getFolders())
-  //   }
-  // }, []) 
-  
-  // React.useEffect(() => {
-  //   if (user){
-  //     // setStateFolder(null)
-  //     // console.log(stateFolder[0].key);
-  //     console.log(user.uid);
-  //     console.log(getFolders());
-  //     setStateFolder(getFolders())
-  //   }
-  // }, [router.query, user])
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -68,7 +46,6 @@ export default function Layout({ children }: any) {
         return;
       }
       folderReload()
-      // setStateFolder(getFolders())
       setState({ ...state, [anchor]: open });
     };
 
@@ -82,20 +59,21 @@ export default function Layout({ children }: any) {
         <ListItem>
             <ListItemText primary="Pastas" />
         </ListItem>
-       
         {getFolders()&&getFolders().map((item: any, index: any) => (
           <ListItem key={item.value} disablePadding onClick={()=>golink(item.key, item.value)}>
             <ListItemButton>
               <ListItemIcon>
-                <FolderIcon />
+              <Avatar>
+                    {(item.key=='')?
+                    <HomeIcon/>:
+                    <FolderIcon />
+                    }
+                  </Avatar>
               </ListItemIcon>
               <ListItemText primary={item.value} />
             </ListItemButton>
           </ListItem>
         ))}<br/>
-        {/* <Box textAlign='center'><Button onClick={()=>{handleFolderReload();}}>
-          Atualizar
-        </Button></Box> */}
       </List>
       <Divider/>
     </Box>
