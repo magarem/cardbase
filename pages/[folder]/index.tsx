@@ -192,7 +192,7 @@ const List: NextPage<Props> = (props) => {
           <PhotoZoonCard />
         </DialogContent>
       </Dialog>
-      {<h2 style={{marginBottom: 15}}>{capitalizeFirstLetter(folder)}</h2>}
+      {<h2 style={{marginBottom: 15}}>{capitalizeFirstLetter(folder as string)}</h2>}
       <IconButton size="small" aria-label="edit" onClick={() => {
                 router.push("/" + folder + "/new/edit")
                 }}>

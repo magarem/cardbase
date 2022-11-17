@@ -43,10 +43,10 @@ export default (req: any, res: any) => {
         return {id:doc.id, ...doc.data()}
     });
     console.log(cityList);
-    return cityList.sort((a, b) => (a.order > b.order) ? 1 : -1)
+    return cityList.sort((a: any, b: any) => (a.order > b.order) ? 1 : -1)
   }
   
-  CardDataService.readUserData(username).then(async (ret)=>{
+  CardDataService.readUserData(username).then(async (ret: any)=>{
     const folder = req.query.folder
     console.log(11, await folderReloadByGuest(ret.uid, folder));
     if (folder) {
