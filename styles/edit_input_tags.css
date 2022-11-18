@@ -1,0 +1,16 @@
+.rti--container {
+    --rti-bg: rgb(13, 9, 13) !important;
+    --rti-border: black !important;
+    --rti-main: #111418 !important;
+    --rti-radius: .375rem !important;
+    --rti-s: 0.5rem !important;
+    --rti--input: black  !important;
+    --rti-tag: #151719 !important;
+    --rti-tag-remove: red !important;
+    
+  }
+
+  input[type=text] {
+    background-color: #0f100f;
+    color: white;
+  }

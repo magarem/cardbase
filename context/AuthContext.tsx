@@ -82,6 +82,7 @@ export const AuthContextProvider = ({
         console.log(data)
         console.log(Object.values(data))
         const aa = Object.values(data) as Array<any>
+        console.log(aa);
         setStateFolder(aa)
         console.log(stateFolder);
         return true

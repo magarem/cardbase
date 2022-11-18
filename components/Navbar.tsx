@@ -52,7 +52,6 @@ const PageMenu = (props: obj2) => {
           </Grid>
           <Grid item md={6}>
             <IconButton size="small" aria-label="list" onClick={() => {
-                console.log(1);
                 if (folder=='usersettings') folder = 'home'
                 router.push("/" + folder )
                 }}>
@@ -158,20 +157,20 @@ const NavbarComp = (props: any) => {
           edge="start"
           color="inherit"
           aria-label="menu"
-          sx={{ mr: 2 }}
+          sx={{ mr: 0 }}
           onMouseOver={props.toggleDrawer('left', true)}
           onClick={props.toggleDrawer('left', true)}>
           <MenuIcon />
         </IconButton>
         }
-        <Grid container rowSpacing={2} columnSpacing={2}>
+        <Grid  sx={{ mt: -1.4 }} container rowSpacing={2} columnSpacing={2}>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
               <SiteTitle user={user}/>
             </Typography>
           </Grid>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
-            <PageMenu user={user}/>
+            {/* <PageMenu user={user}/> */}
           </Grid>
           <Grid item xs={4} sm={4} md={4} style={{textAlign: "right"}} >
             <UserOptions user={user}/>

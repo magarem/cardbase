@@ -6,10 +6,11 @@ import CardDataService from "../../services/services";
 import { useRouter } from "next/router";
 import CardsGrid from '../../components/CardsGrid'
 import { useAuth } from '../../context/AuthContext'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem, IconButton } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem, IconButton, Fab } from "@mui/material";
 import React from "react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
+import AddIcon from '@mui/icons-material/Add';
+import { SxProps } from '@mui/system';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -63,12 +64,44 @@ function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+const fabStyle = {
+  bottom: 40,
+  right: 40,
+  position: 'fixed',
+};
+
+const fabs = [
+  {
+    color: 'primary' as 'primary',
+    sx: fabStyle as SxProps,
+    icon: <AddIcon />,
+    label: 'Add',
+  }]
+
 const List: NextPage<Props> = (props) => {
   const router = useRouter()
   const { user, getFolderKeyByValue, folderReloadByGuest } = useAuth()
   let folder = router.query.folder
   console.log({user, folder});
   const [open, setOpen] = useState(false);
+ 
+  const styleDiv = {
+    display: 'flex',
+    position: 'fixed',
+    width: '100%',
+    justifyContent: 'center',
+    bottom: '5vh'
+  }
+
+//   const style = {
+//     margin: 0,
+//     top: 'auto',
+//     right: 20,
+//     bottom: 20,
+//     left: 'auto',
+//     position: 'fixed',
+// }
+ 
   const handleOpen = (obj: ss) => {
     if (window.innerWidth > 700) {
       console.log(obj);
@@ -192,15 +225,28 @@ const List: NextPage<Props> = (props) => {
           <PhotoZoonCard />
         </DialogContent>
       </Dialog>
-      {<h2 style={{marginBottom: 15}}>{capitalizeFirstLetter(folder as string)}</h2>}
-      <IconButton size="small" aria-label="edit" onClick={() => {
-                router.push("/" + folder + "/new/edit")
-                }}>
-              <AddCircleOutlineIcon />
-            </IconButton>
+      <Grid container>
+        <Grid item md={2}>
+        {<h2 style={{marginBottom: 15}}>{capitalizeFirstLetter(folder as string)}</h2>}
+        </Grid>
+        <Grid item md={10}>
+        {/* <IconButton size="small" aria-label="edit" onClick={() => {
+          router.push("/" + folder + "/new/edit")
+          }}>
+        <AddCircleOutlineIcon />
+      </IconButton> */}
+        </Grid>
+      </Grid>
+     
       {/* {JSON.stringify(currentState)} */}
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} />
-      <Copyright />
+      <Fab sx={fabs[0].sx} aria-label={fabs[0].label} color={fabs[0].color} onClick={() => {
+          router.push("/" + folder + "/new/edit")
+          }}>
+        {fabs[0].icon}
+      </Fab>
+      <br/><br/><br/><br/><br/><br/>
+      {/* <Copyright /> */}
     </>
   );
 };

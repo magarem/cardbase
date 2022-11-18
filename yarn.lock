@@ -6635,6 +6635,11 @@
     "classnames" "2.3.1"
     "tiny-invariant" "1.2.0"
 
+"react-tag-input-component@^2.0.2":
+  "integrity" "sha512-dydI9luVwwv9vrjE5u1TTnkcOVkOVL6mhFti8r6hLi78V2F2EKWQOLptURz79UYbDHLSk6tnbvGl8FE+sMpADg=="
+  "resolved" "https://registry.npmjs.org/react-tag-input-component/-/react-tag-input-component-2.0.2.tgz"
+  "version" "2.0.2"
+
 "react-tag-input@^6.8.1":
   "integrity" "sha512-eD8SCFVMGbnDP0qnlpMnalw6POJVnkOh0M7FhuVyR3u/Mf+lgAuvl+GbrtGaFZcw3qz2sWo6j3jrrHUV2gO6Cg=="
   "resolved" "https://registry.npmjs.org/react-tag-input/-/react-tag-input-6.8.1.tgz"

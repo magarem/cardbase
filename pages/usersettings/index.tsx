@@ -23,13 +23,14 @@ function capitalizeFirstLetter(str: string) {
 const Usersettings: NextPage = (props) => {
  
   console.log(props);
+  const [formCardFolder, setFormCardFolder] = useState<a>({key:"", value:"", order: 0})
   const [cardFolder, setCardFolder] = useState<a>({key:"", value:"", order: 0})
   const [operation, setOperation] = useState("Inserir")
-  const { user, getFolders, setFolders } = useAuth()
+  const { user, getFolders, setFolders, folderReload } = useAuth()
   const [open2, setOpen2] = React.useState(false);
 
   const handleClickOpen = () => {
-    // setCardFolder({key:"", value:"", order: 1})
+    setFormCardFolder({key:"", value:"", order: 1})
     setOpen2(true);
   };
 
@@ -52,17 +53,18 @@ const Usersettings: NextPage = (props) => {
   }
 
   const folderAdd = () => {
-    if (cardFolder.value){
+    if (formCardFolder.value){
       var array = getFolders()
-      if (cardFolder.key){
-        var foundIndex = array.findIndex((x: any) => x.key == cardFolder.key);
-        array[foundIndex] = cardFolder;
+      if (formCardFolder.key){
+        var foundIndex = array.findIndex((x: any) => x.key == formCardFolder.key);
+        array[foundIndex] = formCardFolder;
       }else{
-        array = [...getFolders(), {key: generateId(), value: capitalizeFirstLetter(cardFolder.value), order: new Date().getTime()} ]
+        array = [...getFolders(), {key: generateId(), value: capitalizeFirstLetter(formCardFolder.value), order: new Date().getTime()} ]
       }
       console.log(array);
       setFolders(array)
       save(array)
+      // folderReload()
       setOpen2(false)
       router.push({
         pathname: '/usersettings',
@@ -89,7 +91,7 @@ const Usersettings: NextPage = (props) => {
   const itemEdit = (index: number) => {
     setOpen2(true)
     setOperation('Alterar')
-    setCardFolder({key: getFolders()[index].key, value: getFolders()[index].value, order: getFolders()[index].order})
+    setFormCardFolder({key: getFolders()[index].key, value: getFolders()[index].value, order: getFolders()[index].order})
   }
   return (
     <>
@@ -105,12 +107,12 @@ const Usersettings: NextPage = (props) => {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <FormControl fullWidth>
-              <TextField name="cardFolder_key" value={cardFolder.key} hidden></TextField>
+              {/* <TextField name="formCardFolder_key" value={formCardFolder.key} hidden></TextField> */}
               <TextField
-                name="cardFolder_value"
-                value={cardFolder.value}
+                name="formCardFolder_value"
+                value={formCardFolder.value}
                 placeholder="Nova pasta"
-                onChange={(e)=>{setCardFolder({key: cardFolder.key, value: e.target.value, order: cardFolder.order})}}
+                onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value, order: formCardFolder.order})}}
               />
             </FormControl>
           </DialogContentText>

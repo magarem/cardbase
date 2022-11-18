@@ -45,6 +45,7 @@
     "react-rte": "^0.16.5",
     "react-sortablejs": "^6.1.4",
     "react-tag-input": "^6.8.1",
+    "react-tag-input-component": "^2.0.2",
     "slate": "^0.84.0",
     "slate-react": "^0.83.2"
   },

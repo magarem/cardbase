@@ -13,6 +13,7 @@ import React from 'react';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
+import { TagsInput } from "react-tag-input-component";
 
 interface Props {
   setuser: Function,
@@ -29,7 +30,6 @@ interface Obj1 {
   title: string;
   body: string;
   order: number;
-  tags: string;
 }
 
 const Create: NextPage<Props> = (props) => {
@@ -38,6 +38,8 @@ const Create: NextPage<Props> = (props) => {
   const [bodyValue, setBodyValue] = useState('');
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false);
+
+  const [selected, setSelected] = useState<string[]>([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -77,7 +79,7 @@ const Create: NextPage<Props> = (props) => {
   
   const saveCard = () => {
     setDesableSaveButton(true)
-    let data = { img: state.img||'', folder: state.folder, title: state.title, body: bodyValue, order: -1 };
+    let data = { img: state.img||'', folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), order: -1 };
     console.log({data});
     CardDataService.create(user.uid, data)
       .then((x) => {
@@ -103,12 +105,12 @@ const Create: NextPage<Props> = (props) => {
       folder: state.folder,
       body: bodyValue,
       order: state.order,
-      tags: state.tags
+      tags: selected.toString()
     };
 
     console.log(user.uid, data)
 
-    CardDataService.update(user.uid, state.id, data)
+    CardDataService.update(user.uid, state.id, {...data})
       .then((x) => {
         console.log("Update item successfully!");
         console.log(x)
@@ -137,8 +139,9 @@ const Create: NextPage<Props> = (props) => {
       CardDataService.readById(user.uid, router.query.id as string).then((data) => {
         console.log(data)
         if (data) {
-          setState({ id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, tags: data.tags, order: data.order })
+          setState({ id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
           setBodyValue(data.body)
+          setSelected(data.tags?.split(','))
           console.log(state);
         }
       })
@@ -163,7 +166,7 @@ const Create: NextPage<Props> = (props) => {
             <Select
               fullWidth
               name="folder"
-              defaultValue="general"
+              defaultValue="/"
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={state.folder}
@@ -240,7 +243,14 @@ const Create: NextPage<Props> = (props) => {
               </Grid>
                   <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
                  <br/>
-                  <TextField 
+                 <TagsInput
+                  value={selected}
+                  onChange={setSelected}
+                  name="tags"
+                  placeHolder="Etiquetas"
+                />
+                <br/>
+                  {/* <TextField 
                         id="outlined-basic"
                         fullWidth
                         name="tags"
@@ -248,7 +258,7 @@ const Create: NextPage<Props> = (props) => {
                         variant="outlined"
                         onChange={handleChange}
                         value={state.tags}
-                      />
+                      /> */}
                   <TextField
                   name="order"
                   label="Order"
