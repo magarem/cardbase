@@ -10,6 +10,8 @@ import dataServices from '../services/services'
 import { useRouter } from 'next/router'
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import React from 'react'
+// import Cookies from 'universal-cookie';
+import { useCookies } from 'react-cookie';
 const AuthContext = createContext<any>({})
 
 export const useAuth = () => useContext(AuthContext)
@@ -23,11 +25,27 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [stateFolder, setStateFolder] = React.useState([{key: '', value: '', order:0}])
-
+  const [cookie, setCookie] = useCookies(["user"])
+  const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]']
+  
+  // const cookies = new Cookies();
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("onAuthStateChanged", user);
+      console.log("1onAuthStateChanged", user);
+      // console.log(cookie.user);
+      
+      // console.log(cookies.get('myCat')); // Pacman
+     
       if (user) {
+        
+        // setCookie('user', user, { path: '/', domain: '.magadell.local' });
+
+        // cookies.set('myCat', 'Pacman', { path: '/' });
+        // console.log(cookies.get('myCat')); // Pacman
+        // setCookie("user", JSON.stringify(user), {
+        //   path: "/"})
+        //  console.log(cookie.user);
+         
         userReadData(user.uid).then((ret)=>{
           console.log(ret);
           setUser({
@@ -37,7 +55,18 @@ export const AuthContextProvider = ({
           })
         })
       } else {
-        setUser(null)
+        // if ( false ) {
+        //   user = cookie.user
+        //   console.log(user);
+          
+        // }else{
+          console.log(11,{user});
+          
+          setUser(null)
+          if (!noAuthRequired.includes(router.pathname)) {
+            console.log(22);
+            router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login')
+          }
       }
       setLoading(false)
     })

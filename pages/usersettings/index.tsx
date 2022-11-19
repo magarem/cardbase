@@ -53,7 +53,7 @@ const Usersettings: NextPage = (props) => {
   }
 
   const folderAdd = () => {
-    folderReload()
+    
     if (formCardFolder.value){
       var array = getFolders()
       if (formCardFolder.key){
@@ -67,10 +67,10 @@ const Usersettings: NextPage = (props) => {
       save(array)
       // folderReload()
       setOpen2(false)
-      router.push({
-        pathname: '/usersettings',
-        query: { name: 'Someone' }
-    }, '/usersettings');
+    //   router.push({
+    //     pathname: '/usersettings',
+    //     query: { name: 'Someone' }
+    // }, '/usersettings');
     }
   }
   

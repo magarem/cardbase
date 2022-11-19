@@ -91,6 +91,7 @@ const Create: NextPage<Props> = (props) => {
         setState(cardObj)
         setBodyValue('')
         setDesableSaveButton(false)
+        router.push(`/${folder}`)
       })
       .catch((e) => {
         console.log(e);

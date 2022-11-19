@@ -12,7 +12,7 @@ import { AuthContextProvider } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 import ProtectedRoute from '../components/ProtectedRoute'
 import Head from 'next/head'
-const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]']
+const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]/edit']
 import Layout from '../components/layout'
 const darkTheme = createTheme({
   palette: {
