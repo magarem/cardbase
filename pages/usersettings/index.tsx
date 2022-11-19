@@ -41,7 +41,7 @@ const Usersettings: NextPage = (props) => {
   const router = useRouter()
 
   const save = (data: object) => {
-    CardDataService.addUserFolders(user.uid, data)
+    CardDataService.setUserFolders(user.uid, data)
     .then((x) => {
       console.log("Created new item successfully!");
       console.log(x)
@@ -53,6 +53,7 @@ const Usersettings: NextPage = (props) => {
   }
 
   const folderAdd = () => {
+    folderReload()
     if (formCardFolder.value){
       var array = getFolders()
       if (formCardFolder.key){

@@ -3,7 +3,7 @@ import { getFirestore, getDoc, deleteDoc, where, collection, getDocs, updateDoc,
 // import { route } from "next/dist/server/router";
 import { NextRouter, useRouter } from 'next/router'
 class CardDataService {
-  async addUserFolders(user: string, data: object) {
+  async setUserFolders(user: string, data: object) {
     try {
       console.log(data);
       await setDoc(doc(db, user, "folders"), {...data});

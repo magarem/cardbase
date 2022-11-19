@@ -240,11 +240,11 @@ const List: NextPage<Props> = (props) => {
      
       {/* {JSON.stringify(currentState)} */}
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} />
-      <Fab sx={fabs[0].sx} aria-label={fabs[0].label} color={fabs[0].color} onClick={() => {
+      {user&&<Fab sx={fabs[0].sx} aria-label={fabs[0].label} color={fabs[0].color} onClick={() => {
           router.push("/" + folder + "/new/edit")
           }}>
         {fabs[0].icon}
-      </Fab>
+      </Fab>}
       <br/><br/><br/><br/><br/><br/>
       {/* <Copyright /> */}
     </>

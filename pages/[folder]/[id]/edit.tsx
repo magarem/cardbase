@@ -299,7 +299,7 @@ const Create: NextPage<Props> = (props) => {
           }}
         >
         <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveAltIcon />} />
-        <BottomNavigationAction label="Cancelar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
+        <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
         
         </BottomNavigation>
         <br/>
