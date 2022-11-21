@@ -113,7 +113,7 @@ const Usersettings: NextPage = (props) => {
                 name="formCardFolder_value"
                 value={formCardFolder.value}
                 placeholder="Nova pasta"
-                onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value, order: formCardFolder.order})}}
+                onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
               />
             </FormControl>
           </DialogContentText>
@@ -125,7 +125,7 @@ const Usersettings: NextPage = (props) => {
       </Dialog>
       <h3>{'Configurações de usuário > Pastas'}</h3><br/>
       <Button onClick={handleClickOpen}>Nova pasta</Button>
-      <div style={{width:350}}>
+      <span style={{width:350}}>
         <List dense={true}>
           {getFolders()&&getFolders().map((item: any, index: any) => {
             return (
@@ -153,7 +153,7 @@ const Usersettings: NextPage = (props) => {
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText 
-                  onClick={() => itemEdit(index)}
+                  // onClick={() => itemEdit(index)}
                   primaryTypographyProps={{
                     fontSize: 16
                   }}
@@ -163,7 +163,7 @@ const Usersettings: NextPage = (props) => {
             )})
           }
         </List>
-      </div>
+      </span>
     </>
   )
 }

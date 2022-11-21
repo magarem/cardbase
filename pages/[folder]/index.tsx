@@ -211,6 +211,7 @@ const List: NextPage<Props> = (props) => {
   }
 
   const mw = currentState2?.img ? "md" : "sm"
+  // if (folder=='Home') folder='Início'
   return (
     <>
       <Dialog

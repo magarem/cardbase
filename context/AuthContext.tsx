@@ -26,7 +26,7 @@ export const AuthContextProvider = ({
   const [loading, setLoading] = useState(true)
   const [stateFolder, setStateFolder] = React.useState([{key: '', value: '', order:0}])
   const [cookie, setCookie] = useCookies(["user"])
-  const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]']
+  const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/usersettings']
   
   // const cookies = new Cookies();
   useEffect(() => {

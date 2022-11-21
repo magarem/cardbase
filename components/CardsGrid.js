@@ -16,7 +16,11 @@ function CardsGrid(props){
       CardDataService.update(user.uid, item.id, objToUpdate)
     })
   }
+
   return (
+    <>
+    {props.currentState.length==0?
+    <h3>Esta pasta está vazia</h3>:
     <ReactSortable 
       handle=".handle"
       className="grid-container"
@@ -33,6 +37,8 @@ function CardsGrid(props){
         />
       ))}
     </ReactSortable>
+    }
+    </>
   )
 }
 

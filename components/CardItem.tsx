@@ -17,8 +17,8 @@ import { DragIndicator } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
 import { SnippetFolder } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
-import { Box } from '@mui/material';
-
+import { Box, ListItem, ListItemText } from '@mui/material';
+import Image from 'next/image'
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
@@ -98,62 +98,80 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
     const folder = router.asPath.split('/')[1]
     setFolder(folder)
   }, [])
-
-  return (  
-    <Box style={{"padding": "0px"}}>
-    <Card raised  >
-      {user&&
-      <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
-        <Grid container m={0}>
-          <Grid item xs={6} sm={6} md={6}>
-            <IconButton aria-label="Edit" onClick={() => callLink("/" + folder + "/" + item.id + "/edit")}>
-              <EditIcon fontSize="small"/>
-            </IconButton>
-            <IconButton aria-label="Delete" onClick={() => delete_card(user.uid, item.id)}>
-              <DeleteForeveIcon fontSize="small"/>
-            </IconButton>
+  if (false) {
+    return (
+      <>
+        <ListItem
+          key={item.id}
+          disableGutters
+         > 
+          <ListItemText primary={item.title} />
+          <div >
+            <img
+            src={item.img}
+            style={{width: '150px'}}
+          /></div>
+          
+        </ListItem>
+      </>
+    )
+  }else{
+    return (  
+      <Box style={{"padding": "0px"}}>
+      <Card raised  >
+        {user&&
+        <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
+          <Grid container m={0}>
+            <Grid item xs={6} sm={6} md={6}>
+              <IconButton aria-label="Edit" onClick={() => callLink("/" + folder + "/" + item.id + "/edit")}>
+                <EditIcon fontSize="small"/>
+              </IconButton>
+              <IconButton aria-label="Delete" onClick={() => delete_card(user.uid, item.id)}>
+                <DeleteForeveIcon fontSize="small"/>
+              </IconButton>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
+              <IconButton>
+                <DragIndicator className="handle" fontSize="small"/>
+              </IconButton>
             </Grid>
-            <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
-            <IconButton>
-              <DragIndicator className="handle" fontSize="small"/>
-            </IconButton>
           </Grid>
-        </Grid>
-      </CardActions>
-      }
-      {item.img&&
-      <CardMedia height={300} component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
-      }
-      <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
-        <Grid container rowSpacing={2} columnSpacing={2}>
-          <Grid item md={10}  >
-            <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
-              {item.title}
-            </Typography>
-             <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
-              {!item.img && <div dangerouslySetInnerHTML={{ __html: item.body.substring(0, 178) }}></div>}
-            </Typography>
+        </CardActions>
+        }
+        {item.img&&
+        <CardMedia height={300} component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
+        }
+        <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
+          <Grid container rowSpacing={2} columnSpacing={2}>
+            <Grid item md={10}  >
+              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+                {item.title}
+              </Typography>
+              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+                {!item.img && <div dangerouslySetInnerHTML={{ __html: item.body.substring(0, 178) }}></div>}
+              </Typography>
+            </Grid>
+            {item.img &&
+            <Grid item md={2}>
+              <ExpandMore
+                expand={expanded}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show more">
+                <ExpandMoreIcon fontSize="small" />
+              </ExpandMore>
+            </Grid>
+            }
           </Grid>
-          {item.img &&
-          <Grid item md={2}>
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more">
-              <ExpandMoreIcon fontSize="small" />
-            </ExpandMore>
-          </Grid>
-          }
-        </Grid>
-      </CardContent>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent sx={{ pt:1, '&:last-child': { pb: 0 }}}>
-          <div dangerouslySetInnerHTML={{ __html: item.body }}/>
         </CardContent>
-      </Collapse>
-    </Card>
-    </Box>
-  )
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent sx={{ pt:1, '&:last-child': { pb: 0 }}}>
+            <div dangerouslySetInnerHTML={{ __html: item.body }}/>
+          </CardContent>
+        </Collapse>
+      </Card>
+      </Box>
+    )
+  }
 }
 

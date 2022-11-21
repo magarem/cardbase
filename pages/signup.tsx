@@ -56,10 +56,8 @@ const Signup = () => {
     if (userCredential) {
       const user = userCredential.uid
       const data2 = {uid: user, email: data.email, username: userNameDef}
-      const r2 = await CardDataService.userAdd(data2)
-      // const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'Principal', value: 'Principal', order: 0}});
-      CardDataService.setUserFolders(data2.uid, {0:{key: '/', value: 'Home', order: 0}})
-      // console.log("User settings with ID: ", docRef2);
+      await CardDataService.userAdd(data2)
+      CardDataService.setUserFolders(user, {0:{key: '/', value: 'Home', order: 0}})
       return userNameDef
     }else{
       alert("Esse email já está cadastrado")
@@ -70,6 +68,8 @@ const Signup = () => {
 
   const handleSignup = async (e: any) => {
     e.preventDefault()
+    const email = data.email.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+    console.log({email})
     let formOk = true
     if (data.password != data.passwordConfirm) {
       formOk = false
@@ -80,11 +80,11 @@ const Signup = () => {
       alert('A senha deve ter 6 digitos no mínimo')
     }
     if (formOk) {
-      console.log(data.email, data.password)
-      registra(data.email, data.password).then((x)=>{
+      console.log(email, data.password)
+      registra(email, data.password).then((x)=>{
         if (x) {
           logout()
-          router.push(process.env.NEXT_PUBLIC_DOMAIN + '/signup2?email=' + data.email + '&username=' + x);
+          router.push(process.env.NEXT_PUBLIC_DOMAIN + '/signup2?email=' + email + '&username=' + x);
         }
       })
       setButtonCreateAccount(true)

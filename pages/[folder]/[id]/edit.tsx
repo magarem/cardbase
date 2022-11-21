@@ -121,6 +121,7 @@ const Create: NextPage<Props> = (props) => {
           setMostra(false)
         }, 1000)
         setDesableSaveButton(false)
+        router.push(`/${folder}`)
       })
       .catch((e) => {
         console.log(e);

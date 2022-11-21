@@ -120,8 +120,7 @@ const UserOptions = (props: obj2) => {
                 }}>
                  <MenuItem onClick={() => {
                   router.push({
-                    pathname: '/usersettings',
-                    query: { name: 'Someone' }
+                    pathname: '/usersettings'
                 }, '/usersettings');
                   }}>Definições</MenuItem>
 
@@ -164,15 +163,15 @@ const NavbarComp = (props: any) => {
         </IconButton>
         }
         <Grid  sx={{ mt: -1.4 }} container rowSpacing={2} columnSpacing={2}>
-          <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>
+          <Grid item xs={6} sm={6} md={6} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
               <SiteTitle user={user}/>
             </Typography>
           </Grid>
-          <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
-            {/* <PageMenu user={user}/> */}
-          </Grid>
-          <Grid item xs={4} sm={4} md={4} style={{textAlign: "right"}} >
+          {/* <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
+            <PageMenu user={user}/>
+          </Grid> */}
+          <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}} >
             <UserOptions user={user}/>
           </Grid>
         </Grid>
