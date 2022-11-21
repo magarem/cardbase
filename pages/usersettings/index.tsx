@@ -113,7 +113,7 @@ const Usersettings: NextPage = (props) => {
                 name="formCardFolder_value"
                 value={formCardFolder.value}
                 placeholder="Nova pasta"
-                onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
+                onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.trim().substring(0,20).replace(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
               />
             </FormControl>
           </DialogContentText>

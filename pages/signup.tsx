@@ -50,7 +50,7 @@ const Signup = () => {
   
   const registra = async (email: string, password: string) => {
     email = email.toLowerCase()
-    const userNameDef = await CardDataService.userNameDef(email.split('@')[0])
+    const userNameDef = await CardDataService.userNameDef(email.split('@')[0].substring(0,18))
     console.log(userNameDef);
     const userCredential = await signup(email, password)
     if (userCredential) {
@@ -127,7 +127,7 @@ const Signup = () => {
             onChange={(e: any) =>
               setData({
                 ...data,
-                email: e.target.value.toLowerCase()
+                email: e.target.value.toLowerCase().trim().substring(0,40).replace(' ','_')
               })
             }
             value={data.email}/>
@@ -144,7 +144,7 @@ const Signup = () => {
             onChange={(e: any) =>
               setData({
                 ...data,
-                password: e.target.value.toLowerCase()
+                password: e.target.value.substring(0,25)
               })
             }
             value={data.password}/>
@@ -162,7 +162,7 @@ const Signup = () => {
             onChange={(e: any) =>
               setData({
                 ...data,
-                passwordConfirm: e.target.value.toLowerCase()
+                passwordConfirm: e.target.value.substring(0,25)
               })
             }
             value={data.passwordConfirm}/> 
