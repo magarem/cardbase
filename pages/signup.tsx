@@ -6,6 +6,10 @@ import Link from '@mui/material/Link';
 import AlertDialog from '../components/AlertDialog'
 import CardDataService from '../services/services'
 
+// Make modifications to the theme with your own fields and widgets
+
+const log = (type: any) => console.log.bind(console, type);
+
 function CopyrightFooter(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -31,14 +35,9 @@ const Signup = () => {
   const { signup, logout } = useAuth()
 
   interface ttt {email:string; password: string; confirmpassword: string}
-  const fields = [
-    {name:'email', label: 'e-mail', type: 'email', autofocus: true}, 
-    {name:'password', label: 'Senha', type: 'password',  minLength: 6},
-    {name:'confirmpassword', label: 'Confirma Senha', type: 'password',  minLength: 6, autofocus: false,  check: 'password'},
-  ]
 
   const [flgErrorDialog, setFlgErrorDialog] = useState(false)
-  const formBegin = {uid: '', email: '', password: '', username: ''}
+  const formBegin = { email: '', password: '', passwordConfirm: ''}
   const [data, setData] = useState(formBegin)
   const [open, setOpen] = React.useState(false);
   const [buttonCreateAccount, setButtonCreateAccount] = React.useState(false);
@@ -51,25 +50,45 @@ const Signup = () => {
   
   const registra = async (email: string, password: string) => {
     email = email.toLowerCase()
+    const userNameDef = await CardDataService.userNameDef(email.split('@')[0])
+    console.log(userNameDef);
     const userCredential = await signup(email, password)
     if (userCredential) {
       const user = userCredential.uid
-      const data2 = {uid: user, email: data.email, username: data.email.split('@')[0]}
+      const data2 = {uid: user, email: data.email, username: userNameDef}
       const r2 = await CardDataService.userAdd(data2)
       // const docRef2 = await setDoc(doc(db, data2.uid, "settings"), {0:{key: 'Principal', value: 'Principal', order: 0}});
-      CardDataService.addUserFolders(data2.uid, {0:{key: '/', value: 'Home', order: 0}})
+      CardDataService.setUserFolders(data2.uid, {0:{key: '/', value: 'Home', order: 0}})
       // console.log("User settings with ID: ", docRef2);
-      return userCredential
+      return userNameDef
+    }else{
+      alert("Esse email já está cadastrado")
+      setButtonCreateAccount(false)
+      return false
     }
   }
 
   const handleSignup = async (e: any) => {
     e.preventDefault()
-    registra(data.email, data.password).then(()=>{
-      logout()
-      router.push(process.env.NEXT_PUBLIC_DOMAIN + '/signup2?email=' + data.email + '&username=' + data.email.split('@')[0]);
-    })
-    setButtonCreateAccount(true)
+    let formOk = true
+    if (data.password != data.passwordConfirm) {
+      formOk = false
+      alert('As senhas não são iguais')
+    }
+    if (data.password.length < 6) {
+      formOk = false
+      alert('A senha deve ter 6 digitos no mínimo')
+    }
+    if (formOk) {
+      console.log(data.email, data.password)
+      registra(data.email, data.password).then((x)=>{
+        if (x) {
+          logout()
+          router.push(process.env.NEXT_PUBLIC_DOMAIN + '/signup2?email=' + data.email + '&username=' + x);
+        }
+      })
+      setButtonCreateAccount(true)
+    }
   } 
 
   function handleChange(event: { target: { name: any; value: any } }) {
@@ -91,26 +110,63 @@ const Signup = () => {
       }}>
         <Typography component="h1" variant="h5" mt={4}>
           Registro
-        </Typography>
+        </Typography> 
+        
         <Box component="form" onSubmit={handleSignup} noValidate sx={{ mt: 1 }}>
-         {fields.map((item, i)=>{
-           return (
-            <TextField  
-            key={item.name}
-            type={item.type}
+      
+        <TextField  
+            type="email"
             margin="normal"
             autoComplete="new-password"
             required
             fullWidth
-            id={item.name}
-            label={item.label}
-            name={item.name}
-            autoFocus={item.autofocus==true}
-            onChange={handleChange}
-            value={(data as any)[item.name]}
-            />
-            )
-         })}
+            id="email"
+            label="Email"
+            name="email"
+            autoFocus={true}
+            onChange={(e: any) =>
+              setData({
+                ...data,
+                email: e.target.value.toLowerCase()
+              })
+            }
+            value={data.email}/>
+            
+            <TextField  
+            type="password"
+            margin="normal"
+            autoComplete="new-password"
+            required
+            fullWidth
+            id="password"
+            label="Senha"
+            name="password"
+            onChange={(e: any) =>
+              setData({
+                ...data,
+                password: e.target.value.toLowerCase()
+              })
+            }
+            value={data.password}/>
+            
+            <TextField  
+            type="password"
+            margin="normal"
+            autoComplete="new-password"
+            required
+            fullWidth
+            id="passwordConfirm"
+            label="Confirme senha"
+            name="passwordConfirm"
+            autoFocus={true}
+            onChange={(e: any) =>
+              setData({
+                ...data,
+                passwordConfirm: e.target.value.toLowerCase()
+              })
+            }
+            value={data.passwordConfirm}/> 
+            
           <Button
             disabled={buttonCreateAccount}
             color="success"

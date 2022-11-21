@@ -85,7 +85,7 @@ const Create: NextPage<Props> = (props) => {
       .then((x) => {
         console.log("Created new item successfully!");
         console.log(x)
-        setUploadRefresh(uploadRefresh + 1)
+        // setUploadRefresh(uploadRefresh + 1)
         setMostra(true)
         setTimeout(() => { setMostra(false) }, 1000)
         setState(cardObj)

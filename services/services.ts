@@ -17,6 +17,29 @@ class CardDataService {
     return db;
   }
 
+
+  async userNameDef(userName: string) {
+    let a=0
+    const originalUserName = userName
+    // const docRef = doc(db, 'users', user);
+    async function userNameSearch (userName: any): Promise<any> {
+      console.log(2, { userName });
+      const docRef = query(collection(db, "users"), where("username", "==", userName));
+      const docSnap = await getDocs(docRef);
+      console.log(3, docSnap);
+      console.log(4, docSnap.size);
+      if (docSnap.size == 0) {
+        console.log('Find a free name0:', userName)
+        return userName
+      } 
+      a++
+      return await userNameSearch(originalUserName + a)
+    }
+    const x = await userNameSearch(userName)
+    console.log('Find a free name:', x)
+    return x
+  }
+
   async readUserData(userName: string) {
     console.log({ userName });
     // const docRef = doc(db, 'users', user);
