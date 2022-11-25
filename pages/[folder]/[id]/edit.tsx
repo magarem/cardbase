@@ -14,7 +14,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
 import { TagsInput } from "react-tag-input-component";
-
+import FullFeaturedCrudGrid from "../../../components/dataGrid"
 interface Props {
   setuser: Function,
   user: {
@@ -32,6 +32,10 @@ interface Obj1 {
   order: number;
 }
 
+interface Obj2 {
+  key: any;
+  value: any;
+}
 const Create: NextPage<Props> = (props) => {
   const { user, getFolderKeyByValue, getFolders } = useAuth()
   const [desableSaveButton, setDesableSaveButton] = useState(false);
@@ -59,7 +63,12 @@ const Create: NextPage<Props> = (props) => {
   const [state, setState] = useState<Obj1>(cardObj)
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
+  
  
+  const tblObj = [{key: "", value: ""}];
+  const [stateExtra, setStateExtra] = React.useState<Obj2[]>(tblObj)
+
+
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     handleClose()
     const { name, value } = e.target;
@@ -79,7 +88,7 @@ const Create: NextPage<Props> = (props) => {
   
   const saveCard = () => {
     setDesableSaveButton(true)
-    let data = { img: state.img||'', folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), order: -1 };
+    let data = { img: state.img||'', folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: -1 };
     console.log({data});
     CardDataService.create(user.uid, data)
       .then((x) => {
@@ -106,7 +115,8 @@ const Create: NextPage<Props> = (props) => {
       folder: state.folder,
       body: bodyValue,
       order: state.order,
-      tags: selected.toString()
+      tags: selected.toString(),
+      extra: stateExtra
     };
 
     console.log(user.uid, data)
@@ -144,7 +154,14 @@ const Create: NextPage<Props> = (props) => {
           setState({ id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
           setBodyValue(data.body)
           setSelected(data.tags?.split(','))
-          console.log(state);
+          console.log(555, data.extra);
+          if (!data.extra) {
+            data.extra = [{key: "", value: ""}]
+          } 
+          
+          setStateExtra(data.extra)
+          
+          console.log(stateExtra);
         }
       })
     }
@@ -190,6 +207,7 @@ const Create: NextPage<Props> = (props) => {
           <Grid container alignItems="center" justifyContent="center" spacing={{ xs: 2, md: 1 }} mb={12}>
             <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "center"}}>
               <Box >
+                {/* {JSON.stringify(stateExtra)} */}
                 <Grid mb={2} container spacing={{ xs: 2, md: 1 }} alignItems="center" justifyContent="center">
                   <Grid item xs={12} sm={12} md={8} lg={9} style={{textAlign: "left"}} >
                   <Grid container>
@@ -268,15 +286,17 @@ const Create: NextPage<Props> = (props) => {
                   value={state.order}
                   hidden
                 />
+                <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={setStateExtra}/>
+          <br/><br/><br/><br/><br/><br/><br/>
                 <Grid sx={{marginBottom: "20px"}} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                   {/* <Grid item xs={12} sm={12} md={12} style={{textAlign: "center"}} >
                     <Box sx={{ m: 1 }} />
                   </Grid> */}
-              
                 </Grid>
               </Box>
             </Grid>
           </Grid>
+          
         </div>
       </main>
       <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
@@ -302,7 +322,6 @@ const Create: NextPage<Props> = (props) => {
         >
         <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveAltIcon />} />
         <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
-        
         </BottomNavigation>
         <br/>
       </Paper>

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -27,7 +27,7 @@ const Login2 = () => {
   const email = router.query.email
   const { user, login, folderReload } = useAuth()
   const [data, setData] = useState({ email: '', password: '' })
-  
+  const ref = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if (user) {
       folderReload().then(()=>{
@@ -40,8 +40,20 @@ const Login2 = () => {
     e.preventDefault()
     try {
       login(email, data.password).then((user: any)=>{
+        console.log({user})
+        if (user=='auth/wrong-password'){
+          alert('Ops, parece que essa não é a senha correta. Tente novamente')
+          setData({...data, password:''})
+          ref.current?.focus();
+        }
+        if (user=='auth/too-many-requests'){
+          alert('Muitas tentativas senha incorreta. Esta conta será bloqueada momentaniamente, tente novamente mais tarde')
+          setData({...data, password:''})
+          ref.current?.focus();
+        }
       })
     } catch (err) {
+      console.log(1)
       console.log(err)
     }
   }
@@ -62,6 +74,8 @@ const Login2 = () => {
         <h4>{window.location.host.split(".")[0]}</h4>
         <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
           <TextField
+            inputRef={ref} 
+            autoFocus={true}
             variant="filled"
             margin="normal"
             required

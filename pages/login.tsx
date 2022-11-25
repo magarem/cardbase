@@ -37,7 +37,7 @@ const Login = () => {
         console.log(url);
         router.push(url + '?email=' + data.email)
       }else{
-        alert('Usuário não existe')
+        alert('Esse Usuário não existe em nossa base de dados')
       }
     }
   }
@@ -63,6 +63,7 @@ const Login = () => {
           </Typography>
           <Box component="form"  noValidate sx={{ mt: 1 }}>
             <TextField
+              autoFocus={true}
               variant="filled" 
               margin="normal"
               required
@@ -71,7 +72,6 @@ const Login = () => {
               label="Email"
               name="email"
               autoComplete="email"
-              autoFocus
               onChange={(e: any) =>
                 setData({
                   ...data,

@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
@@ -20,7 +20,11 @@
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.10.9",
     "@mui/lab": "^5.0.0-alpha.103",
-    "@mui/material": "^5.10.9",
+    "@mui/material": "^5.10.15",
+    "@mui/styled-engine-sc": "^5.10.14",
+    "@mui/x-data-grid": "^5.17.12",
+    "@mui/x-data-grid-generator": "^5.17.12",
+    "@mui/x-data-grid-pro": "^5.17.12",
     "@nextui-org/react": "^1.0.0-beta.10",
     "@rjsf/core": "^5.0.0-beta.13",
     "@rjsf/material-ui": "^5.0.0-beta.13",
@@ -54,6 +58,7 @@
     "react-tag-input-component": "^2.0.2",
     "slate": "^0.84.0",
     "slate-react": "^0.83.2",
+    "styled-components": "^5.3.6",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {

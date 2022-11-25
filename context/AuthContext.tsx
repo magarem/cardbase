@@ -197,8 +197,9 @@ export const AuthContextProvider = ({
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert('Senha não confere')
-        return null
+        console.log(errorCode, errorMessage);
+        return errorCode
+        // return {code:-1, txt: 'Ops, parece que essa não é a senha correta. Tente novamente'}
       });
   }
 
