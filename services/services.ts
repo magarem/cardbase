@@ -132,6 +132,29 @@ class CardDataService {
       } catch (err) {
         console.log(err)
       }
+  }
+
+  async setCard (user: string, card_id: string, data: { img: string; title: string; body: string; folder: string; order: number; }) {
+    try {
+      console.log(card_id)
+      const docRef = doc(db, user, card_id)
+      const docSnap = await getDoc(docRef);
+      console.log(docSnap.data());
+      if (docSnap.data()){
+        card_id = card_id + '-' + new Date().getTime()
+      }
+      // const doc = await userDocRef.get();
+      // if (!doc.exists) {
+      //   console.log('No such document exista!');
+      // } else {
+      //   console.log('Document data:', doc.data());
+      // }
+
+        await setDoc(doc(db, user, card_id), data);
+      } 
+      catch (err) {
+        // console.log(err)
+      }
   } 
   
   async userAdd ( data: { uid: string; email: string; username: string;}) {

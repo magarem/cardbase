@@ -67,7 +67,7 @@ const resizeFile = (file) =>
         name="img"
         label="img"
         variant="outlined"
-        style={{width: "100%"}}
+        
         value={props.state.img}
         InputProps={{
           endAdornment: (

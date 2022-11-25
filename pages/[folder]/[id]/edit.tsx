@@ -25,6 +25,7 @@ interface Props {
 interface Obj1 {
   [x: string]: any;
   id: any;
+  card_id: any;
   img: string; 
   folder: string,
   title: string;
@@ -44,7 +45,7 @@ const Create: NextPage<Props> = (props) => {
   const [open, setOpen] = useState(false);
 
   const [selected, setSelected] = useState<string[]>([]);
-
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -56,10 +57,11 @@ const Create: NextPage<Props> = (props) => {
   const router = useRouter()
   let folder = router.query.folder
   if (folder=='usersettings') folder = 'Home'
+  const original_card_id = router.query.id
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "", img: "", folder: "", title: "", body: "", tags: "", order: -1 };
+  const cardObj = {id: "", card_id: "", img: "", folder: "", title: "", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
@@ -84,13 +86,30 @@ const Create: NextPage<Props> = (props) => {
       // router.push( '/' + innerText + '/' + id + '/edit' )
       router.push(`/${innerText}/${id}/edit`)
     }
+    if (name == 'card_id') {
+      setState({...state, card_id: value.substring(0,30).replaceAll(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, "")})// + '-' + new Date().getTime()
+      console.log('inner text: ', state.card_id);
+      // router.push( '/' + innerText + '/' + id + '/edit' )
+      state.card_id = '111'
+     
+    }
+    if (name == 'title' && router.query.id=='new') {
+      state.card_id = value.substring(0,30).replaceAll(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, "")// + '-' + new Date().getTime()
+      console.log('inner text: ', state.card_id);
+      // router.push( '/' + innerText + '/' + id + '/edit' )
+     
+    }
   };
   
   const saveCard = () => {
     setDesableSaveButton(true)
     let data = { img: state.img||'', folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: -1 };
     console.log({data});
-    CardDataService.create(user.uid, data)
+    const timestamp = new Date().getTime()
+    console.log(state.card_id=='');
+    let card_id = state.card_id
+    if (card_id == '') card_id = timestamp.toString()
+    CardDataService.setCard(user.uid, card_id, data)
       .then((x) => {
         console.log("Created new item successfully!");
         console.log(x)
@@ -113,7 +132,7 @@ const Create: NextPage<Props> = (props) => {
       img: state.img||'',
       title: state.title,
       folder: state.folder,
-      body: bodyValue,
+      body: bodyValue||'',
       order: state.order,
       tags: selected.toString(),
       extra: stateExtra
@@ -121,47 +140,40 @@ const Create: NextPage<Props> = (props) => {
 
     console.log(user.uid, data)
 
-    CardDataService.update(user.uid, state.id, {...data})
-      .then((x) => {
-        console.log("Update item successfully!");
-        console.log(x)
-        setUploadRefresh(uploadRefresh + 1)
-        setMostra(true)
-        setTimeout(() => {
-          setMostra(false)
-        }, 1000)
-        setDesableSaveButton(false)
-        router.push(`/${folder}`)
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    if (state.card_id == original_card_id) {
+      CardDataService.update(user.uid, state.card_id, {...data})
+        .then((x) => {
+          console.log("Update item successfully!");
+          console.log(x)
+          setUploadRefresh(uploadRefresh + 1)
+          setMostra(true)
+          setTimeout(() => {
+            setMostra(false)
+          }, 1000)
+          setDesableSaveButton(false)
+          router.push(`/${folder}`)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      }else{
+        saveCard()
+        CardDataService.delete(user.uid, original_card_id as string)
+      }
   }
 
   useEffect(() => {
-    console.log(getFolders());
-    // setStateFolder(getFolders())
-    console.log(folder);
-    // console.log(stateFolder);
     const folder_key = getFolderKeyByValue(folder)
-    console.log(folder_key)
     setState({...state, folder: folder_key})
-    
     if (id!=='new'){
       CardDataService.readById(user.uid, router.query.id as string).then((data) => {
         console.log(data)
         if (data) {
-          setState({ id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
+          setState({ id: router.query.id, card_id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
           setBodyValue(data.body)
           setSelected(data.tags?.split(','))
-          console.log(555, data.extra);
-          if (!data.extra) {
-            data.extra = [{key: "", value: ""}]
-          } 
-          
+          if (!data.extra) data.extra = [{key: "", value: ""}] 
           setStateExtra(data.extra)
-          
-          console.log(stateExtra);
         }
       })
     }
@@ -169,72 +181,79 @@ const Create: NextPage<Props> = (props) => {
 
   return (
     <div>
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      >
-      <DialogTitle id="alert-dialog-title">
-        {"Selecione a nova pasta"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Pasta</InputLabel>
-            <Select
-              fullWidth
-              name="folder"
-              defaultValue="/"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={state.folder}
-              label="Pasta"
-              onChange={handleChange}>
-                {getFolders().map((item: any)=>{
-                  return (
-                    <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>
-                  )
-                })}
-            </Select>
-          </FormControl>
-        </DialogContentText>
-      </DialogContent>
-    </Dialog>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        >
+        <DialogTitle id="alert-dialog-title">
+          {"Selecione a nova pasta"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Pasta</InputLabel>
+              <Select
+                fullWidth
+                name="folder"
+                defaultValue="/"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={state.folder}
+                label="Pasta"
+                onChange={handleChange}>
+                  {getFolders().map((item: any)=>{
+                    return (
+                      <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>
+                    )
+                  })}
+              </Select>
+            </FormControl>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
       <main className="py-10">
         <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
         <div className="w-full max-w-3xl px-3 mx-auto"><br/>
           <Grid container alignItems="center" justifyContent="center" spacing={{ xs: 2, md: 1 }} mb={12}>
-            <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "center"}}>
+            <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "left"}}>
               <Box >
                 {/* {JSON.stringify(stateExtra)} */}
-                <Grid mb={2} container spacing={{ xs: 2, md: 1 }} alignItems="center" justifyContent="center">
-                  <Grid item xs={12} sm={12} md={8} lg={9} style={{textAlign: "left"}} >
-                  <Grid container>
-                    <Grid item xs={6} sm={6} md={6} style={{textAlign: "left"}} >
-                    {state.id?<h2>Editar</h2>:<h2>Criar</h2>}
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
-                      <Button variant="outlined" onClick={handleClickOpen}>
+                {state.id?<h2>Editar</h2>:<h2>Criar</h2>}<br/>
+                <Button style={{width: 233, height: 50}} variant="outlined" onClick={handleClickOpen}>
                         {folder}
-                      </Button>
-                    </Grid>
-                  </Grid>
-                      <br/>
+                      </Button><br/><br/>
                       <TextField 
                         id="outlined-basic"
-                        fullWidth
+                        
+                        name="card_id"
+                        label="card_id"
+                        variant="outlined"
+                        onChange={handleChange}
+                        value={state.card_id}
+                      />
+                      <br/><br/>
+                      <TextField 
+                        id="outlined-basic"
+                        
                         name="title"
                         label="Titulo"
                         variant="outlined"
                         onChange={handleChange}
                         value={state.title}
                       /><br/><br/>
-                      <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4} lg={3} style={{textAlign: "right"}} >
-                    {state.img?
-                      <Card sx={{ width: 200, margin: 'auto', maxHeight: 500 }}>
+                       <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
+                 <br/>
+                 <TagsInput
+                  value={selected}
+                  onChange={setSelected}
+                  name="tags"
+                  placeHolder="Etiquetas"
+                /><br/>
+                       <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/><br/>
+                    {state.img&&
+                    <><Card sx={{ width: 200, maxHeight: 500 }}>
                         <CardMedia
                           component="img"
                           height="100%"
@@ -242,34 +261,10 @@ const Create: NextPage<Props> = (props) => {
                           image={state.img}
                         />
                       </Card>
-                      :
-                      <Box
-                        sx={{
-                          display: { xs: 'none', xl: 'none', md: 'block', lg: 'block' },
-                          borderRadius: '4px',
-                          margin: 'auto',
-                          width: "98%",
-                          height: 215,
-                          backgroundColor: 'darkslategray',
-                          '&:hover': {
-                            backgroundColor: 'primary.main',
-                            opacity: [0.9, 0.8, 0.7],
-                          }
-                        }}
-                      />
+                      <br/>
+                    </>
                     }
-                </Grid>
-                <Box sx={{ m: 0 }} />
-              </Grid>
-                  <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
-                 <br/>
-                 <TagsInput
-                  value={selected}
-                  onChange={setSelected}
-                  name="tags"
-                  placeHolder="Etiquetas"
-                />
-                <br/>
+                
                   {/* <TextField 
                         id="outlined-basic"
                         fullWidth
@@ -287,7 +282,7 @@ const Create: NextPage<Props> = (props) => {
                   hidden
                 />
                 <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={setStateExtra}/>
-          <br/><br/><br/><br/><br/><br/><br/>
+          <br/>
                 <Grid sx={{marginBottom: "20px"}} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                   {/* <Grid item xs={12} sm={12} md={12} style={{textAlign: "center"}} >
                     <Box sx={{ m: 1 }} />
@@ -319,9 +314,9 @@ const Create: NextPage<Props> = (props) => {
           onChange={(event, newValue) => {
             setValue(newValue);
           }}
-        >
-        <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveAltIcon />} />
-        <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
+          >
+          <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveAltIcon />} />
+          <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
         </BottomNavigation>
         <br/>
       </Paper>
