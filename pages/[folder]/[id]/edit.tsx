@@ -226,7 +226,6 @@ const Create: NextPage<Props> = (props) => {
                       </Button><br/><br/>
                       <TextField 
                         id="outlined-basic"
-                        
                         name="card_id"
                         label="card_id"
                         variant="outlined"

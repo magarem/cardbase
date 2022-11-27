@@ -29,6 +29,17 @@ export default (req: any, res: any) => {
   const username = req.query.username
   console.log(username);
  
+  async function loadDataByCardId(userUid: any, card_id: any) {
+    console.log(card_id);
+    
+    const docRef = doc(db, userUid, card_id)
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap.data());
+    if (docSnap.data()){
+      return docSnap.data()
+    }
+  } 
+  
   async function ler(userUid: any, folder: any) {
     console.log(55, userUid, folder);
     let citiesCol
@@ -47,8 +58,14 @@ export default (req: any, res: any) => {
   }
   
   CardDataService.readUserData(username).then(async (ret: any)=>{
+    const id = req.query.id
     const folder = req.query.folder
-    console.log(11, await folderReloadByGuest(ret.uid, folder));
+  
+    if (id) {
+      loadDataByCardId(ret.uid, id).then((a) => {
+        res.status(200).json(a);
+      }) 
+    }
     if (folder) {
       const folderKey = await folderReloadByGuest(ret.uid, folder)
       if (folderKey){

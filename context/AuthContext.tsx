@@ -26,7 +26,7 @@ export const AuthContextProvider = ({
   const [loading, setLoading] = useState(true)
   const [stateFolder, setStateFolder] = React.useState([{key: '', value: '', order:0}])
   const [cookie, setCookie] = useCookies(["user"])
-  const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/usersettings']
+  const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]/edit', '/[folder]/[id]/index', '/usersettings']
   
   // const cookies = new Cookies();
   useEffect(() => {
@@ -65,7 +65,7 @@ export const AuthContextProvider = ({
           setUser(null)
           if (!noAuthRequired.includes(router.pathname)) {
             console.log(22);
-            router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login')
+            // router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login')
           }
       }
       setLoading(false)

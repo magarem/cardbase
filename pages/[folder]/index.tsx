@@ -103,10 +103,12 @@ const List: NextPage<Props> = (props) => {
 // }
  
   const handleOpen = (obj: ss) => {
+    router.push("/" + folder + "/" + obj.id)
     if (window.innerWidth > 700) {
       console.log(obj);
+
       setCurrentState2(obj)
-      setOpen(true)
+      // setOpen(true)
     }
   }
 
