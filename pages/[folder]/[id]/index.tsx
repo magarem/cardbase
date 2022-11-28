@@ -124,7 +124,7 @@ const Create: NextPage<Props> = () => {
         <img src={data.img} style={{width: '100%', maxWidth: '100%'}}/>
     </Container>
        }<br/>
-                   <div style={{fontSize: '20px'}} dangerouslySetInnerHTML={{ __html: data.body }}/>
+        <div style={{fontSize: '20px'}} dangerouslySetInnerHTML={{ __html: data.body }}/>
 
         {/* </div> */}
         <MagaTable cols={cols} rows={state}/>
@@ -149,7 +149,7 @@ const Create: NextPage<Props> = () => {
           showLabels
           >
           <BottomNavigationAction label="Editar" disabled={false} onClick={() => callLink("/" + folder + "/" + router.query.id + "/edit")} icon={<EditIcon />} />
-          <BottomNavigationAction label="Excluir" onClick={() => delete_card(user.uid, router.query.id)}  icon={<DeleteIcon />}  />
+          <BottomNavigationAction label="Excluir" onClick={() => delete_card(user.uid, router.query.id as string)}  icon={<DeleteIcon />}  />
           <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
         
         </BottomNavigation>

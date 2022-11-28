@@ -37,7 +37,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function BasicTabs({children}) {
+export default function BasicTabs({children}: any) {
   const [value, setValue] = React.useState(0);
   const arrayChildren = Children.toArray(children);
 
@@ -59,35 +59,36 @@ export default function BasicTabs({children}) {
       </Box>
       <div>
         {Children.map(arrayChildren, (child, i) => {
-            if (child.props['data-tab']=='tab1'){
-                return (
-                    <TabPanel value={value} index={0}>
-                        {child}
-                    </TabPanel>
-                )
+            if (React.isValidElement(child)) {
+                if (child.props['data-tab']=='tab1'){
+                    return (
+                        <TabPanel value={value} index={0}>
+                            {child}
+                        </TabPanel>
+                    )
+                }
+                if (child.props['data-tab']=='tab2'){
+                    return (
+                        <TabPanel value={value} index={1}>
+                            {child}
+                        </TabPanel>
+                    )
+                }
+                if (child.props['data-tab']=='tab3'){
+                    return (
+                        <TabPanel value={value} index={2}>
+                            {child}
+                        </TabPanel>
+                    )
+                } 
+                if (child.props['data-tab']=='tab4'){
+                    return (
+                        <TabPanel value={value} index={3}>
+                            {child}
+                        </TabPanel>
+                    )
+                }
             }
-             if (child.props['data-tab']=='tab2'){
-                return (
-                    <TabPanel value={value} index={1}>
-                        {child}
-                    </TabPanel>
-                )
-            }
-             if (child.props['data-tab']=='tab3'){
-                return (
-                    <TabPanel value={value} index={2}>
-                        {child}
-                    </TabPanel>
-                )
-            } 
-            if (child.props['data-tab']=='tab4'){
-                return (
-                    <TabPanel value={value} index={3}>
-                        {child}
-                    </TabPanel>
-                )
-            }
-            
         })}
       </div>
       {/* <TabPanel value={value} index={0}>
