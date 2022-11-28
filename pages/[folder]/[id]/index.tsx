@@ -11,13 +11,16 @@ import Box from '@mui/material/Box';
 import AlertDialog from '../../../components/AlertDialog'
 import React from 'react';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
 import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
 import Image from 'next/image'
 import MagaTable from "../../../components/table"
 import { spacing } from '@mui/system';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 interface Props {
   setuser: Function,
   user: {
@@ -39,15 +42,8 @@ interface Obj2 {
   key: any;
   value: any;
 }
-const Create: NextPage<Props> = (props) => {
-  const { user, getFolderKeyByValue, getFolders } = useAuth()
-  const [desableSaveButton, setDesableSaveButton] = useState(false);
-  const [bodyValue, setBodyValue] = useState('');
-  const [value, setValue] = useState('');
-  const [open, setOpen] = useState(false);
-
-  const [selected, setSelected] = useState<string[]>([]);
-  
+const Create: NextPage<Props> = () => {
+  const { user, getFolderKeyByValue } = useAuth()
 
   const router = useRouter()
   let folder = router.query.folder
@@ -62,18 +58,22 @@ const Create: NextPage<Props> = (props) => {
   const tblObj = [{key: "", value: ""}];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]>(tblObj)
 
- 
-//   const cols = ['Nome', 'Email', 'Fone', 'Adress', 'Obs']
-//   const rows = [
-//       ['Maguete!', 'maga@teste.com', 6.0, 24, 4.0], 
-//       ['Ice cream sandwich', 237, 9.0, 37, 4.3], 
-//       ['Eclair', 262, 16.0, 24, 6.0], 
-//       ['Cupcake', 305, 3.7, 67, 4.3], 
-//       ['Gingerbread', 356, 16.0, 49, 3.9]
-//   ]
+  const callLink = (link: string) =>{
+    router.push(link)
+  }
+  
+  const handleRemove = (id: string) => {
+    callLink('/' + folder)
+  };
+  
+  const delete_card = (user: string, id: string) => {
+    if (window.confirm("Confirma exclusão?")) {
+      CardDataService.delete(user, id)
+      handleRemove(id)
+    }
+  }
 
-
-  const cols = ['Chave', 'Valor']
+  const cols: any[] = ['', '']
   const rows: any[] = []
 
 
@@ -106,8 +106,8 @@ const Create: NextPage<Props> = (props) => {
   }, [])
  
   return (
-    <> 
-    
+    <Container maxWidth="md">
+    <Box>
         <h1>{data.title}</h1>
         {/* <img src={data.img}/> */}
         {/* <div style={{ position: "relative", width: "100%", paddingBottom: "20%" }} > */}
@@ -116,19 +116,50 @@ const Create: NextPage<Props> = (props) => {
         <Container disableGutters
             sx={{
                 padding: 0,
+                width: '100%',
                 maxWidth: '100%',
             }}
         // alt="Logo"
         >
-        <img src={data.img} style={{maxWidth: '100%'}}/>
+        <img src={data.img} style={{width: '100%', maxWidth: '100%'}}/>
     </Container>
        }<br/>
                    <div style={{fontSize: '20px'}} dangerouslySetInnerHTML={{ __html: data.body }}/>
 
         {/* </div> */}
         <MagaTable cols={cols} rows={state}/>
-        <br/><br/>
-    </>
+        <br/><br/><br/><br/><br/><br/>
+        {user&&
+        <>
+        <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
+        <BottomNavigation sx={{ 
+          bgcolor: '#121212',
+            '& .Mui-selected': {
+              '& .MuiBottomNavigationAction-label': {
+                fontSize: theme => theme.typography.caption,
+                transition: 'none',
+                fontWeight: 'bold',
+                lineHeight: '20px'
+              },
+              '& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label': {
+                color: theme => theme.palette.secondary.main
+              }
+            }
+          }}
+          showLabels
+          >
+          <BottomNavigationAction label="Editar" disabled={false} onClick={() => callLink("/" + folder + "/" + router.query.id + "/edit")} icon={<EditIcon />} />
+          <BottomNavigationAction label="Excluir" onClick={() => delete_card(user.uid, router.query.id)}  icon={<DeleteIcon />}  />
+          <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
+        
+        </BottomNavigation>
+        
+        <br/>
+      </Paper>
+      </>
+        }
+        </Box>
+    </Container>
    
   );
 } 

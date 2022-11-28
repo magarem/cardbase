@@ -20,7 +20,7 @@ function CardsGrid(props){
   return (
     <>
     {props.currentState.length==0?
-    <h3>Esta pasta está vazia</h3>:
+    <h3></h3>:
     <ReactSortable 
       handle=".handle"
       className="grid-container"

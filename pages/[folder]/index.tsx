@@ -6,7 +6,7 @@ import CardDataService from "../../services/services";
 import { useRouter } from "next/router";
 import CardsGrid from '../../components/CardsGrid'
 import { useAuth } from '../../context/AuthContext'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem, IconButton, Fab } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem, IconButton, Fab, Switch } from "@mui/material";
 import React from "react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddIcon from '@mui/icons-material/Add';
@@ -88,9 +88,9 @@ const List: NextPage<Props> = (props) => {
   const styleDiv = {
     display: 'flex',
     position: 'fixed',
-    width: '100%',
+    right: '4vh',
     justifyContent: 'center',
-    bottom: '5vh'
+    bottom: '15vh'
   }
 
 //   const style = {
@@ -231,6 +231,7 @@ const List: NextPage<Props> = (props) => {
       <Grid container>
         <Grid item md={2}>
         {<h2 style={{marginBottom: 15}}>{capitalizeFirstLetter(folder as string)}</h2>}
+        
         </Grid>
         <Grid item md={10}>
         {/* <IconButton size="small" aria-label="edit" onClick={() => {
@@ -243,11 +244,20 @@ const List: NextPage<Props> = (props) => {
      
       {/* {JSON.stringify(currentState)} */}
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} />
-      {user&&<Fab sx={fabs[0].sx} aria-label={fabs[0].label} color={fabs[0].color} onClick={() => {
+      {user&&
+      <>
+      {/* <Switch 
+      // checked={checked}
+      sx={styleDiv}
+      onChange={()=>alert(1)}
+      inputProps={{ 'aria-label': 'controlled' }}
+    /> */}
+      <Fab sx={fabs[0].sx} aria-label={fabs[0].label} color={fabs[0].color} onClick={() => {
           router.push("/" + folder + "/new/edit")
           }}>
         {fabs[0].icon}
-      </Fab>}
+      </Fab>
+      </>}
       <br/><br/><br/><br/><br/><br/>
       {/* <Copyright /> */}
     </>

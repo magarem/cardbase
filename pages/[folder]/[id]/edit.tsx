@@ -15,6 +15,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
 import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
+import MagaTabs from "../../../components/Tabs"
+
 interface Props {
   setuser: Function,
   user: {
@@ -66,7 +68,6 @@ const Create: NextPage<Props> = (props) => {
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
   
- 
   const tblObj = [{key: "", value: ""}];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]>(tblObj)
 
@@ -112,8 +113,6 @@ const Create: NextPage<Props> = (props) => {
     CardDataService.setCard(user.uid, card_id, data)
       .then((x) => {
         console.log("Created new item successfully!");
-        console.log(x)
-        // setUploadRefresh(uploadRefresh + 1)
         setMostra(true)
         setTimeout(() => { setMostra(false) }, 1000)
         setState(cardObj)
@@ -215,84 +214,73 @@ const Create: NextPage<Props> = (props) => {
       </Dialog>
       <main className="py-10">
         <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
-        <div className="w-full max-w-3xl px-3 mx-auto"><br/>
-          <Grid container alignItems="center" justifyContent="center" spacing={{ xs: 2, md: 1 }} mb={12}>
-            <Grid item={true} xs={12} sm={12} md={12} sx={{ padding: 0 }} style={{textAlign: "left"}}>
-              <Box >
-                {/* {JSON.stringify(stateExtra)} */}
-                {state.id?<h2>Editar</h2>:<h2>Criar</h2>}<br/>
-                <Button style={{width: 233, height: 50}} variant="outlined" onClick={handleClickOpen}>
-                        {folder}
-                      </Button><br/><br/>
-                      <TextField 
-                        id="outlined-basic"
-                        name="card_id"
-                        label="card_id"
-                        variant="outlined"
-                        onChange={handleChange}
-                        value={state.card_id}
-                      />
-                      <br/><br/>
-                      <TextField 
-                        id="outlined-basic"
-                        
-                        name="title"
-                        label="Titulo"
-                        variant="outlined"
-                        onChange={handleChange}
-                        value={state.title}
-                      /><br/><br/>
-                       <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
-                 <br/>
-                 <TagsInput
-                  value={selected}
-                  onChange={setSelected}
-                  name="tags"
-                  placeHolder="Etiquetas"
-                /><br/>
-                       <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/><br/>
-                    {state.img&&
-                    <><Card sx={{ width: 200, maxHeight: 500 }}>
-                        <CardMedia
-                          component="img"
-                          height="100%"
-                          width="100%"
-                          image={state.img}
-                        />
-                      </Card>
-                      <br/>
-                    </>
-                    }
-                
-                  {/* <TextField 
-                        id="outlined-basic"
-                        fullWidth
-                        name="tags"
-                        label="Etiquetas"
-                        variant="outlined"
-                        onChange={handleChange}
-                        value={state.tags}
-                      /> */}
-                  <TextField
-                  name="order"
-                  label="Order"
-                  onChange={handleChange}
-                  value={state.order}
-                  hidden
-                />
-                <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={setStateExtra}/>
-          <br/>
-                <Grid sx={{marginBottom: "20px"}} container spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                  {/* <Grid item xs={12} sm={12} md={12} style={{textAlign: "center"}} >
-                    <Box sx={{ m: 1 }} />
-                  </Grid> */}
-                </Grid>
-              </Box>
-            </Grid>
-          </Grid>
-          
-        </div>
+        {state.id?<h2 style={{marginLeft:20, marginTop:100}}>Editar</h2>:<h2>Criar</h2>}<br/>
       </main>
+
+      <MagaTabs>
+        <div data-tab="tab1">
+          <TextField 
+              id="outlined-basic"
+              name="title"
+              label="Titulo"
+              variant="outlined"
+              onChange={handleChange}
+              value={state.title}
+            /><br/><br/>
+              <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
+        <br/>
+        </div>
+        <div data-tab="tab2">
+          <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/><br/>
+            {state.img&&
+            <><Card sx={{ width: 200, maxHeight: 500 }}>
+                <CardMedia
+                  component="img"
+                  height="100%"
+                  width="100%"
+                  image={state.img}
+                />
+              </Card>
+              <br/>
+            </>
+            }
+
+           
+        </div>
+        <div data-tab="tab3">
+           <TagsInput
+              value={selected}
+              onChange={setSelected}
+              name="tags"
+              placeHolder="Etiquetas"
+            /><br/>
+            <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={(e) => setStateExtra}/>
+              <TextField
+              name="order"
+              label="Order"
+              onChange={handleChange}
+              value={state.order}
+              hidden
+            />
+            <br/>
+        </div>
+        <div data-tab="tab4">
+          <TextField 
+              id="outlined-basic"
+              name="card_id"
+              label="Código"
+              variant="outlined"
+              onChange={handleChange}
+              value={state.card_id}
+            />
+            <br/><br/>
+            <Button style={{width: 233, height: 50}} variant="outlined" onClick={handleClickOpen}>
+              {folder}
+            </Button>
+        </div>
+      </MagaTabs>
+      
+      <br/><br/><br/><br/><br/>
       <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
         <BottomNavigation sx={{ 
           bgcolor: '#121212',

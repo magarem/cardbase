@@ -62,12 +62,12 @@ export default function BasicTable(props: { stateExtra: React.SetStateAction<Obj
     <>
         {/* {JSON.stringify(stateExtra)} */}
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 400 }} aria-label="simple table">
+      <Table sx={{ minWidth: '100%' }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="center">Chave</TableCell>
             <TableCell align="center">Valor</TableCell>
-            <TableCell align="center">Excluir</TableCell>
+            <TableCell align="center"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -77,7 +77,7 @@ export default function BasicTable(props: { stateExtra: React.SetStateAction<Obj
               key={index}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell width={200} key={'keyss_'+index} align="center" component="th" scope="row">
+              <TableCell width={150} key={'keyss_'+index} align="center" component="th" scope="row">
               <TextField 
                     key={'key_'+index}
                     id="outlined-basic"
@@ -88,7 +88,7 @@ export default function BasicTable(props: { stateExtra: React.SetStateAction<Obj
                     value={stateExtra[index].key}
                     />
               </TableCell>
-              <TableCell align="center">
+              <TableCell width={200} align="center">
                 <TextField 
                  key={'value_'+index}
                     id="outlined-basic"
@@ -99,7 +99,7 @@ export default function BasicTable(props: { stateExtra: React.SetStateAction<Obj
                     value={stateExtra[index].value}
                     />
               </TableCell>
-              <TableCell align="center">
+              <TableCell width={1} align="center">
                 <Button onClick={()=>itemDel(index)}>x</Button>
               </TableCell>
             </TableRow>

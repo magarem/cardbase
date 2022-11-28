@@ -19,6 +19,8 @@ import { SnippetFolder } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { Box, ListItem, ListItemText } from '@mui/material';
 import Image from 'next/image'
+import Switch from '@mui/material/Switch';
+
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
@@ -119,7 +121,7 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
     return (  
       <Box style={{"padding": "0px"}}>
       <Card raised  >
-        {user&&
+        {/* {user&&
         <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
           <Grid container m={0}>
             <Grid item xs={6} sm={6} md={6}>
@@ -137,14 +139,14 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
             </Grid>
           </Grid>
         </CardActions>
-        }
+        } */}
         {item.img&&
-        <CardMedia height={300} component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
+        <CardMedia height={300}  component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
         }
         <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2}>
             <Grid item md={10}  >
-              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+              <Typography className="handle" variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
                 {item.title}
               </Typography>
               <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
