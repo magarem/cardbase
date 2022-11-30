@@ -17,7 +17,15 @@ interface Props {
 
 export default function DenseTable({cols, rows}: Props) {
     return (
-    <TableContainer component={Paper} style={{ width: '100%' }}>
+    <TableContainer component={Paper}  sx={{
+      width: {
+        xs: '100%', // theme.breakpoints.up('xs')
+        sm: '100%', // theme.breakpoints.up('sm')
+        md: 300, // theme.breakpoints.up('md')
+        lg: 400, // theme.breakpoints.up('lg')
+        xl: 500, // theme.breakpoints.up('xl')
+      },
+    }}>
       <Table aria-label="a dense table">
         {/* <TableHead>
           <TableRow >
@@ -33,8 +41,8 @@ export default function DenseTable({cols, rows}: Props) {
               sx={{  '&:last-child td, &:last-child th': { border: 0 } }}
             >
                 {cols.map((col: any, index: number ) => 
-                    <TableCell key={index.toString()} component="th" scope="row" align={index==0?'right':'left'}>
-                      <Typography sx={{size: 20, fontWeight: (index==0)?'bold':'' }}>
+                    <TableCell key={index.toString()} component="th" scope="row" >
+                      <Typography sx={{fontWeight: (index==0)?'bold':'' }}>
                         {row[index]}
                       </Typography>
                     </TableCell>

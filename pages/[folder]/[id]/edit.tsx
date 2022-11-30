@@ -58,7 +58,7 @@ const Create: NextPage<Props> = (props) => {
 
   const router = useRouter()
   let folder = router.query.folder
-  if (folder=='usersettings') folder = 'Home'
+  if (folder == 'usersettings') folder = 'Home'
   const original_card_id = router.query.id
   const id = router.query.id
 
@@ -69,7 +69,7 @@ const Create: NextPage<Props> = (props) => {
   const [mostra, setMostra] = useState(false)
   
   const tblObj = [{key: "", value: ""}];
-  const [stateExtra, setStateExtra] = React.useState<Obj2[]>(tblObj)
+  const [stateExtra, setStateExtra] = React.useState<Obj2[]| undefined>(tblObj)
 
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -162,6 +162,8 @@ const Create: NextPage<Props> = (props) => {
   }
 
   useEffect(() => {
+    if (user.uid) {
+    console.log(router.query.id);
     const folder_key = getFolderKeyByValue(folder)
     setState({...state, folder: folder_key})
     if (id!=='new'){
@@ -176,7 +178,8 @@ const Create: NextPage<Props> = (props) => {
         }
       })
     }
-  }, [router.query])
+  }
+  }, [user])
 
   return (
     <div>
@@ -244,8 +247,6 @@ const Create: NextPage<Props> = (props) => {
               <br/>
             </>
             }
-
-           
         </div>
         <div data-tab="tab3">
            <TagsInput
@@ -254,7 +255,7 @@ const Create: NextPage<Props> = (props) => {
               name="tags"
               placeHolder="Etiquetas"
             /><br/>
-            <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={(e) => setStateExtra}/>
+            <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={setStateExtra}/>
               <TextField
               name="order"
               label="Order"

@@ -11,7 +11,16 @@ import { useRouter } from 'next/router'
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import React from 'react'
 // import Cookies from 'universal-cookie';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
+
+interface UserType {
+  email: string | null;
+  uid: string | null;
+  username: string | null;
+  folders: Array<{key: string, value: string}> | null;
+  isLogged: boolean;
+}
+
 const AuthContext = createContext<any>({})
 
 export const useAuth = () => useContext(AuthContext)
@@ -22,56 +31,89 @@ export const AuthContextProvider = ({
   children: React.ReactNode
 }) => {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [stateFolder, setStateFolder] = React.useState([{key: '', value: '', order:0}])
-  const [cookie, setCookie] = useCookies(["user"])
-  const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]/edit', '/[folder]/[id]/index', '/usersettings']
+  const [user, setUser] = useState<UserType>({
+    uid: null,
+    email: null,
+    username: null,
+    folders: [{key: '', value: ''}],
+    isLogged: false
+  })
+  const [loading, setLoading] = useState<boolean>(true)
+  const [stateFolder, setStateFolder] = React.useState([{key: null, value: null, order:0}])
+  // const [cookie, setCookie] = useCookies(["user"])
+  const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]', '/[folder]/[id]/index', '/usersettings']
   
-  // const cookies = new Cookies();
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("1onAuthStateChanged", user);
-      // console.log(cookie.user);
-      
-      // console.log(cookies.get('myCat')); // Pacman
-     
+      console.log('onAuthStateChanged', stateFolder);
       if (user) {
-        
-        // setCookie('user', user, { path: '/', domain: '.magadell.local' });
-
-        // cookies.set('myCat', 'Pacman', { path: '/' });
-        // console.log(cookies.get('myCat')); // Pacman
-        // setCookie("user", JSON.stringify(user), {
-        //   path: "/"})
-        //  console.log(cookie.user);
-         
-        userReadData(user.uid).then((ret)=>{
+        dataServices.readUserData(user.uid, null).then((ret) => {
           console.log(ret);
           setUser({
             uid: user.uid,
             email: user.email,
-            username: ret?.data.username
+            username: ret?.data.username,
+            folders: ret.folders,
+            isLogged: true
           })
         })
       } else {
-        // if ( false ) {
-        //   user = cookie.user
-        //   console.log(user);
-          
-        // }else{
-          console.log(11,{user});
-          
-          setUser(null)
-          if (!noAuthRequired.includes(router.pathname)) {
-            console.log(22);
-            // router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login')
-          }
+        setUser({ email: null, uid: null, username: null, folders: null, isLogged: false });
       }
-      setLoading(false)
-    })
-    return () => unsubscribe()
-  }, [])
+    });
+    setLoading(false);
+
+    return () => unsubscribe();
+  }, []);
+
+
+  // const cookies = new Cookies();
+  // useEffect(() => {
+  //   alert('auth called')
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     console.log("1onAuthStateChanged", user);
+  //     alert(user)
+  //     // console.log(cookie.user);
+      
+  //     // console.log(cookies.get('myCat')); // Pacman
+     
+  //     if (user) {
+        
+  //       // setCookie('user', user, { path: '/', domain: '.magadell.local' });
+
+  //       // cookies.set('myCat', 'Pacman', { path: '/' });
+  //       // console.log(cookies.get('myCat')); // Pacman
+  //       // setCookie("user", JSON.stringify(user), {
+  //       //   path: "/"})
+  //       //  console.log(cookie.user);
+         
+  //       userReadData(user.uid).then((ret)=>{
+  //         console.log(ret);
+  //         setUser({
+  //           uid: user.uid,
+  //           email: user.email,
+  //           username: ret?.data.username
+  //         })
+  //       })
+  //     } else {
+  //       // if ( false ) {
+  //       //   user = cookie.user
+  //       //   console.log(user);
+          
+  //       // }else{
+  //         console.log(11,{user});
+          
+  //         setUser(null)
+  //         if (!noAuthRequired.includes(router.pathname)) {
+  //           console.log(22);
+  //           // router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login')
+  //         }
+  //     }
+  //     setLoading(false)
+  //   })
+  //   return () => unsubscribe()
+  // }, [])
 
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -88,7 +130,7 @@ export const AuthContextProvider = ({
   
   const getFolderKeyByValue = (value: string) => {
     console.log(stateFolder);
-    const ret = stateFolder.find(item => item.value == value)?.key
+    const ret = user.folders?.find(item => item.value == value)?.key
     return ret
   }
 
@@ -106,7 +148,8 @@ export const AuthContextProvider = ({
   }
 
   const folderReload = async () => {
-    return await dataServices.readById(user.uid, "folders").then((data: any) => {
+    console.log('folderReload', user.uid);
+    return await dataServices.readById(user.uid as string, "folders").then((data: any) => {
       if (data){
         console.log(data)
         console.log(Object.values(data))
@@ -114,20 +157,25 @@ export const AuthContextProvider = ({
         console.log(aa);
         setStateFolder(aa)
         console.log(stateFolder);
-        return true
+        return aa
       }
     })
   }
 
+  // React.useEffect(() => {
+  //     alert(JSON.stringify(stateFolder))
+  // }, [stateFolder[0].key])
+  
   React.useEffect(() => {
-    if (user){
-      // setStateFolder(null)
-      console.log(stateFolder[0].key);
-      console.log(user.uid);
-      folderReload()
-    }
-    // return () => getFolders()
-  }, [router.query, user])
+      console.log('AuthContext');
+      if (user.uid){
+        // setStateFolder(null)
+        console.log(user.uid);
+        folderReload()
+        console.log(stateFolder);
+      }
+  
+  }, [])
 
   const userReadData = async (uid: string)=> {
     console.log(uid);
@@ -204,7 +252,7 @@ export const AuthContextProvider = ({
   }
 
   const logout = async () => {
-    setUser(null)
+    setUser({ email: null, uid: null, username: null, folders: null, isLogged: false })
     signOut(auth).then(() => {
       console.log('logout');
       // router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
@@ -215,7 +263,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
+    <AuthContext.Provider value={{user, stateFolder, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )

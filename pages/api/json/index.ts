@@ -57,7 +57,7 @@ export default (req: any, res: any) => {
     return cityList.sort((a: any, b: any) => (a.order > b.order) ? 1 : -1)
   }
   
-  CardDataService.readUserData(username).then(async (ret: any)=>{
+  CardDataService.readUserData(null, username).then(async (ret: any)=>{
     const id = req.query.id
     const folder = req.query.folder
   

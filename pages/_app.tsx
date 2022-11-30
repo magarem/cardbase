@@ -14,6 +14,7 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import Head from 'next/head'
 const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]/edit', '/[folder]/[id]', '/usersettings']
 import Layout from '../components/layout'
+// import { CookiesProvider } from "react-cookie"
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -77,14 +78,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Layout>
             <Container fixed>
               <Box mt={10}>
-                
-                {(noAuthRequired.includes(router.pathname)) ? (
-                  <Component {...pageProps} />
-                ) : (
-                  <ProtectedRoute>
+                {/* <CookiesProvider> */}
+                  {(noAuthRequired.includes(router.pathname)) ? (
                     <Component {...pageProps} />
-                  </ProtectedRoute>
-                )}
+                  ) : (
+                    <ProtectedRoute>
+                      <Component {...pageProps} />
+                    </ProtectedRoute>
+                  )}
+                {/* </CookiesProvider> */}
               </Box>
             </Container>
           </Layout>

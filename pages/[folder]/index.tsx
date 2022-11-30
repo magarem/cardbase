@@ -6,22 +6,10 @@ import CardDataService from "../../services/services";
 import { useRouter } from "next/router";
 import CardsGrid from '../../components/CardsGrid'
 import { useAuth } from '../../context/AuthContext'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, useMediaQuery, Grid, Link, FormControl, InputLabel, Select, MenuItem, IconButton, Fab, Switch } from "@mui/material";
+import { Dialog, DialogContent, Grid, Link, Fab } from "@mui/material";
 import React from "react";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddIcon from '@mui/icons-material/Add';
 import { SxProps } from '@mui/system';
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '1px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 interface Props {
   setuser: Function,
@@ -38,7 +26,7 @@ interface Props {
 type ss = {
   id?: any;
   img?: string;
-  cardSession?: string;
+  folder?: string;
   title?: string;
   body?: string;
   type?: string;
@@ -70,46 +58,26 @@ const fabStyle = {
   position: 'fixed',
 };
 
-const fabs = [
-  {
-    color: 'primary' as 'primary',
-    sx: fabStyle as SxProps,
-    icon: <AddIcon />,
-    label: 'Add',
-  }]
+const fabs = [{
+    color: 'primary' as 'primary', sx: fabStyle as SxProps,
+    icon: <AddIcon />, label: 'Add',
+}]
 
 const List: NextPage<Props> = (props) => {
   const router = useRouter()
-  const { user, getFolderKeyByValue, folderReloadByGuest } = useAuth()
+  const { user, stateFolder, folderReload, getFolderKeyByValue, folderReloadByGuest } = useAuth()
   let folder = router.query.folder
   console.log({user, folder});
   const [open, setOpen] = useState(false);
  
-  const styleDiv = {
-    display: 'flex',
-    position: 'fixed',
-    right: '4vh',
-    justifyContent: 'center',
-    bottom: '15vh'
-  }
-
-//   const style = {
-//     margin: 0,
-//     top: 'auto',
-//     right: 20,
-//     bottom: 20,
-//     left: 'auto',
-//     position: 'fixed',
-// }
- 
   const handleOpen = (obj: ss) => {
     router.push("/" + folder + "/" + obj.id)
-    if (window.innerWidth > 700) {
-      console.log(obj);
+    // if (window.innerWidth > 700) {
+    //   console.log(obj);
 
-      setCurrentState2(obj)
-      // setOpen(true)
-    }
+    //   setCurrentState2(obj)
+    //   // setOpen(true)
+    // }
   }
 
   const handleClose = () => setOpen(false);
@@ -117,24 +85,26 @@ const List: NextPage<Props> = (props) => {
   const [currentState2, setCurrentState2] = useState<ss>();
   const [userDataByGuest, setUserDataByGuest] = useState({});
 
-  const loadData = async () => {
-    
-    if (user) {
-      const folderKey = await getFolderKeyByValue(folder)
-      console.log(folder, folderKey)
-      console.log({folderKey, folder});
-      console.log('>>', user.uid);
-      CardDataService.read(user.uid, folderKey).then((data3) => {
-        setCurrentState(data3)
-        console.log(data3)
-      })
+  const loadData = async (user: { folders: any[]; uid: string; }) => {
+    if (true) {
+      // await folderReload()
+      // const folderKey = await getFolderKeyByValue(folder)
+      // console.log(stateFolder);
+      const folderKey = await user.folders.find(item => item.value == folder)?.key
+      console.log('>>', user, folder, folderKey);
+      if (folderKey){
+        CardDataService.read(user.uid, folderKey).then((data3) => {
+          setCurrentState(data3)
+          console.log(data3)
+        })
+      }
     }else{
       userByGuest()
     }
   }
 
   const userByGuest = async () => {
-    CardDataService.readUserData(location.href.split('//')[1].split('.')[0]).then( async (ret: any)=>{
+    CardDataService.readUserData(null, location.href.split('//')[1].split('.')[0]).then( async (ret: any)=>{
       // setUserDataByGuest(ret)
       // console.log(folder, folderKey)
       const folderKey = await folderReloadByGuest(ret.uid, folder)
@@ -147,17 +117,23 @@ const List: NextPage<Props> = (props) => {
   }
   
   // useEffect(() => {
-  //   loadData()
-  // }, [user, folder])
+  //   console.log(user);
+  //   if (user.uid) {
+  //     loadData(user, folder)
+  //   }
+  // }, [folder])
   
 
   useEffect(() => {
-    console.log(location.href.split('//')[1].split('.')[0]);
-    CardDataService.readUserData(location.href.split('//')[1].split('.')[0]).then((ret: any)=>{
-      setUserDataByGuest(ret)
-    })
-    loadData()
-  }, [user, folder])
+    if (true) {
+      console.log(location.href.split('//')[1].split('.')[0]);
+      CardDataService.readUserData(null, location.href.split('//')[1].split('.')[0]).then((ret: any)=>{
+        console.log(ret);
+        setUserDataByGuest(ret)
+        loadData(ret)
+      })
+    }
+  },[folder])
 
 
   const PhotoZoonCard = () => {
@@ -228,9 +204,11 @@ const List: NextPage<Props> = (props) => {
           <PhotoZoonCard />
         </DialogContent>
       </Dialog>
+      {/* {JSON.stringify(user)}<br/>
+      {JSON.stringify(stateFolder)} */}
       <Grid container>
         <Grid item md={2}>
-        {<h2 style={{marginBottom: 15}}>{capitalizeFirstLetter(folder as string)}</h2>}
+        {<h2 style={{marginBottom: 15}}>{folder&&capitalizeFirstLetter(folder as string)}</h2>}
         
         </Grid>
         <Grid item md={10}>

@@ -36,7 +36,7 @@ export default function Layout({ children }: any) {
   }
 
   function capitalizeFirstLetter(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    return str?.charAt(0).toUpperCase() + str?.slice(1)
   }
 
   const toggleDrawer =
@@ -63,7 +63,7 @@ export default function Layout({ children }: any) {
         <ListItem>
             <ListItemText primary="Pastas" />
         </ListItem>
-        {getFolders()&&getFolders().map((item: any, index: any) => (
+        {user.folders&&user.folders.map((item: any, index: any) => (
           <ListItem key={item.value} disablePadding onClick={()=>golink(item.key, item.value)}>
             <ListItemButton>
               <ListItemIcon>
@@ -86,7 +86,7 @@ export default function Layout({ children }: any) {
     <div>
       {(['left'] as const).map((anchor) => (
         <React.Fragment key={anchor}>
-          {user&&
+          {user.isLogged&&
             <Drawer
               anchor={anchor}
               open={state[anchor]}
@@ -94,7 +94,7 @@ export default function Layout({ children }: any) {
               {list(anchor)}
             </Drawer>
           }
-          <Navbar toggleDrawer={toggleDrawer} />
+          <Navbar toggleDrawer={toggleDrawer}/>
           <main>{children}</main>
         </React.Fragment>
       ))}

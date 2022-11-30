@@ -40,17 +40,52 @@ class CardDataService {
     return x
   }
 
-  async readUserData(userName: string) {
-    console.log({ userName });
-    // const docRef = doc(db, 'users', user);
-    const docRef = query(collection(db, "users"), where("username", "==", userName));
-    const docSnap = await getDocs(docRef);
-   let a 
-    docSnap.forEach((doc) => {
-      a = doc.data()
-    });
+  async readUserData(uid: string|null, userName: string|null) {
+    let a: any
+
+    if (uid) {
+      console.log(uid);
+      const col = query(collection(db, 'users'), where("uid", "==", uid))
+      const snap = await getDocs(col);
+      const list = snap.docs.map(doc => {
+          return {id: doc.id, data: doc.data()}
+      });
+      // console.log(list);
+      // return list[0]
+      a = list[0]
+    }
+
+    if (userName) {
+      console.log({ userName });
+      // const docRef = doc(db, 'users', user);
+      const docRef = query(collection(db, "users"), where("username", "==", userName));
+      const docSnap = await getDocs(docRef);
+       
+      docSnap.forEach((doc) => {
+        a = doc.data()
+      });
+
+      uid = a.uid
+    }
+
+    await this.readById(uid as string, "folders").then((data: any) => {
+      if (data){
+        console.log(data)
+        console.log(Object.values(data))
+        const folders = Object.values(data) as Array<any>
+        console.log(folders);
+        a = {...a, folders}
+        console.log(a);
+        // return aa
+      }
+    })
+    console.log(a);
     return a
   }
+
+
+
+
 
   async readById (user: string, id: string) {
     console.log({ user, id });
@@ -143,18 +178,10 @@ class CardDataService {
       if (docSnap.data()){
         card_id = card_id + '-' + new Date().getTime()
       }
-      // const doc = await userDocRef.get();
-      // if (!doc.exists) {
-      //   console.log('No such document exista!');
-      // } else {
-      //   console.log('Document data:', doc.data());
-      // }
-
-        await setDoc(doc(db, user, card_id), data);
-      } 
-      catch (err) {
-        // console.log(err)
-      }
+      await setDoc(doc(db, user, card_id), data);
+    } 
+    catch (err) {
+    }
   } 
   
   async userAdd ( data: { uid: string; email: string; username: string;}) {

@@ -8,6 +8,9 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+// import { useCookies } from "react-cookie"
+
+ 
 
 function Copyright(props: any) {
   return (
@@ -23,6 +26,7 @@ function Copyright(props: any) {
 }
 
 const Login2 = () => {
+  // const [cookie, setCookie] = useCookies(["user"])
   const router = useRouter()
   const email = router.query.email
   const { user, login, folderReload } = useAuth()
@@ -41,16 +45,25 @@ const Login2 = () => {
     try {
       login(email, data.password).then((user: any)=>{
         console.log({user})
+        let authOk = true
         if (user=='auth/wrong-password'){
+          let authOk = false
           alert('Ops, parece que essa não é a senha correta. Tente novamente')
           setData({...data, password:''})
           ref.current?.focus();
         }
         if (user=='auth/too-many-requests'){
+          let authOk = false
           alert('Muitas tentativas senha incorreta. Esta conta será bloqueada momentaniamente, tente novamente mais tarde')
           setData({...data, password:''})
           ref.current?.focus();
         }
+        // if (authOk) {
+        //   setCookie("user", JSON.stringify(user), {
+        //     path: "/",
+        //     sameSite: true,
+        //   })
+        // }
       })
     } catch (err) {
       console.log(1)

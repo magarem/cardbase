@@ -1,20 +1,17 @@
-import { DeleteForever } from "@material-ui/icons";
-import { Create } from "@material-ui/icons";
-import { Folder } from "@material-ui/icons";
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, InputAdornment,  InputLabel,  List, ListItem, ListItemAvatar, ListItemText, MenuItem, Select, TextField } from "@mui/material";
+import React from "react";
+import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import CardDataService from "../../services/services";
 import HomeIcon from '@mui/icons-material/Home';
-import { useRouter } from "next/router";
-import React from "react";
-interface a {
-  key: string;
-  value: string;
+import { Create, DeleteForever, Folder } from "@material-ui/icons";
+
+interface folderItem {
+  key: string | null;
+  value: string | null;
   order: number;
 }
-let aa = 0
 
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -22,24 +19,19 @@ function capitalizeFirstLetter(str: string) {
 
 const Usersettings: NextPage = (props) => {
  
-  console.log(props);
-  const [formCardFolder, setFormCardFolder] = useState<a>({key:"", value:"", order: 0})
-  const [cardFolder, setCardFolder] = useState<a>({key:"", value:"", order: 0})
-  const [operation, setOperation] = useState("Inserir")
-  const { user, getFolders, setFolders, folderReload } = useAuth()
-  const [open2, setOpen2] = React.useState(false);
+  const [formCardFolder, setFormCardFolder] = useState<folderItem>({key:"", value:"", order: 0})
+  const { user, getFolders, setFolders } = useAuth()
+  const [flgDialogSetOpen, setFlgDialogSetOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    setFormCardFolder({key:"", value:"", order: 1})
-    setOpen2(true);
+    setFormCardFolder({key: null, value: null, order: 1})
+    setFlgDialogSetOpen(true);
   };
 
   const handleClose = () => {
-    setOpen2(false);
+    setFlgDialogSetOpen(false);
   };
   
-  const router = useRouter()
-
   const save = (data: object) => {
     CardDataService.setUserFolders(user.uid, data)
     .then((x) => {
@@ -52,25 +44,19 @@ const Usersettings: NextPage = (props) => {
     });
   }
 
-  const folderAdd = () => {
-    
+  const folderAdd = () => {  
     if (formCardFolder.value){
       var array = getFolders()
-      if (formCardFolder.key){
+      if (formCardFolder.key){ // In case if a edition
         var foundIndex = array.findIndex((x: any) => x.key == formCardFolder.key);
         array[foundIndex] = formCardFolder;
-      }else{
-        array = [...getFolders(), {key: generateId(), value: capitalizeFirstLetter(formCardFolder.value), order: new Date().getTime()} ]
+      }else{ // In case if a new folder
+        array = [ ...array, {key: generateId(), value: capitalizeFirstLetter(formCardFolder.value), order: new Date().getTime()} ]
       }
       console.log(array);
       setFolders(array)
       save(array)
-      // folderReload()
-      setOpen2(false)
-    //   router.push({
-    //     pathname: '/usersettings',
-    //     query: { name: 'Someone' }
-    // }, '/usersettings');
+      setFlgDialogSetOpen(false)
     }
   }
   
@@ -80,8 +66,6 @@ const Usersettings: NextPage = (props) => {
 
   const itemRemove = (index: number, name: string) => {
     if (confirm('Excluir pasta ' + name + '?')){
-      console.log({name});
-      
       var array = [...getFolders()]; 
       array.splice(index, 1);
       setFolders(array);
@@ -90,14 +74,14 @@ const Usersettings: NextPage = (props) => {
   }
 
   const itemEdit = (index: number) => {
-    setOpen2(true)
-    setOperation('Alterar')
+    setFlgDialogSetOpen(true)
+    // setOperation('Alterar')
     setFormCardFolder({key: getFolders()[index].key, value: getFolders()[index].value, order: getFolders()[index].order})
   }
   return (
     <>
       <Dialog
-        open={open2}
+        open={flgDialogSetOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -108,7 +92,6 @@ const Usersettings: NextPage = (props) => {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <FormControl fullWidth>
-              {/* <TextField name="formCardFolder_key" value={formCardFolder.key} hidden></TextField> */}
               <TextField
                 name="formCardFolder_value"
                 value={formCardFolder.value}
@@ -119,7 +102,7 @@ const Usersettings: NextPage = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>setOpen2(false)}>Cancelar</Button>
+          <Button onClick={()=>setFlgDialogSetOpen(false)}>Cancelar</Button>
           <Button onClick={()=>folderAdd()}>Salvar</Button>
         </DialogActions>
       </Dialog>

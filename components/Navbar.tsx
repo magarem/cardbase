@@ -21,136 +21,136 @@ interface obj1 {
   user: string
 }
 
-const SiteTitle = (props: obj1) => {
-  const { user } = useAuth()
-  console.log({user});
-  let title = "ZenBase"
-  return (
-    <>{title}</>
-  )
-}
-interface obj2 {
-  user: {
-    displayName: string;
-  }
-}
-
-const PageMenu = (props: obj2) => {
+const Navbar = (props: any) => {
+  // const { user, logout } = useAuth()
+  const { user, logOut } = useAuth();
+  console.log(props)
   const router = useRouter()
-  let folder = router.asPath.split('/')[1]
-  const user = props.user
-  if (user) {
-    return (
-      <Container sx={{width:120}}>
-        <Grid container  direction="row" spacing={1} justifyContent="center" alignItems="center" >
-          <Grid item md={6}>
-            <IconButton size="small" aria-label="edit" onClick={() => {
-                router.push("/" + folder + "/new/edit")
-                }}>
-              <AddCircleOutlineIcon />
-            </IconButton>
-          </Grid>
-          <Grid item md={6}>
-            <IconButton size="small" aria-label="list" onClick={() => {
-                if (folder=='usersettings') folder = 'home'
-                router.push("/" + folder )
-                }}>
-              <PhotoLibrary />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </Container>
-    )
-  }else{
-    return null
-  }
-}
-
-const UserOptions = (props: obj2) => {
   // const user = props.user
-  const { user, logout, userReadData } = useAuth()
-  const router = useRouter()
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [userName, setUserName] = useState(null);
-  const open_ = Boolean(anchorEl);
+  console.log(user);
 
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  useEffect(() => {
-    if (user){
-      console.log(user);
-      setUserName(user.username)
-    }
-  },[user])
-
-  const goHome = () => {
-    router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
-  }
-
-  if (user) {
+  const SiteTitle = () => {
+    console.log({user});
+    let title = "ZenBase"
     return (
-      <div>
-        <Typography variant="h6" noWrap component="div" align="right" >
-              <Button
-                color='success'
-                startIcon={<AccountCircleIcon />}
-                id="basic-button"
-                variant="text"
-                aria-controls={'basic-menu'}
-                aria-haspopup="true"
-                aria-expanded={'true'}
-                onClick={handleClick}
-              >
-              {userName} 
-              </Button>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open_}
-                onClick={handleClose}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}>
-                 <MenuItem onClick={() => {
-                  router.push({
-                    pathname: '/usersettings'
-                }, '/usersettings');
-                  }}>Definições</MenuItem>
-
-                <MenuItem  onClick={() => {
-                  logout()
-                  goHome()
-                  }}>Sair</MenuItem>
-            </Menu>
-        </Typography>
-      </div>)
-  } else {
-    return (
-      <Link href="/login" >
-        <Button color="inherit">Entrar</Button>
-      </Link>
+      <>{title}</>
     )
   }
-}
 
+  interface obj2 {
+    user: {
+      displayName: string;
+    }
+  }
+  
+  const PageMenu = () => {
+    const router = useRouter()
+    let folder = router.asPath.split('/')[1]
+    // const user = props.user
+    if (user) {
+      return (
+        <Container sx={{width:120}}>
+          <Grid container  direction="row" spacing={1} justifyContent="center" alignItems="center" >
+            <Grid item md={6}>
+              <IconButton size="small" aria-label="edit" onClick={() => {
+                  router.push("/" + folder + "/new/edit")
+                  }}>
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </Grid>
+            <Grid item md={6}>
+              <IconButton size="small" aria-label="list" onClick={() => {
+                  if (folder=='usersettings') folder = 'home'
+                  router.push("/" + folder )
+                  }}>
+                <PhotoLibrary />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Container>
+      )
+    }else{
+      return null
+    }
+  }
+  
+  const UserOptions = () => {
+  
+    const router = useRouter()
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open_ = Boolean(anchorEl);
+  
+    const handleClick = (event: any) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+    
+    useEffect(() => {
+      if (user){
+        console.log(user);
+        // setUserName(user.username)
+      }
+    },[])
+  
+    const goHome = () => {
+      router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
+    }
+  
+    if (user.isLogged) {
+      return (
+        <div>
+          <Typography variant="h6" noWrap component="div" align="right" >
+                <Button
+                  color='success'
+                  startIcon={<AccountCircleIcon />}
+                  id="basic-button"
+                  variant="text"
+                  aria-controls={'basic-menu'}
+                  aria-haspopup="true"
+                  aria-expanded={'true'}
+                  onClick={handleClick}
+                >
+                {user.username} 
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open_}
+                  onClick={handleClose}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}>
+                   <MenuItem onClick={() => {
+                    router.push({
+                      pathname: '/usersettings'
+                  }, '/usersettings');
+                    }}>Definições</MenuItem>
+  
+                  <MenuItem  onClick={() => {
+                    logOut()
+                    goHome()
+                    }}>Sair</MenuItem>
+              </Menu>
+          </Typography>
+        </div>)
+    } else {
+      return (
+        <Link href="/login" >
+          <Button color="inherit">Entrar</Button>
+        </Link>
+      )
+    }
+  }
 
-const NavbarComp = (props: any) => {
-  const { user, logout } = useAuth()
-  const router = useRouter()
-  const AuthRequired = ['/', '/adm']
-  console.log(user);
   return (
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="fixed">
       <Toolbar>
-      {user&&
+      {user.isLogged&&
         <IconButton
           size="large"
           edge="start"
@@ -165,14 +165,14 @@ const NavbarComp = (props: any) => {
         <Grid  sx={{ mt: -1.4 }} container rowSpacing={2} columnSpacing={2}>
           <Grid item xs={6} sm={6} md={6} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
-              <SiteTitle user={user}/>
+              <SiteTitle />
             </Typography>
           </Grid>
           {/* <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
             <PageMenu user={user}/>
           </Grid> */}
           <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}} >
-            <UserOptions user={user}/>
+            <UserOptions />
           </Grid>
         </Grid>
       </Toolbar>
@@ -181,4 +181,4 @@ const NavbarComp = (props: any) => {
   )
 }
 
-export default NavbarComp
+export default Navbar

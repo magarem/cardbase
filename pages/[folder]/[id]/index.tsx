@@ -78,36 +78,31 @@ const Create: NextPage<Props> = () => {
 
 
   useEffect(() => {
-    const folder_key = getFolderKeyByValue(folder)
-    // setState({...state, folder: folder_key})
-    const username = location.href.split('//')[1].split('.')[0]
-    console.log(username);
-    
-    CardDataService.readUserData(username).then(async (ret: any)=>{
+    if (router.query.id) {
+      const folder_key = getFolderKeyByValue(folder)
+      const username = location.href.split('//')[1].split('.')[0]
+      CardDataService.readUserData(null, username).then(async (ret: any)=>{
         const uid = ret.uid
         console.log(uid, router.query.id)
         CardDataService.readById(uid, router.query.id as string).then((data: any) => {
-            console.log(data)
-            if (data) {
-                setData(data)
-                console.log(data.extra);
-                data.extra.map((item: any)=>{
-                    rows.push([item.key, item.value])
-                })
-                setState(rows)
-
-               console.log(rows);
-               
-                // if (!data.extra) data.extra = [{key: "", value: ""}] 
-                
-            }
+          console.log(data)
+          if (data) {
+            setData(data)
+            console.log(data.extra);
+            data.extra.map((item: any)=>{
+                rows.push([item.key, item.value])
+            })
+            setState(rows)
+            console.log(rows);
+          }
         })
-    })
-  }, [])
+      })
+    }
+  }, [router.query.id])
  
   return (
     <Container maxWidth="md">
-    <Box>
+    <Box justifyContent="center">
         <h1>{data.title}</h1>
         {/* <img src={data.img}/> */}
         {/* <div style={{ position: "relative", width: "100%", paddingBottom: "20%" }} > */}
@@ -118,18 +113,24 @@ const Create: NextPage<Props> = () => {
                 padding: 0,
                 width: '100%',
                 maxWidth: '100%',
+                alignContent: 'center'
             }}
         // alt="Logo"
-        >
-        <img src={data.img} style={{width: '100%', maxWidth: '100%'}}/>
+        ><Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        // minHeight="200"
+      >
+        <img src={data.img} style={{ maxWidth: '100%'}}/>
+        </Box>
     </Container>
        }<br/>
         <div style={{fontSize: '20px'}} dangerouslySetInnerHTML={{ __html: data.body }}/>
-
         {/* </div> */}
         <MagaTable cols={cols} rows={state}/>
         <br/><br/><br/><br/><br/><br/>
-        {user&&
+        {user.isLogged&&
         <>
         <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
         <BottomNavigation sx={{ 
