@@ -206,23 +206,13 @@ const List: NextPage<Props> = (props) => {
       </Dialog>
       {/* {JSON.stringify(user)}<br/>
       {JSON.stringify(stateFolder)} */}
-      <Grid container>
-        <Grid item md={2}>
-        {<h2 style={{marginBottom: 15}}>{folder&&capitalizeFirstLetter(folder as string)}</h2>}
-        
-        </Grid>
-        <Grid item md={10}>
-        {/* <IconButton size="small" aria-label="edit" onClick={() => {
-          router.push("/" + folder + "/new/edit")
-          }}>
-        <AddCircleOutlineIcon />
-      </IconButton> */}
-        </Grid>
-      </Grid>
+       <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
+          {folder}
+      </Typography>
      
       {/* {JSON.stringify(currentState)} */}
       <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} />
-      {user&&
+      {user.isLogged&&
       <>
       {/* <Switch 
       // checked={checked}

@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, Link, MenuItem, Paper, Radio, RadioGroup, Select, ThemeProvider, Typography } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -20,6 +20,7 @@ import Image from 'next/image'
 import MagaTable from "../../../components/table"
 import { spacing } from '@mui/system';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import '@fontsource/roboto/300.css';
 
 interface Props {
   setuser: Function,
@@ -76,7 +77,22 @@ const Create: NextPage<Props> = () => {
   const cols: any[] = ['', '']
   const rows: any[] = []
 
-
+  const theme = createTheme({
+    typography: {
+      subtitle1: {
+        fontSize: 12,
+      },
+      body1: {
+        fontFamily: 'roboto',
+        fontSize: 20,
+        fontWeight: 500,
+      },
+      button: {
+        fontStyle: 'italic',
+      },
+    },
+  });
+  
   useEffect(() => {
     if (router.query.id) {
       const folder_key = getFolderKeyByValue(folder)
@@ -101,33 +117,40 @@ const Create: NextPage<Props> = () => {
   }, [router.query.id])
  
   return (
-    <Container maxWidth="md">
-    <Box justifyContent="center">
-        <h1>{data.title}</h1>
-        {/* <img src={data.img}/> */}
-        {/* <div style={{ position: "relative", width: "100%", paddingBottom: "20%" }} > */}
-       {/* {data.img} */}
+    <Container>
+      <Box justifyContent="center">
+      <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
+        <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
+      </Typography>
+      <Box
+      sx={{
+        xs: {width: '100%'},
+        md: {width: '50%'}
+      }}
+    >
+        {/* <h4><Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link> {'›'} {data.title}</h4><br/> */}
         {data.img&&
         <Container disableGutters
-            sx={{
-                padding: 0,
-                width: '100%',
-                maxWidth: '100%',
-                alignContent: 'center'
-            }}
-        // alt="Logo"
-        ><Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        // minHeight="200"
-      >
-        <img src={data.img} style={{ maxWidth: '100%'}}/>
-        </Box>
-    </Container>
-       }<br/>
-        <div style={{fontSize: '20px'}} dangerouslySetInnerHTML={{ __html: data.body }}/>
-        {/* </div> */}
+          sx={{
+            padding: 0,
+            width: '100%',
+            maxWidth: '100%',
+            alignContent: 'center'
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <img src={data.img} style={{ maxWidth: '100%'}}/>
+          </Box>
+        </Container>
+       }
+       <br/>
+        <ThemeProvider theme={theme}>
+          <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.body }}/>
+        </ThemeProvider>
         <MagaTable cols={cols} rows={state}/>
         <br/><br/><br/><br/><br/><br/>
         {user.isLogged&&
@@ -154,12 +177,13 @@ const Create: NextPage<Props> = () => {
           <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
         
         </BottomNavigation>
-        
         <br/>
       </Paper>
       </>
         }
         </Box>
+        </Box>
+        
     </Container>
    
   );

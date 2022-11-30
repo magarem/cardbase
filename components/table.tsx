@@ -16,41 +16,45 @@ interface Props {
 }
 
 export default function DenseTable({cols, rows}: Props) {
+  if (rows[0]) {
     return (
-    <TableContainer component={Paper}  sx={{
-      width: {
-        xs: '100%', // theme.breakpoints.up('xs')
-        sm: '100%', // theme.breakpoints.up('sm')
-        md: 300, // theme.breakpoints.up('md')
-        lg: 400, // theme.breakpoints.up('lg')
-        xl: 500, // theme.breakpoints.up('xl')
-      },
-    }}>
-      <Table aria-label="a dense table">
-        {/* <TableHead>
-          <TableRow >
-            {cols.map((item: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined, index: number) =>
-                <TableCell key={index.toString()} style={{ width: 50 }} align="left">{item}</TableCell>
-            )}
-          </TableRow>
-        </TableHead> */}
-        <TableBody>
-          {rows&&rows.map((row: (React.Key | null | undefined)[], index: number) => (
-            <TableRow
-              key={index.toString()}
-              sx={{  '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-                {cols.map((col: any, index: number ) => 
-                    <TableCell key={index.toString()} component="th" scope="row" >
-                      <Typography sx={{fontWeight: (index==0)?'bold':'' }}>
-                        {row[index]}
-                      </Typography>
-                    </TableCell>
-                )}
+      <TableContainer component={Paper}  sx={{
+        width: {
+          xs: '100%', // theme.breakpoints.up('xs')
+          sm: '100%', // theme.breakpoints.up('sm')
+          md: 300, // theme.breakpoints.up('md')
+          lg: 400, // theme.breakpoints.up('lg')
+          xl: 500, // theme.breakpoints.up('xl')
+        },
+      }}>
+        <Table aria-label="a dense table">
+          {/* <TableHead>
+            <TableRow >
+              {cols.map((item: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined, index: number) =>
+                  <TableCell key={index.toString()} style={{ width: 50 }} align="left">{item}</TableCell>
+              )}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+          </TableHead> */}
+          <TableBody>
+            {rows&&rows.map((row: (React.Key | null | undefined)[], index: number) => (
+              <TableRow
+                key={index.toString()}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                  {cols.map((col: any, index: number ) => 
+                      <TableCell key={index.toString()} component="th" scope="row" >
+                        <Typography component={'span'} sx={{fontWeight: (index==0)?'bold':'' }}>
+                          {row[index]}
+                        </Typography>
+                      </TableCell>
+                  )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }else{
+    return null
+  }
 }

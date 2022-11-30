@@ -1473,6 +1473,11 @@
   "resolved" "https://registry.npmjs.org/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.8.0.tgz"
   "version" "0.8.0"
 
+"@fontsource/roboto@^4.5.8":
+  "integrity" "sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA=="
+  "resolved" "https://registry.npmjs.org/@fontsource/roboto/-/roboto-4.5.8.tgz"
+  "version" "4.5.8"
+
 "@formatjs/ecma402-abstract@1.13.0":
   "integrity" "sha512-CQ8Ykd51jYD1n05dtoX6ns6B9n/+6ZAxnWUAonvHC4kkuAemROYBhHkEB4tm1uVrRlE7gLDqXkAnY51Y0pRCWQ=="
   "resolved" "https://registry.npmjs.org/@formatjs/ecma402-abstract/-/ecma402-abstract-1.13.0.tgz"

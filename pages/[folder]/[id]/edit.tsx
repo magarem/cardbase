@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, Link, MenuItem, Paper, Radio, RadioGroup, Select, Typography } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -68,7 +68,7 @@ const Create: NextPage<Props> = (props) => {
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
   
-  const tblObj = [{key: "", value: ""}];
+  const tblObj: Obj2[] | (() => Obj2[] | undefined) | undefined = [];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]| undefined>(tblObj)
 
 
@@ -92,6 +92,10 @@ const Create: NextPage<Props> = (props) => {
       console.log('inner text: ', state.card_id);
       // router.push( '/' + innerText + '/' + id + '/edit' )
       state.card_id = '111'
+     
+    }
+    if (name == 'title') {
+      state.title = value.substring(0,30)
      
     }
     if (name == 'title' && router.query.id=='new') {
@@ -215,11 +219,14 @@ const Create: NextPage<Props> = (props) => {
           </DialogContentText>
         </DialogContent>
       </Dialog>
-      <main className="py-10">
+      {/* <main className="py-10"> */}
         <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
-        {state.id?<h2 style={{marginLeft:20, marginTop:100}}>Editar</h2>:<h2>Criar</h2>}<br/>
-      </main>
-
+        {/* {state.id?<h2 style={{marginLeft:20, marginTop:100}}>Editar</h2>:<h2>Criar</h2>}<br/> */}
+      {/* </main> */}
+      <Typography variant="h5" gutterBottom mt={11} ml={1} mb={3}>
+        {/* <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} <Link onClick={()=>router.push('/'+folder+'/'+state.card_id)} underline="hover">{state.title.substring(0,100)}</Link> {' › '} {state.id?<span>[Editar]</span>:<span>[Criar]</span>} */}
+        <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {state.title.substring(0,100)} {' › '} {state.id?<span>[Editar]</span>:<span>[Criar]</span>}
+      </Typography>
       <MagaTabs>
         <div data-tab="tab1">
           <TextField 
@@ -228,7 +235,7 @@ const Create: NextPage<Props> = (props) => {
               label="Titulo"
               variant="outlined"
               onChange={handleChange}
-              value={state.title}
+              value={state.title.substring(0,100)}
             /><br/><br/>
               <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
         <br/>
@@ -256,7 +263,7 @@ const Create: NextPage<Props> = (props) => {
               placeHolder="Etiquetas"
             /><br/>
             <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={setStateExtra}/>
-              <TextField
+            <TextField
               name="order"
               label="Order"
               onChange={handleChange}

@@ -146,7 +146,7 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
         <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2}>
             <Grid item md={10}  >
-              <Typography className="handle" variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+              <Typography className={user.isLogged&&"handle"} variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
                 {item.title}
               </Typography>
               <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
