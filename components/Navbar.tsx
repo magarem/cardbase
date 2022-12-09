@@ -23,7 +23,7 @@ interface obj1 {
 
 const Navbar = (props: any) => {
   // const { user, logout } = useAuth()
-  const { user, logOut } = useAuth();
+  const { user, logout } = useAuth();
   console.log(props)
   const router = useRouter()
   // const user = props.user
@@ -31,9 +31,14 @@ const Navbar = (props: any) => {
 
   const SiteTitle = () => {
     let title = "ZenBase"
-    if (!user.isLogged) {
+    console.log(user?.isLogged);
+    
+    if (user?.isLogged) {
      title = location.hostname.split('.')[0]
     }
+
+    console.log(title);
+    
     return (
       <>{title}</>
     )
@@ -97,6 +102,12 @@ const Navbar = (props: any) => {
       }
     },[])
   
+    const goToLogin = () => {
+      console.log(location.hostname);
+      
+      // router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
+    }
+    
     const goHome = () => {
       router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
     }
@@ -133,7 +144,7 @@ const Navbar = (props: any) => {
                     }}>Definições</MenuItem>
   
                   <MenuItem  onClick={() => {
-                    logOut()
+                    logout()
                     goHome()
                     }}>Sair</MenuItem>
               </Menu>
@@ -141,9 +152,9 @@ const Navbar = (props: any) => {
         </div>)
     } else {
       return (
-        <Link href="/login" >
-          <Button color="inherit">Entrar</Button>
-        </Link>
+        // <Link href="/login" >
+          <Button color="inherit" onClick={goToLogin}>Entrar</Button>
+        // </Link>
       )
     }
   }

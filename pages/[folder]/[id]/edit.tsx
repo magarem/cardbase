@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, Link, MenuItem, Paper, Radio, RadioGroup, Select, Typography } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, Link, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Typography } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -16,6 +16,9 @@ const ReactQuill = typeof window === 'object' ? require('react-quill') : () => f
 import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
 import MagaTabs from "../../../components/Tabs"
+import { VisibilityOff, Visibility } from "@material-ui/icons";
+// import Mgrid from "../../../components/muiDataGrid"
+import HighlightOff from '@mui/icons-material/HighlightOff';
 
 interface Props {
   setuser: Function,
@@ -28,7 +31,7 @@ interface Obj1 {
   [x: string]: any;
   id: any;
   card_id: any;
-  img: string; 
+  img: any; 
   folder: string,
   title: string;
   body: string;
@@ -36,6 +39,7 @@ interface Obj1 {
 }
 
 interface Obj2 {
+  id: any,
   key: any;
   value: any;
 }
@@ -63,14 +67,15 @@ const Create: NextPage<Props> = (props) => {
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "", card_id: "", img: "", folder: "", title: "", body: "", tags: "", order: -1 };
+  const cardObj = {id: "", card_id: "", img: [{}], folder: "", title: "", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
   
   const tblObj: Obj2[] | (() => Obj2[] | undefined) | undefined = [];
+  const tblObj2: Obj2[] = [{id:0, key:'', value:''}];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]| undefined>(tblObj)
-
+  const [stateImg, setStateImg] = React.useState<Obj2[]>(tblObj2)
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     handleClose()
@@ -108,10 +113,9 @@ const Create: NextPage<Props> = (props) => {
   
   const saveCard = () => {
     setDesableSaveButton(true)
-    let data = { img: state.img||'', folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: -1 };
+    let data = { img: stateImg, folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: -1 };
     console.log({data});
     const timestamp = new Date().getTime()
-    console.log(state.card_id=='');
     let card_id = state.card_id
     if (card_id == '') card_id = timestamp.toString()
     CardDataService.setCard(user.uid, card_id, data)
@@ -132,7 +136,7 @@ const Create: NextPage<Props> = (props) => {
   const updateCard = () => {
     setDesableSaveButton(true)
     let data = {
-      img: state.img||'',
+      img: stateImg,
       title: state.title,
       folder: state.folder,
       body: bodyValue||'',
@@ -165,6 +169,10 @@ const Create: NextPage<Props> = (props) => {
       }
   }
 
+  const clearField = (field: string) => {
+    setState({...state, [field]: ''})
+  }
+
   useEffect(() => {
     if (user.uid) {
     console.log(router.query.id);
@@ -175,15 +183,25 @@ const Create: NextPage<Props> = (props) => {
         console.log(data)
         if (data) {
           setState({ id: router.query.id, card_id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
+          if (data.img=='') data.img = []
+          if (!Array.isArray(data.img)) data.img = [{value:data.img}]
+          
+          setStateImg(data.img)
           setBodyValue(data.body)
           setSelected(data.tags?.split(','))
           if (!data.extra) data.extra = [{key: "", value: ""}] 
           setStateExtra(data.extra)
+
         }
       })
     }
   }
   }, [user])
+
+  const handleChange2 =
+  (prop: keyof Obj1) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, [prop]: event.target.value });
+  };
 
   return (
     <div>
@@ -238,41 +256,29 @@ const Create: NextPage<Props> = (props) => {
               value={state.title.substring(0,100)}
             /><br/><br/>
               <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
+              <br/>
+              <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
         <br/>
         </div>
         <div data-tab="tab2">
-          <Upload key={uploadRefresh} user={user} state={state} setState={setState} /> <br/><br/>
-            {state.img&&
-            <><Card sx={{ width: 200, maxHeight: 500 }}>
-                <CardMedia
-                  component="img"
-                  height="100%"
-                  width="100%"
-                  image={state.img}
-                />
-              </Card>
-              <br/>
-            </>
-            }
+          <Box sx={{ width: 760 }}>
+            <FullFeaturedCrudGrid width={760} user={user} optColumKey={false} stateExtra={stateImg} setStateExtra={setStateImg}/>
+          </Box>
         </div>
         <div data-tab="tab3">
-           <TagsInput
+          <TagsInput
               value={selected}
               onChange={setSelected}
               name="tags"
               placeHolder="Etiquetas"
-            /><br/>
-            <FullFeaturedCrudGrid stateExtra={stateExtra} setStateExtra={setStateExtra}/>
+            />
             <TextField
               name="order"
               label="Order"
               onChange={handleChange}
               value={state.order}
               hidden
-            />
-            <br/>
-        </div>
-        <div data-tab="tab4">
+            /><br/>
           <TextField 
               id="outlined-basic"
               name="card_id"
@@ -287,7 +293,6 @@ const Create: NextPage<Props> = (props) => {
             </Button>
         </div>
       </MagaTabs>
-      
       <br/><br/><br/><br/><br/>
       <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
         <BottomNavigation sx={{ 

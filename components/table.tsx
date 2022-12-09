@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Box, Typography } from '@mui/material';
+import { Box, Card, CardMedia, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 
 interface Props {
@@ -15,7 +15,33 @@ interface Props {
     // any props that come into the component
 }
 
+function isImage(url: string) {
+if (url) { url = url.split('?')[0]
+  return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+}
+ }
+
 export default function DenseTable({cols, rows}: Props) {
+
+  const ShowItem = (value: any) => {
+    value = value.value
+    if (isImage(value)){ 
+      return (
+        <Card sx={{ width: 100, maxHeight: 100 }}>
+          <CardMedia
+            component="img"
+            height="100%"
+            width="100%"
+            image={value}
+          />
+        </Card>
+      )
+    }else{
+      return (
+        <>{value}</>
+      )
+    }
+  }
   if (rows[0]) {
     return (
       <TableContainer component={Paper}  sx={{
@@ -44,7 +70,7 @@ export default function DenseTable({cols, rows}: Props) {
                   {cols.map((col: any, index: number ) => 
                       <TableCell key={index.toString()} component="th" scope="row" >
                         <Typography component={'span'} sx={{fontWeight: (index==0)?'bold':'' }}>
-                          {row[index]}
+                          <ShowItem value={row[index] as string} />
                         </Typography>
                       </TableCell>
                   )}

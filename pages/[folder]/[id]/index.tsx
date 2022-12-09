@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, InputLabel, Link, MenuItem, Paper, Radio, RadioGroup, Select, ThemeProvider, Typography } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, ImageList, ImageListItem, InputLabel, Link, MenuItem, Paper, Radio, RadioGroup, Select, ThemeProvider, Typography, useMediaQuery } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -18,7 +18,6 @@ import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
 import Image from 'next/image'
 import MagaTable from "../../../components/table"
-import { spacing } from '@mui/system';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import '@fontsource/roboto/300.css';
 
@@ -32,7 +31,7 @@ interface Props {
 interface Obj1 {
   id: any;
   card_id: any;
-  img: string; 
+  img: any; 
   folder: string,
   title: string;
   body: string;
@@ -52,7 +51,7 @@ const Create: NextPage<Props> = () => {
   const original_card_id = router.query.id
   const id = router.query.id
 
-  const cardObj = {id: "", card_id: "", img: "", folder: "", title: "", body: "", tags: "", order: -1 };
+  const cardObj = {id: "", card_id: "", img: [], folder: "", title: "", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1[]>([cardObj])
   const [data, setData] = useState<Obj1>(cardObj)
  
@@ -92,7 +91,7 @@ const Create: NextPage<Props> = () => {
       },
     },
   });
-  
+
   useEffect(() => {
     if (router.query.id) {
       const folder_key = getFolderKeyByValue(folder)
@@ -115,13 +114,14 @@ const Create: NextPage<Props> = () => {
       })
     }
   }, [router.query.id])
- 
+  const matches = useMediaQuery('(min-width:600px)');
   return (
     <Container>
       <Box justifyContent="center">
       <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
         <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
       </Typography>
+      
       <Box
       sx={{
         xs: {width: '100%'},
@@ -129,7 +129,7 @@ const Create: NextPage<Props> = () => {
       }}
     >
         {/* <h4><Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link> {'›'} {data.title}</h4><br/> */}
-        {data.img&&
+        {data.img[0]?.value&&
         <Container disableGutters
           sx={{
             padding: 0,
@@ -138,12 +138,42 @@ const Create: NextPage<Props> = () => {
             alignContent: 'center'
           }}
         >
+            {/* <Carousel >
+              {
+                items.map( (item, i) => <img src={data.img[i]?.value} style={{ maxWidth: '100%', zIndex: '0 !important'}}/> )
+              }
+            </Carousel> */}
+            <ImageList sx={{ width: '100%', height: 350 }} cols={matches ? 3 : 1} rowHeight={350}>
+              {data.img.map((item: any) => (
+                <ImageListItem key={item.value}>
+                  <img
+                    src={`${item.value}?w=164&h=164&fit=crop&auto=format`}
+                    srcSet={`${item.value}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                    loading="lazy"
+                    style={{ maxHeight: 350 }}
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
           <Box
+          sx={{
+            padding: 0,
+            width: {
+              md: '50%',
+              lg: '50%',
+              xs: '100%'
+            }
+            ,
+            maxWidth: '100%',
+            alignContent: 'center'
+          }}
             display="flex"
             justifyContent="center"
             alignItems="center"
           >
-            <img src={data.img} style={{ maxWidth: '100%'}}/>
+          
+
+            {/* <img src={data.img[0]?.value} style={{ maxWidth: '100%'}}/> */}
           </Box>
         </Container>
        }
@@ -157,6 +187,7 @@ const Create: NextPage<Props> = () => {
         <>
         <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
         <BottomNavigation sx={{ 
+          zIndex: 5000,
           bgcolor: '#121212',
             '& .Mui-selected': {
               '& .MuiBottomNavigationAction-label': {

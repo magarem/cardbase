@@ -34,9 +34,9 @@ const Login2 = () => {
   const ref = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if (user) {
-      folderReload().then(()=>{
+      // folderReload().then(()=>{
         router.push('Home')
-      })
+      // })
     }
   },[user])
 

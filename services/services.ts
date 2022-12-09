@@ -84,9 +84,6 @@ class CardDataService {
   }
 
 
-
-
-
   async readById (user: string, id: string) {
     console.log({ user, id });
     const docRef = doc(db, user, id);
@@ -169,7 +166,7 @@ class CardDataService {
       }
   }
 
-  async setCard (user: string, card_id: string, data: { img: string; title: string; body: string; folder: string; order: number; }) {
+  async setCard (user: string, card_id: string, data: { img: Array<any>; title: string; body: string; folder: string; order: number; }) {
     try {
       console.log(card_id)
       const docRef = doc(db, user, card_id)
@@ -195,7 +192,7 @@ class CardDataService {
       }
   }
 
-  async update (user: string, id: string, data: { img: string; title: string; body: string; cardSession?: string|undefined; order: number; }) {
+  async update (user: string, id: string, data: { img: Array<any>; title: string; body: string; order: number; }) {
     console.log(user, id, data)
     const docRef = doc(db, user, id);
     await updateDoc(docRef, data)

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, IconButton, List, ListItem, ListItemAvatar, ListItemText, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -10,6 +10,16 @@ import router from "next/router";
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import { margin } from "@mui/system";
 import '@fontsource/roboto/300.css';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 interface folderItem {
   key: string | null;
@@ -121,43 +131,74 @@ const Usersettings: NextPage = (props) => {
         </DialogActions>
       </Dialog>
 
-      <Typography variant="h5" gutterBottom mt={11} ml={1}>
-        {'Pastas'}
+      <Typography variant="h5" gutterBottom mt={11} ml={1} mb={2}>
+        {'Configurações'}
       </Typography>
       {/* <Button onClick={handleClickOpen}><ControlPointIcon/></Button> */}
       <Container  >
-        <List dense={true}>
-          {user.folders&&user.folders.map((item: any, index: any) => {
-            return (
-              <ListItem key={item.key}>
-                <ListItemAvatar >
-                  <Avatar>
-                    {(item.key=='/')?
-                    <HomeIcon/>:
-                    <Folder  onClick={() => itemEdit(index)}/>
-                    }
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText 
-                  // onClick={() => itemEdit(index)}
-                  onClick={()=>router.push('/'+item.value)}
-                  primaryTypographyProps={{
-                    fontSize: 16
-                  }}
-                  primary={capitalizeFirstLetter(item.value)}
-                />
-              </ListItem>
-            )})
-          }
+      <div>
+      <Accordion>
+        {/* <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Definições</Typography>
+        </AccordionSummary> */}
+        <AccordionDetails sx={{ mt: 0 }}>
+          <Box ml={1} >
+          {/* <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/> */}
 
-              <ListItem key='novo'>
-                <ListItemAvatar >
-                  <Avatar>
-                    <ControlPointIcon onClick={handleClickOpen}/>
-                  </Avatar>
-                </ListItemAvatar>
-              </ListItem>
-        </List>
+            {/* <TextField id="outlined-basic" label="Logotipo" variant="outlined" sx={{mr:5}} />
+            <TextField id="outlined-basic" label="Logotipo" variant="outlined" />
+            <TextField id="outlined-basic" label="Logotipo" variant="outlined" /><br/><br/> */}
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2a-content"
+          id="panel2a-header"
+        >
+          <Typography>Pastas</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ mt: -2 }}>
+          <List dense={true}>
+            {user.folders&&user.folders.map((item: any, index: any) => {
+              return (
+                <ListItem key={item.key} sx={{ mb: .5 }}>
+                  <ListItemAvatar >
+                    <Avatar>
+                      {(item.key=='/')?
+                      <HomeIcon/>:
+                      <Folder  onClick={() => itemEdit(index)}/>
+                      }
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText 
+                    // onClick={() => itemEdit(index)}
+                    onClick={()=>router.push('/'+item.value)}
+                    primaryTypographyProps={{
+                      fontSize: 16
+                    }}
+                    primary={capitalizeFirstLetter(item.value)}
+                  />
+                </ListItem>
+              )})
+            }
+            <ListItem key='novo' sx={{ mb: .5 }}>
+              <ListItemAvatar >
+                <Avatar>
+                  <ControlPointIcon onClick={handleClickOpen}/>
+                </Avatar>
+              </ListItemAvatar>
+            </ListItem>
+          </List>
+        </AccordionDetails>
+      </Accordion>
+    </div>
+       
       </Container>
     </>
   )

@@ -56,7 +56,7 @@ interface main {
   item: {
     id: string;
     type: string;
-    img: string;
+    img: any;
     title: string;
     body: string;
     order: number;
@@ -140,8 +140,8 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
           </Grid>
         </CardActions>
         } */}
-        {item.img&&
-        <CardMedia height={300}  component="img" image={item.img} onClick = {() => {handleOpen({...item})}}/>
+        {item.img[0]?.value&&
+        <CardMedia height={300}  component="img" image={item.img[0]?.value} onClick = {() => {handleOpen({...item})}}/>
         }
         <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2}>

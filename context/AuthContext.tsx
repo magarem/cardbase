@@ -171,7 +171,7 @@ export const AuthContextProvider = ({
       if (user.uid){
         // setStateFolder(null)
         console.log(user.uid);
-        folderReload()
+        // folderReload()
         console.log(stateFolder);
       }
   
