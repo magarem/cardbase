@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, Link, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, Link, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Typography } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -17,9 +17,8 @@ import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
 import MagaTabs from "../../../components/Tabs"
 import { VisibilityOff, Visibility } from "@material-ui/icons";
-// import Mgrid from "../../../components/muiDataGrid"
 import HighlightOff from '@mui/icons-material/HighlightOff';
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 interface Props {
   setuser: Function,
   user: {
@@ -256,8 +255,22 @@ const Create: NextPage<Props> = (props) => {
               value={state.title.substring(0,100)}
             /><br/><br/>
               <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
-              <br/>
-              <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
+        <Box sx={{ marginTop: 2, marginLeft: 0,  marginRight: 0}}>
+
+              <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Extra</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ marginTop: 0, marginLeft: 0,  marginRight: 0}}>
+                <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
+        </AccordionDetails>
+      </Accordion>
+      </Box>
+            
         <br/>
         </div>
         <div data-tab="tab2">

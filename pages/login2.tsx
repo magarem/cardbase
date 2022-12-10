@@ -35,7 +35,6 @@ const Login2 = () => {
   useEffect(() => {
     if (user.isLogged) {
       // folderReload().then(()=>{
-        alert("oi?")
         router.push('Home')
       // })
     }

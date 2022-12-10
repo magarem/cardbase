@@ -106,8 +106,10 @@ export default function BasicTable(props: { width: string | number; user: any; o
     //   newItems[index] = value;
     //   props.setStateExtra(newItems);
     // }
-    const deleteImage = (index: number) => {
-      rowUpdate({...props.stateExtra, id: index, value: ''})
+    const deleteImage = (index: any, id: any) => {
+      console.log({...props.stateExtra[index], id: id, value: ''});
+      
+      rowUpdate({...props.stateExtra[index], id: id, value: ''})
     }
 
     // React.useEffect(() => {
@@ -125,13 +127,15 @@ export default function BasicTable(props: { width: string | number; user: any; o
       const onLoad = () => {
         console.log("loaded");
       };
-      return <img src={url} style={{ width: '200', maxHeight: 200 }} onLoad={onLoad} />;
+      return <img src={url} style={{ width: '200', maxHeight: 180, marginBottom: 10, marginTop: 10 }} onLoad={onLoad} />;
     }
   return (
     <>
       {/* {JSON.stringify(props.stateExtra)Box} */}
+      <Box sx={{ overflow: "auto" }}>
+        <Box sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
       <TableContainer component="table" sx={{ width: props.width }}>
-        <Table sx={{width: '100%' }} aria-label="simple table">
+        <Table  sx={{width: '100%' }} aria-label="simple table">
           <TableBody>
             <ReactSortable 
               handle=".handle"
@@ -147,11 +151,20 @@ export default function BasicTable(props: { width: string | number; user: any; o
                   key={'key_'+index}
                   sx={{'&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell key={'keyss_'+index} className="handle" align="center" component="th" scope="row">
-                    <DragIndicatorIcon/>
+                  <TableCell style={{width: '0', paddingRight: 1}} size='small'  key={'keyss_'+index} className="handle" align="center" component="th" scope="row">
+                    <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} ><DragIndicatorIcon/></Button><br/>
+                    {!isImage(props.stateExtra[index].value)&& 
+                    <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
+                    }
+                    {isImage(props.stateExtra[index].value)&& 
+                       <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(index, props.stateExtra[index].id)}>
+                                    <HighlightOff />
+                                  </IconButton>}
+                    <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={()=>itemDel(index)}><RemoveCircleOutlineIcon/></Button>
+
                   </TableCell>
                   {props.optColumKey&&
-                    <TableCell key={'keysss_'+index} align="center" component="td" scope="row">
+                    <TableCell sx={{width: 100, padding: 1}}  key={'keysss_'+index} align="center" component="td" scope="row">
                       <TextField 
                         key={'id_'+index}
                         id="outlined-basic"
@@ -173,54 +186,55 @@ export default function BasicTable(props: { width: string | number; user: any; o
                         />
                     </TableCell>
                   }
-                  <TableCell align="center">
-                    <TextField 
-                      key={'value_'+index}
-                      id="outlined-basic"
-                      fullWidth
-                      name="value"
-                      variant="outlined"
-                      // onBlur={checkIfIsAImage}
-                      onChange={updateFieldChanged(index)}
-                      value={props.stateExtra[index].value}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <>
-                              <IconButton color="primary" aria-label="upload picture" component="label" onClick={() => deleteImage(index)}>
-                                <HighlightOff />
-                              </IconButton>
-                            </>
-                          </InputAdornment>
-                      )}}
-                    />
-                  </TableCell>
-                  <TableCell width={10} align="center">
-                    <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
-                  </TableCell> 
-                  <TableCell width={260} align="center">
-                    {(props.stateExtra[index].value)&&
-                      <>
-                      {isImage(props.stateExtra[index].value)&& 
-                        <Image url={props.stateExtra[index].value}/>
+                  <TableCell sx={{width: 200}} padding='none' align="center">
+                   
+                      {(props.stateExtra[index].value)&&
+                        <>
+                          {isImage(props.stateExtra[index].value)&& 
+                            <Image url={props.stateExtra[index].value}/>
+                          }
+                        </>
                       }
-                        {/* {isImage(props.stateExtra[index].value)&& */}
+                      {!isImage(props.stateExtra[index].value)&&
+                        <TextField 
+                          key={'value_'+index}
+                          id="outlined-basic"
+                          fullWidth
+                          name="value"
+                          variant="outlined"
+                          // onBlur={checkIfIsAImage}
+                          onChange={updateFieldChanged(index)}
+                          value={props.stateExtra[index].value}
+                          // InputProps={{
+                          //   endAdornment: (
+                          //     <InputAdornment position="end">
+                          //       <>
+                          //         <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(props.stateExtra[index].id)}>
+                          //           <HighlightOff />
+                          //         </IconButton>
+                          //       </>
+                          //     </InputAdornment>
+                          // )}}
+                        />
+                      }
+                      {/* <Grid item md={2}>
+                       <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
+                       <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(props.stateExtra[index].id)}>
+                                    <HighlightOff />
+                                  </IconButton>
+                      </Grid> */}
+                 
                     
-                         {/* <img
-                            style={{ width: '100', maxHeight: 100 }}
-                            src={props.stateExtra[index].value}
-                            loading="lazy"
-                          /> */}
-                        {/* } */}
-                       
-                      </>
-                      }
+
                   </TableCell>
-                  <TableCell width={20} align="center">
-                    <Button onClick={()=>itemDel(index)}><RemoveCircleOutlineIcon/></Button>
-                    {/* {index + 1 === arr.length&&<Button onClick={rowAdd}><AddIcon/></Button>} */}
-                  </TableCell> 
-                  {/* <TableCell width={1} align="center">
+                 
+          
+                 
+                  {/* <TableCell style={{width: '0', paddingLeft: 1, paddingRight: 1}} align="center">
+                  <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
+                       <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(props.stateExtra[index].id)}>
+                                    <HighlightOff />
+                                  </IconButton>
                   </TableCell> */}
                 </TableRow>
               )})}
@@ -233,6 +247,8 @@ export default function BasicTable(props: { width: string | number; user: any; o
           </TableBody>
         </Table>
       </TableContainer>
+      </Box>
+      </Box>
     </>
   );
 }

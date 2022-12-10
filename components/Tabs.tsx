@@ -48,8 +48,8 @@ export default function BasicTabs({children}: any) {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 2 }}>
+    <Box sx={{ width: '100%', padding: 0, margin: 0 }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', margin: 0 }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Texto" {...a11yProps(0)} />
           <Tab label="Imagem" {...a11yProps(1)} />
@@ -59,25 +59,31 @@ export default function BasicTabs({children}: any) {
       <div>
         {Children.map(arrayChildren, (child, i) => {
             if (React.isValidElement(child)) {
-                if (child.props['data-tab']=='tab1'){
-                    return (
-                        <TabPanel value={value} index={0}>
-                            {child}
-                        </TabPanel>
-                    )
-                }
+              if (child.props['data-tab']=='tab1'){
+                return (
+                  <TabPanel value={value} index={0} >
+                    <Box sx={{ marginTop: 2, marginLeft: -3,  marginRight: -3}}>
+                      {child}
+                    </Box>
+                  </TabPanel>
+                )
+              }
                 if (child.props['data-tab']=='tab2'){
                     return (
-                        <TabPanel value={value} index={1}>
-                            {child}
-                        </TabPanel>
+                      <TabPanel value={value} index={1} >
+                        <Box sx={{ marginTop: 2, marginLeft: -3,  marginRight: -3}}>
+                          {child}
+                        </Box>
+                    </TabPanel>
                     )
                 }
                 if (child.props['data-tab']=='tab3'){
                     return (
-                        <TabPanel value={value} index={2}>
-                            {child}
-                        </TabPanel>
+                      <TabPanel value={value} index={2} >
+                        <Box sx={{ marginTop: 2, marginLeft: -3,  marginRight: -3}}>
+                          {child}
+                        </Box>
+                    </TabPanel>
                     )
                 } 
                 if (child.props['data-tab']=='tab4'){
