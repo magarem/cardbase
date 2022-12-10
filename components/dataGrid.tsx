@@ -129,8 +129,8 @@ export default function BasicTable(props: { width: string | number; user: any; o
     }
   return (
     <>
-      {/* {JSON.stringify(props.stateExtra)} */}
-      <TableContainer component={Paper} sx={{ width: props.width }}>
+      {/* {JSON.stringify(props.stateExtra)Box} */}
+      <TableContainer component="table" sx={{ width: props.width }}>
         <Table sx={{width: '100%' }} aria-label="simple table">
           <TableBody>
             <ReactSortable 
@@ -143,7 +143,7 @@ export default function BasicTable(props: { width: string | number; user: any; o
                  
                 return (
                
-                <TableRow 
+                <TableRow component="tr"
                   key={'key_'+index}
                   sx={{'&:last-child td, &:last-child th': { border: 0 } }}
                 >
@@ -201,11 +201,9 @@ export default function BasicTable(props: { width: string | number; user: any; o
                   <TableCell width={260} align="center">
                     {(props.stateExtra[index].value)&&
                       <>
-                      <div>
                       {isImage(props.stateExtra[index].value)&& 
                         <Image url={props.stateExtra[index].value}/>
                       }
-                      </div>
                         {/* {isImage(props.stateExtra[index].value)&& */}
                     
                          {/* <img

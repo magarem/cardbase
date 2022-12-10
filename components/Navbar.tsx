@@ -32,8 +32,9 @@ const Navbar = (props: any) => {
   const SiteTitle = () => {
     let title = "ZenBase"
     console.log(user?.isLogged);
-    
+    // alert(user?.isLogged)
     if (user?.isLogged) {
+      
      title = location.hostname.split('.')[0]
     }
 

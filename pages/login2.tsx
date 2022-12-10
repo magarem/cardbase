@@ -33,8 +33,9 @@ const Login2 = () => {
   const [data, setData] = useState({ email: '', password: '' })
   const ref = useRef<HTMLInputElement>(null)
   useEffect(() => {
-    if (user) {
+    if (user.isLogged) {
       // folderReload().then(()=>{
+        alert("oi?")
         router.push('Home')
       // })
     }

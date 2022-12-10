@@ -67,12 +67,12 @@ export default function DenseTable({cols, rows}: Props) {
                 key={index.toString()}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                  {cols.map((col: any, index: number ) => 
+                  {cols.map((col: any, index: number ) => (
                       <TableCell key={index.toString()} component="th" scope="row" >
                         <Typography component={'span'} sx={{fontWeight: (index==0)?'bold':'' }}>
                           <ShowItem value={row[index] as string} />
                         </Typography>
-                      </TableCell>
+                      </TableCell>)
                   )}
               </TableRow>
             ))}
