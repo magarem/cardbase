@@ -151,8 +151,8 @@ export default function BasicTable(props: { width: string | number; user: any; o
                   key={'key_'+index}
                   sx={{'&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell style={{width: '0', paddingRight: 1}} size='small'  key={'keyss_'+index} className="handle" align="center" component="th" scope="row">
-                    <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} ><DragIndicatorIcon/></Button><br/>
+                  <TableCell style={{width: '0', paddingRight: 1}} size='small'  key={'keyss_'+index} align="center" component="th" scope="row">
+                    <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} className="handle" ><DragIndicatorIcon/></Button><br/>
                     {!isImage(props.stateExtra[index].value)&& 
                     <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
                     }
@@ -160,7 +160,7 @@ export default function BasicTable(props: { width: string | number; user: any; o
                        <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(index, props.stateExtra[index].id)}>
                                     <HighlightOff />
                                   </IconButton>}
-                    <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={()=>itemDel(index)}><RemoveCircleOutlineIcon/></Button>
+                    <br/><Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={()=>itemDel(index)}><RemoveCircleOutlineIcon/></Button>
 
                   </TableCell>
                   {props.optColumKey&&

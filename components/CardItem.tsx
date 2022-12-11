@@ -20,6 +20,7 @@ import { useAuth } from '../context/AuthContext';
 import { Box, ListItem, ListItemText } from '@mui/material';
 import Image from 'next/image'
 import Switch from '@mui/material/Switch';
+import SwipeableTextMobileStepper from './Carousel'
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -140,10 +141,14 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
           </Grid>
         </CardActions>
         } */}
+       
         {item.img[0]?.value&&
-        <CardMedia height={300}  component="img" image={item.img[0]?.value} onClick = {() => {handleOpen({...item})}}/>
-        }
-        <CardContent sx={{  pt:1.5, '&:last-child': { pb: 0.4 }}}>
+        // <CardMedia height={300}  component="img" image={item.img[0]?.value} onClick = {() => {handleOpen({...item})}}/>
+        <div onClick = {() => {handleOpen({...item})}}>
+          <SwipeableTextMobileStepper height={300} position='top' key={item.img} imgs={item.img}/>
+        </div>
+      }
+        <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2}>
             <Grid item md={10}  >
               <Typography className={user.isLogged&&"handle"} variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
