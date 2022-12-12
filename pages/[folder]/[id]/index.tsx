@@ -92,6 +92,14 @@ const Create: NextPage<Props> = () => {
     },
   });
 
+  const imageZoom = (url: string) => {
+    console.log(url);
+    
+    return (
+      <><Typography>{url}</Typography><img src={url} /></>
+    )
+  }
+
   useEffect(() => {
     if (router.query.id) {
       const folder_key = getFolderKeyByValue(folder)
@@ -144,7 +152,7 @@ const Create: NextPage<Props> = () => {
               }
             </Carousel> */}
             <Box sx={{ width: {md:'50%', sm: '100%'} }}>
-              <SwipeableTextMobileStepper height={400} position="static" imgs={data.img}/>
+              <SwipeableTextMobileStepper height={400} position="static" imgs={data.img} />
             </Box>
             {/* <ImageList sx={{ width: '100%', height: 350 }} cols={matches ? 3 : 1} rowHeight={350}>
               {data.img.map((item: any) => (

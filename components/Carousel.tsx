@@ -9,15 +9,18 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import { CardMedia } from '@mui/material';
+import { CardMedia, TextField } from '@mui/material';
 import { useEffect } from 'react';
-
+import { route } from 'next/dist/server/router';
+import FullScreenDialog from "./DialogFullScreen";
+import { Container } from '@mui/system';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 let images: { label: any; imgPath: any; }[] = [];
 
 function SwipeableTextMobileStepper(props: any) {
- 
+  const [open, setOpen] = React.useState(false);
+  
   // useEffect(() => {
     images=[]
     props.imgs.map((item: { value: any; }, index: any) => {
@@ -27,6 +30,7 @@ function SwipeableTextMobileStepper(props: any) {
   
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
+  const [imgZoom, setImgZoom] = React.useState("");
   const maxSteps = images.length;
 
   const handleNext = () => {
@@ -41,9 +45,43 @@ function SwipeableTextMobileStepper(props: any) {
     setActiveStep(step);
   };
   
+  const ImageZoom = () => {
+    console.log(imgZoom);
+    
+    return (
+      <>
+        <img src={imgZoom} /><br/>
+        <Container><br/>
+          <TextField
+            id="outlined-textarea"
+            label="Endereço da imagem"
+            placeholder="Placeholder"
+            fullWidth
+            value={imgZoom}
+            multiline
+          />
+          {/* <Button onClick={()=>handleClose}>Fechar</Button> */}
+        </Container>
+      </>
+    )
+  }
+  const handleClickOpen = (img: string) => {
+    setImgZoom(img)
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Box sx={{ maxWidth: '100%', flexGrow: 1, margin: 'auto' }} >
+    <FullScreenDialog state={open} handleClose={handleClose} >
+      <ImageZoom/>
+    </FullScreenDialog>
+    {/* <Button variant="outlined" onClick={handleClickOpen}>
+        Open full-screen dialog
+    </Button> */}
       {/* <Paper
         square
         elevation={0}
@@ -68,7 +106,7 @@ function SwipeableTextMobileStepper(props: any) {
          
             {Math.abs(activeStep - index) <= 2 ? (
               <> 
-              <CardMedia height={props.height}  component="img" image={step.imgPath} />
+              <CardMedia height={props.height} component="img" image={step.imgPath} onClick={() => handleClickOpen(step.imgPath)}/>
               {/* <Box
                 component="img"
                 sx={{
