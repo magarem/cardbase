@@ -37,9 +37,11 @@ const resizeFile = (file: Blob) =>
       try {
         setSpin(true)
         console.log(user.uid);
+        const timestamp = new Date().getTime().toString(36)
         const uri = await resizeFile(file) as string;
-        const fileName = `thumb_${file.name}`; //filename of thumbnail
+        const fileName = `thumb_${timestamp}_${file.name}`; //filename of thumbnail
         console.log(fileName);
+        alert(fileName)
         const thumbRef = ref(storage, `${user.uid}/${fileName}`);
         uploadString(thumbRef, uri, 'data_url').then((thumbSnapshot) => {
           getDownloadURL(thumbSnapshot.ref).then((thumbUrl) => {
