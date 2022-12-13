@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, IconButton, List, ListItem, ListItemAvatar, ListItemText, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import { useState } from "react";
@@ -13,6 +13,8 @@ import '@fontsource/roboto/300.css';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FullFeaturedCrudGrid from "../../components/dataGrid"
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -36,6 +38,26 @@ const Usersettings: NextPage = (props) => {
   const [formCardFolder, setFormCardFolder] = useState<folderItem>({key:"", value:"", order: 0})
   const { user, getFolders, setFolders } = useAuth()
   const [flgDialogSetOpen, setFlgDialogSetOpen] = React.useState(false);
+  const [state, setState] = React.useState([{key:"", value:""}]);
+
+  useEffect(() => {
+   if (user.uid){
+    console.log(user.uid);
+    
+    CardDataService.getSettingsDefFields(user.uid)
+    .then((x: any) => {
+      console.log(x);
+      // if (x) {
+        console.log(Object.values(x))
+        setState(Object.values(x))
+        // console.log([...x.values()]);
+      // }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+   }
+  }, [user.uid])
 
   const handleClickOpen = () => {
     setFormCardFolder({key: null, value: null, order: 1})
@@ -45,6 +67,17 @@ const Usersettings: NextPage = (props) => {
   const handleClose = () => {
     setFlgDialogSetOpen(false);
   };
+
+  const saveDefFields = () => {
+    console.log(user.uid, state);
+    CardDataService.setSettingsDefFields(user.uid, state)
+    .then((x) => {
+      console.log("Created new item successfully!");
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  }
   
   const save = (data: object) => {
     CardDataService.setUserFolders(user.uid, data)
@@ -138,17 +171,18 @@ const Usersettings: NextPage = (props) => {
       <Container  >
       <div>
       <Accordion>
-        {/* <AccordionSummary
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           <Typography>Definições</Typography>
-        </AccordionSummary> */}
+        </AccordionSummary>
         <AccordionDetails sx={{ mt: 0 }}>
           <Box ml={1} >
-          {/* <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/> */}
-
+            {/* {JSON.stringify(state)} */}
+            <FullFeaturedCrudGrid width={'100%'} optColumKey user={user} stateExtra={state} setStateExtra={setState}/>
+            <Button onClick={saveDefFields}>Salvar</Button>
             {/* <TextField id="outlined-basic" label="Logotipo" variant="outlined" sx={{mr:5}} />
             <TextField id="outlined-basic" label="Logotipo" variant="outlined" />
             <TextField id="outlined-basic" label="Logotipo" variant="outlined" /><br/><br/> */}

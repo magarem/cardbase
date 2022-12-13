@@ -74,14 +74,14 @@ export default function FullScreenDialog(props: any) {
           </ListItem>
         </List> */}
         <IconButton
-        style={{top:100}}
-              edge="start"
-              color="inherit"
-              onClick={props.handleClose}
-              aria-label="close"
+            style={{top:100, paddingBottom: 30}}
+            edge="start"
+            color="inherit"
+            onClick={props.handleClose}
+            aria-label="close"
             >
-              <CloseIcon />
-            </IconButton>
+            <CloseIcon/>
+        </IconButton>
       </Dialog>
     </div>
   );

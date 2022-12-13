@@ -3,6 +3,30 @@ import { getFirestore, getDoc, deleteDoc, where, collection, getDocs, updateDoc,
 // import { route } from "next/dist/server/router";
 import { NextRouter, useRouter } from 'next/router'
 class CardDataService {
+
+  async getSettingsDefFields(user: string) {
+    console.log(user);
+    const docRef = doc(db, user, 'deffields');
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return docSnap.data()
+      } else {
+        console.log("No such document!");
+      }
+  }
+
+  async setSettingsDefFields(user: string, data: object) {
+    try {
+      console.log(data);
+      await setDoc(doc(db, user, "deffields"), {...data});
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  }
+  
+
   async setUserFolders(user: string, data: object) {
     try {
       console.log(data);
@@ -172,7 +196,7 @@ class CardDataService {
       const docRef = doc(db, user, card_id)
       const docSnap = await getDoc(docRef);
       console.log(docSnap.data());
-      if (docSnap.data()){
+      if (docSnap.data()){ 
         card_id = card_id + '-' + new Date().getTime()
       }
       await setDoc(doc(db, user, card_id), data);

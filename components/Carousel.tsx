@@ -15,7 +15,7 @@ import { route } from 'next/dist/server/router';
 import FullScreenDialog from "./DialogFullScreen";
 import { Container } from '@mui/system';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
-
+import Image from "material-ui-image";
 let images: { label: any; imgPath: any; }[] = [];
 
 function SwipeableTextMobileStepper(props: any) {
@@ -47,10 +47,31 @@ function SwipeableTextMobileStepper(props: any) {
   
   const ImageZoom = () => {
     console.log(imgZoom);
-    
     return (
       <>
-        <img src={imgZoom} /><br/>
+      <Box
+        sx={{marginTop:{md:3}}}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        // minHeight="100vh"
+      >
+      <Box
+        component="img"
+        sx={{
+          // height: 233,
+          width: '100%',
+           maxHeight: { xs: '100%', md: 600},
+           maxWidth: { xs: '100%', md: 500 },
+        }}
+        src={imgZoom}
+        />
+      </Box>
+        {/* <Image src={imgZoom}   style={{maxWidth: '100%',
+      height: 'auto',
+      padding: 0,
+      margin: 0}}/> */}
+      <br/>
         <Container><br/>
           <TextField
             id="outlined-textarea"
