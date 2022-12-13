@@ -33,7 +33,10 @@ const Navbar = (props: any) => {
     let title = "ZenBase"
     console.log(user?.isLogged);
     
-    if (!user?.isLogged) {
+    if (!user?.isLogged && 
+      location.href.substring(7).split('/')[1]!='login' && 
+      location.href.substring(7).split('/')[1]!='signup' &&
+      !location.href.substring(7).split('/')[1].includes('login2')) {
       title = location.hostname.split('.')[0]
     }
 

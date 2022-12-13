@@ -67,6 +67,24 @@ export default function BasicTable(props: { width: string | number; user: any; o
       props.setStateExtra([...props.stateExtra, { id: timestamp, key: "", value: ""}])
     }
 
+    const rowUpdate2 = (obj: {id: any, key: string, value: string;}) => {
+      // const index = obj.id   
+      // console.log(index);
+      console.table(obj);
+      
+      const index = props.stateExtra.findIndex((item: { id: any; }) => item.id === obj.id);
+      console.log(index);
+     
+      const clone = props.stateExtra
+      clone[index] = obj
+      console.log(clone)
+      props.setStateExtra(clone)
+      // props.setStateExtra([...obj])
+      console.log(props.stateExtra);
+      props.setStateExtra([...props.stateExtra])
+      
+    } 
+    
     const rowUpdate = (obj: {id: any, key: string, value: string;}) => {
       // const index = obj.id   
       // console.log(index);
@@ -153,9 +171,24 @@ export default function BasicTable(props: { width: string | number; user: any; o
                 >
                   <TableCell style={{width: '0', paddingRight: 1}} size='small'  key={'keyss_'+index} align="center" component="th" scope="row">
                     <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} className="handle" ><DragIndicatorIcon/></Button><br/>
+                   
+                   
+                   
+                   
+                   
+                   
                     {!isImage(props.stateExtra[index].value)&& 
-                    <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
+                    <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate2} /> 
                     }
+
+
+
+
+
+
+
+
+
                     {isImage(props.stateExtra[index].value)&& 
                        <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(index, props.stateExtra[index].id)}>
                                     <HighlightOff />

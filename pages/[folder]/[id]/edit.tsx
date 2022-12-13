@@ -113,7 +113,6 @@ const Create: NextPage<Props> = (props) => {
   const saveCard = () => {
     setDesableSaveButton(true)
     let data = { img: stateImg, folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: -1 };
-    console.log({data});
     const timestamp = new Date().getTime()
     let card_id = state.card_id
     if (card_id == '') card_id = timestamp.toString()
@@ -195,7 +194,7 @@ const Create: NextPage<Props> = (props) => {
       })
     }
   }
-  }, [user])
+  }, [])
 
   const handleChange2 =
   (prop: keyof Obj1) => (event: React.ChangeEvent<HTMLInputElement>) => {
