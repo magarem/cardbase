@@ -151,8 +151,8 @@ const Create: NextPage<Props> = () => {
                 items.map( (item, i) => <img src={data.img[i]?.value} style={{ maxWidth: '100%', zIndex: '0 !important'}}/> )
               }
             </Carousel> */}
-            <Box sx={{ width: {md:'50%', sm: '100%'} }}>
-              <SwipeableTextMobileStepper height={400} position="static" imgs={data.img} />
+            <Box sx={{ width: {md:'60%', sm: '100%'} }}>
+              <SwipeableTextMobileStepper height={500} position="static" imgs={data.img} />
             </Box>
             {/* <ImageList sx={{ width: '100%', height: 350 }} cols={matches ? 3 : 1} rowHeight={350}>
               {data.img.map((item: any) => (

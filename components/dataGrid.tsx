@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Box, Button, Card, CardMedia, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
+import { Box, Button, Card, CardMedia, Grid, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import Upload from './Upload'
 import HighlightOff from '@mui/icons-material/HighlightOff';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -145,82 +145,56 @@ export default function BasicTable(props: { width: string | number; user: any; o
       const onLoad = () => {
         console.log("loaded");
       };
-      return <img src={url} style={{ width: '200', maxHeight: 180, marginBottom: 10, marginTop: 10 }} onLoad={onLoad} />;
+      return <img src={url} style={{ maxWidth: '250px', maxHeight: '300px', marginBottom: 5, marginTop: 10 }} onLoad={onLoad} />;
     }
   return (
     <>
       {/* {JSON.stringify(props.stateExtra)Box} */}
-      <Box sx={{ overflow: "auto" }}>
-        <Box sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
-      <TableContainer component="table" sx={{ width: props.width }}>
-        <Table  sx={{width: '100%' }} aria-label="simple table">
-          <TableBody>
+      {/* <Box sx={{ overflow: "auto" }}>
+        <Box sx={{  display: "table", tableLayout: "fixed" }}> */}
+      {/* <TableContainer component="table" >
+        <Table aria-label="simple table">
+          <TableBody> */}
             <ReactSortable 
+              className="grid-container2"
               handle=".handle"
               list={props.stateExtra} 
               setList={(newlist) => props.setStateExtra(newlist)}
               // onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}
               >
               {props.stateExtra.map((row: any, index: number, arr: any) => { 
-                 
                 return (
-               
-                <TableRow component="tr"
-                  key={'key_'+index}
-                  sx={{'&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell style={{width: '0', paddingRight: 1}} size='small'  key={'keyss_'+index} align="center" component="th" scope="row">
-                    <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} className="handle" ><DragIndicatorIcon/></Button><br/>
-                   
-                   
-                   
-                   
-                   
-                   
-                    {!isImage(props.stateExtra[index].value)&& 
-                    <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate2} /> 
-                    }
-
-
-
-
-
-
-
-
-
-                    {isImage(props.stateExtra[index].value)&& 
-                       <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(index, props.stateExtra[index].id)}>
-                                    <HighlightOff />
-                                  </IconButton>}
-                    <br/><Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={()=>itemDel(index)}><RemoveCircleOutlineIcon/></Button>
-
-                  </TableCell>
-                  {props.optColumKey&&
-                    <TableCell sx={{width: 100, padding: 1}}  key={'keysss_'+index} align="center" component="td" scope="row">
-                      <TextField 
-                        key={'id_'+index}
-                        id="outlined-basic"
-                        fullWidth
-                        name="id"
-                        variant="filled"
-                        onChange={updateFieldChanged(index)}
-                        value={props.stateExtra[index].id}
-                        hidden
-                        />
-                      <TextField 
-                        key={'key_'+index}
-                        id="outlined-basic"
-                        fullWidth
-                        name="key"
-                        variant="outlined"
-                        onChange={updateFieldChanged(index)}
-                        value={props.stateExtra[index].key}
-                        />
-                    </TableCell>
-                  }
-                  <TableCell sx={{width: 200}} padding='none' align="center">
-                   
+                // <TableRow component="tr"
+                //   key={'key_'+index}
+                //   sx={{'&:last-child td, &:last-child th': { border: 0 } }}
+                // >
+                  // <TableCell style={{width: '100%', alignContent: 'center'}} size='small'  key={'keyss_'+index} align="center" component="th" scope="row">
+                    <Stack key={'box_'+index} direction="column" justifyContent="top" style={{width: '250px', backgroundColor: '#171717'}}>
+                      {props.optColumKey&&
+                        <>
+                        <TextField 
+                            key={'id_'+index}
+                            id="outlined-basic"
+                            fullWidth
+                            name="id"
+                            variant="filled"
+                            onChange={updateFieldChanged(index)}
+                            value={props.stateExtra[index].id}
+                            hidden
+                            />
+                          <TextField 
+                            style = {{width: 250}}
+                            placeholder='Chave'
+                            key={'key_'+index}
+                            id="outlined-basic"
+                            fullWidth
+                            name="key"
+                            variant="outlined"
+                            onChange={updateFieldChanged(index)}
+                            value={props.stateExtra[index].key}
+                            />
+                        </>
+                      }
                       {(props.stateExtra[index].value)&&
                         <>
                           {isImage(props.stateExtra[index].value)&& 
@@ -230,58 +204,54 @@ export default function BasicTable(props: { width: string | number; user: any; o
                       }
                       {!isImage(props.stateExtra[index].value)&&
                         <TextField 
+                          style = {{width: 250}}
+                          placeholder='Valor'
                           key={'value_'+index}
                           id="outlined-basic"
-                          fullWidth
+                          
                           name="value"
                           variant="outlined"
                           // onBlur={checkIfIsAImage}
                           onChange={updateFieldChanged(index)}
                           value={props.stateExtra[index].value}
-                          // InputProps={{
-                          //   endAdornment: (
-                          //     <InputAdornment position="end">
-                          //       <>
-                          //         <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(props.stateExtra[index].id)}>
-                          //           <HighlightOff />
-                          //         </IconButton>
-                          //       </>
-                          //     </InputAdornment>
-                          // )}}
                         />
                       }
-                      {/* <Grid item md={2}>
-                       <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
-                       <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(props.stateExtra[index].id)}>
-                                    <HighlightOff />
-                                  </IconButton>
-                      </Grid> */}
-                 
                     
-
-                  </TableCell>
+                      <Box>
+                        <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} className="handle" ><DragIndicatorIcon/></Button>
+                        {!isImage(props.stateExtra[index].value)&& 
+                          <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate2} /> 
+                        }
+                        {isImage(props.stateExtra[index].value)&& 
+                          <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(index, props.stateExtra[index].id)}>
+                            <HighlightOff />
+                          </IconButton>
+                        }
+                        <Button style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}} onClick={()=>itemDel(index)}><RemoveCircleOutlineIcon/></Button>
+                      </Box>
+                    </Stack>
+                  // </TableCell>
+                
+                
                  
           
                  
-                  {/* <TableCell style={{width: '0', paddingLeft: 1, paddingRight: 1}} align="center">
-                  <Upload key={'key_'+index} user={props.user} imgFieldName='value' state={props.stateExtra[index]} setState={rowUpdate} /> 
-                       <IconButton color="primary" aria-label="upload picture off" component="label" onClick={() => deleteImage(props.stateExtra[index].id)}>
-                                    <HighlightOff />
-                                  </IconButton>
-                  </TableCell> */}
-                </TableRow>
+                 
+                // </TableRow>
               )})}
-              <TableRow>
-                <TableCell colSpan={props.optColumKey?6:5} align="center">
-                    <Button onClick={rowAdd}><AddIcon/></Button>
-                </TableCell> 
-              </TableRow>
+              {/* <TableRow>
+                <TableCell colSpan={props.optColumKey?6:5} align="center"> */}
+                    <Stack direction="column" justifyContent="center" style={{width: '250px', backgroundColor: '#171717'}}>
+                      <Button onClick={rowAdd}><AddIcon/></Button>
+                    </Stack>
+                {/* </TableCell> 
+              </TableRow> */}
             </ReactSortable>
-          </TableBody>
+          {/* </TableBody>
         </Table>
-      </TableContainer>
-      </Box>
-      </Box>
+      </TableContainer> */}
+      {/* </Box>
+      </Box> */}
     </>
   );
 }

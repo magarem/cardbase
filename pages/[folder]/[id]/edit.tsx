@@ -19,6 +19,7 @@ import MagaTabs from "../../../components/Tabs"
 import { VisibilityOff, Visibility } from "@material-ui/icons";
 import HighlightOff from '@mui/icons-material/HighlightOff';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EditIcon from '@mui/icons-material/Edit';
 interface Props {
   setuser: Function,
   user: {
@@ -241,7 +242,7 @@ const Create: NextPage<Props> = (props) => {
       {/* </main> */}
       <Typography variant="h5" gutterBottom mt={11} ml={1} mb={3}>
         {/* <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} <Link onClick={()=>router.push('/'+folder+'/'+state.card_id)} underline="hover">{state.title.substring(0,100)}</Link> {' › '} {state.id?<span>[Editar]</span>:<span>[Criar]</span>} */}
-        <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {state.title.substring(0,100)} {' › '} {state.id?<span>[Editar]</span>:<span>[Criar]</span>}
+        <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {state.id.substring(0,100)} {' › '} <EditIcon fontSize='small' sx={{marginTop:-1}}/>
       </Typography>
       <MagaTabs>
         <div data-tab="tab1">
@@ -264,8 +265,8 @@ const Create: NextPage<Props> = (props) => {
         >
           <Typography>Extra</Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{ marginTop: 0, marginLeft: 0,  marginRight: 0}}>
-                <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
+        <AccordionDetails >
+            <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
         </AccordionDetails>
       </Accordion>
       </Box>
@@ -273,8 +274,8 @@ const Create: NextPage<Props> = (props) => {
         <br/>
         </div>
         <div data-tab="tab2">
-          <Box sx={{ width: 760 }}>
-            <FullFeaturedCrudGrid width={760} user={user} optColumKey={false} stateExtra={stateImg} setStateExtra={setStateImg}/>
+          <Box >
+            <FullFeaturedCrudGrid width={'760'} user={user} optColumKey={false} stateExtra={stateImg} setStateExtra={setStateImg}/>
           </Box>
         </div>
         <div data-tab="tab3">

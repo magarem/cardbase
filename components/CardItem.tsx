@@ -17,10 +17,11 @@ import { DragIndicator } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
 import { SnippetFolder } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
-import { Box, ListItem, ListItemText } from '@mui/material';
+import { Box, Button, ListItem, ListItemText } from '@mui/material';
 import Image from 'next/image'
 import Switch from '@mui/material/Switch';
 import SwipeableTextMobileStepper from './Carousel'
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -149,18 +150,20 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
         </div>
       }
         <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
-          <Grid container rowSpacing={2} columnSpacing={2}>
-            <Grid item md={10}  >
-              <Typography className={user.isLogged&&"handle"} variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+          <Grid container rowSpacing={2} columnSpacing={2} >
+            <Grid item md={10}>
+              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+                {user.isLogged&&<Button className="handle" style={{marginLeft:'-15px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}><DragIndicatorIcon /></Button>}
                 {item.title}
               </Typography>
               <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
                 {!item.img && <div dangerouslySetInnerHTML={{ __html: item.body.substring(0, 178) }}></div>}
               </Typography>
             </Grid>
-            {item.img &&
+            
             <Grid item md={2}>
               <ExpandMore
+                disabled={!(item.body.length>0)}
                 expand={expanded}
                 onClick={handleExpandClick}
                 aria-expanded={expanded}
@@ -168,7 +171,7 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
                 <ExpandMoreIcon fontSize="small" />
               </ExpandMore>
             </Grid>
-            }
+           
           </Grid>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>

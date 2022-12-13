@@ -27,7 +27,7 @@ export default function DenseTable({cols, rows}: Props) {
     value = value.value
     if (isImage(value)){ 
       return (
-        <Card sx={{ width: 100, maxHeight: 100 }}>
+        <Card sx={{ width: 150, maxHeight: 200 }}>
           <CardMedia
             component="img"
             height="100%"

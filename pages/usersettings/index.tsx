@@ -14,6 +14,8 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FullFeaturedCrudGrid from "../../components/dataGrid"
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -39,6 +41,25 @@ const Usersettings: NextPage = (props) => {
   const { user, getFolders, setFolders } = useAuth()
   const [flgDialogSetOpen, setFlgDialogSetOpen] = React.useState(false);
   const [state, setState] = React.useState([{key:"", value:""}]);
+
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleCloseAlert = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   useEffect(() => {
    if (user.uid){
@@ -72,6 +93,7 @@ const Usersettings: NextPage = (props) => {
     console.log(user.uid, state);
     CardDataService.setSettingsDefFields(user.uid, state)
     .then((x) => {
+      setOpen(true)
       console.log("Created new item successfully!");
     })
     .catch((e) => {
@@ -163,7 +185,11 @@ const Usersettings: NextPage = (props) => {
           <Button onClick={() => folderAdd()}>Salvar</Button>
         </DialogActions>
       </Dialog>
-
+      <Snackbar open={open} autoHideDuration={4000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="success" sx={{ width: '100%' }}>
+          Dados registrados com sucesso
+        </Alert>
+      </Snackbar>
       <Typography variant="h5" gutterBottom mt={11} ml={1} mb={2}>
         {'Configurações'}
       </Typography>
@@ -182,11 +208,8 @@ const Usersettings: NextPage = (props) => {
           <Box ml={1} >
             {/* {JSON.stringify(state)} */}
             <FullFeaturedCrudGrid width={'100%'} optColumKey user={user} stateExtra={state} setStateExtra={setState}/>
-            <Button onClick={saveDefFields}>Salvar</Button>
-            {/* <TextField id="outlined-basic" label="Logotipo" variant="outlined" sx={{mr:5}} />
-            <TextField id="outlined-basic" label="Logotipo" variant="outlined" />
-            <TextField id="outlined-basic" label="Logotipo" variant="outlined" /><br/><br/> */}
-          </Box>
+            <Button sx={{marginTop: 2}} onClick={saveDefFields} variant="contained">Salvar</Button>
+            </Box>
         </AccordionDetails>
       </Accordion>
       <Accordion>
