@@ -54,12 +54,14 @@ export default (req: any, res: any) => {
         return {id:doc.id, ...doc.data()}
     });
     console.log(cityList);
-    return cityList.sort((a: any, b: any) => (a.order > b.order) ? 1 : -1)
+    // return cityList.sort((a: any, b: any) => (a.order > b.order) ? 1 : -1)
+    return cityList
   }
   
   CardDataService.readUserData(null, username).then(async (ret: any)=>{
     const id = req.query.id
     const folder = req.query.folder
+    console.log(username);
   
     if (id) {
       loadDataByCardId(ret.uid, id).then((a) => {

@@ -129,13 +129,10 @@ const Create: NextPage<Props> = () => {
       <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
         <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
       </Typography>
-      
-      <Box
-      sx={{
-        xs: {width: '100%'},
-        md: {width: '50%'}
-      }}
-    >
+      <Box sx={{
+          xs: {width: '100%'},
+          md: {width: '50%'}
+        }}>
         {/* <h4><Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link> {'›'} {data.title}</h4><br/> */}
         {data.img[0]?.value&&
         <Container disableGutters

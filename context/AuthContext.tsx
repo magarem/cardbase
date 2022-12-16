@@ -63,57 +63,8 @@ export const AuthContextProvider = ({
       }
     });
     setLoading(false);
-
     return () => unsubscribe();
   }, []);
-
-
-  // const cookies = new Cookies();
-  // useEffect(() => {
-  //   alert('auth called')
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     console.log("1onAuthStateChanged", user);
-  //     alert(user)
-  //     // console.log(cookie.user);
-      
-  //     // console.log(cookies.get('myCat')); // Pacman
-     
-  //     if (user) {
-        
-  //       // setCookie('user', user, { path: '/', domain: '.magadell.local' });
-
-  //       // cookies.set('myCat', 'Pacman', { path: '/' });
-  //       // console.log(cookies.get('myCat')); // Pacman
-  //       // setCookie("user", JSON.stringify(user), {
-  //       //   path: "/"})
-  //       //  console.log(cookie.user);
-         
-  //       userReadData(user.uid).then((ret)=>{
-  //         console.log(ret);
-  //         setUser({
-  //           uid: user.uid,
-  //           email: user.email,
-  //           username: ret?.data.username
-  //         })
-  //       })
-  //     } else {
-  //       // if ( false ) {
-  //       //   user = cookie.user
-  //       //   console.log(user);
-          
-  //       // }else{
-  //         console.log(11,{user});
-          
-  //         setUser(null)
-  //         if (!noAuthRequired.includes(router.pathname)) {
-  //           console.log(22);
-  //           // router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login')
-  //         }
-  //     }
-  //     setLoading(false)
-  //   })
-  //   return () => unsubscribe()
-  // }, [])
 
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -122,16 +73,35 @@ export const AuthContextProvider = ({
   const setFolders = (data: any) => {
     setStateFolder(data)
   }
+
   const getFolders = () => {
     return stateFolder.map((item: any)=>{
       return {...item, value: item.value}
     }).sort((a, b) => (a.order > b.order) ? 1 : -1)
   }
   
+  const getUserFolders = () => {
+    return user.folders
+  }
+  
   const getFolderKeyByValue = (value: string) => {
     console.log(stateFolder);
     const ret = user.folders?.find(item => item.value == value)?.key
     return ret
+  }  
+  
+  const foldersListUpdate = (data: any) => {
+    console.log(data);
+    if (user.uid) {
+      user.folders = data
+      dataServices.setUserFolders(user.uid, data)
+      .then((x) => {
+        console.log("foldersListUpdate successfully!");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    }
   }
 
   const folderReloadByGuest = async (uid: string, folder: string) => {
@@ -152,6 +122,7 @@ export const AuthContextProvider = ({
     return await dataServices.readById(user.uid as string, "folders").then((data: any) => {
       if (data){
         console.log(data)
+        user.folders = Object.values(data)
         console.log(Object.values(data))
         const aa = Object.values(data) as Array<any>
         console.log(aa);
@@ -263,7 +234,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, stateFolder, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
+    <AuthContext.Provider value={{user, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )

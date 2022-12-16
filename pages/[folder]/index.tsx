@@ -91,6 +91,7 @@ const List: NextPage<Props> = (props) => {
       // const folderKey = await getFolderKeyByValue(folder)
       // console.log(stateFolder);
       const folderKey = await user.folders.find(item => item.value == folder)?.key
+      // alert(folder + '-' + folderKey)
       console.log('>>', user, folder, folderKey);
       if (folderKey){
         CardDataService.read(user.uid, folderKey).then((data3) => {
@@ -207,7 +208,7 @@ const List: NextPage<Props> = (props) => {
       {/* {JSON.stringify(user)}<br/>
       {JSON.stringify(stateFolder)} */}
        <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
-          {folder}
+        <Link onClick={()=>{router.push('/Home')}} style={{textDecoration: 'none'}}>‹</Link> {folder}
       </Typography>
      
       {/* {JSON.stringify(currentState)} */}

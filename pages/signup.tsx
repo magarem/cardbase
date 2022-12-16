@@ -57,7 +57,7 @@ const Signup = () => {
       const user = userCredential.uid
       const data2 = {uid: user, email: data.email, username: userNameDef}
       await CardDataService.userAdd(data2)
-      CardDataService.setUserFolders(user, {0:{key: '/', value: 'Home', order: 0}})
+      CardDataService.setUserFolders(user, {0:{key: '/', value: 'Home', order: 0}, 1:{key: 'principal', value: 'Principal', order: 1}})
       return userNameDef
     }else{
       alert("Esse email já está cadastrado")
@@ -103,10 +103,10 @@ const Signup = () => {
       <CssBaseline />
       <AlertDialog time img="" title="Erro" body="Esse e-mail ou nome do usuário já existente" mostra={flgErrorDialog} setMostra={setFlgErrorDialog}/>
       <Box sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}>
         <Typography component="h1" variant="h5" mt={4}>
           Registro

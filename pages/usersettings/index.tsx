@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FullFeaturedCrudGrid from "../../components/dataGrid"
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import MagaTable from "../../components/table"
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -111,6 +112,8 @@ const Usersettings: NextPage = (props) => {
     });
   }
 
+ 
+
   const folderAdd = () => {  
     if (formCardFolder.value){
       var array = user.folders
@@ -156,6 +159,8 @@ const Usersettings: NextPage = (props) => {
     // setOperation('Alterar')
     setFormCardFolder({key: user.folders[index].key, value: user.folders[index].value, order: user.folders[index].order})
   }
+  const cols: any[] = ['1', '2']
+  const rows: any[] = [['Usuário', user.username], ['E-mail', user.email], ['UID', user.uid]]
   return (
     <>
       <Dialog
@@ -195,7 +200,26 @@ const Usersettings: NextPage = (props) => {
       </Typography>
       {/* <Button onClick={handleClickOpen}><ControlPointIcon/></Button> */}
       <Container  >
-      <div>
+      <div> 
+        <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Info</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ mt: 0 }}>
+          <Box ml={0} >
+          <MagaTable cols={cols} rows={rows}/>
+          {/* <Stack spacing={1}>
+            <Item>Item 1</Item>
+            <Item>Item 2</Item>
+            <Item>Item 3</Item>
+          </Stack> */}
+          </Box>
+        </AccordionDetails>
+      </Accordion>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

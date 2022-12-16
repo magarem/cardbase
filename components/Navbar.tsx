@@ -32,16 +32,13 @@ const Navbar = (props: any) => {
   const SiteTitle = () => {
     let title = "ZenBase"
     console.log(user?.isLogged);
-    
     if (!user?.isLogged && 
       location.href.substring(7).split('/')[1]!='login' && 
       location.href.substring(7).split('/')[1]!='signup' &&
       !location.href.substring(7).split('/')[1].includes('login2')) {
       title = location.hostname.split('.')[0]
     }
-
     console.log(title);
-    
     return (
       <>{title}</>
     )
@@ -165,7 +162,6 @@ const Navbar = (props: any) => {
       )
     }
   }
-
   return (
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="fixed">
@@ -182,15 +178,12 @@ const Navbar = (props: any) => {
           <MenuIcon />
         </IconButton>
         }
-        <Grid  sx={{ mt: -1.4 }} container rowSpacing={2} columnSpacing={2}>
+        <Grid sx={{mt: -1.4}} container rowSpacing={2} columnSpacing={2}>
           <Grid item xs={6} sm={6} md={6} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
               <SiteTitle />
             </Typography>
           </Grid>
-          {/* <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
-            <PageMenu user={user}/>
-          </Grid> */}
           <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}} >
             <UserOptions />
           </Grid>

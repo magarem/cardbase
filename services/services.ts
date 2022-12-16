@@ -68,7 +68,7 @@ class CardDataService {
     let a: any
 
     if (uid) {
-      console.log(uid);
+      console.log(1,uid);
       const col = query(collection(db, 'users'), where("uid", "==", uid))
       const snap = await getDocs(col);
       const list = snap.docs.map(doc => {
