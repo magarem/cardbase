@@ -11,7 +11,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 export default function MediaCard(props: any) {
   return (
-    <Card sx={{ maxWidth: props.width, maxHeight: 180, backgroundColor: "rgba(0, 0, 0, .7)"}}>
+    <Card sx={{ width: '100%', backgroundColor: "rgba(0, 0, 0, .7)"}}>
       <CardMedia
         
         onClick={props.cmdImage}
