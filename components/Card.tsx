@@ -14,7 +14,7 @@ export default function MediaCard(props: any) {
   return (
     <Card className={props.cls||''} sx={{ width: '100%', height: 185, backgroundColor: "rgba(0, 0, 0, .7)"}}>
       <CardMedia
-        
+      sx={props.sx_||{}}
         onClick={props.cmdImage}
         component="img"
         width={props.width}

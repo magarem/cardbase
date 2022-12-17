@@ -28,7 +28,7 @@ function CardsGrid(props){
       setList={(newlist) => props.setCurrentState(newlist)}
       onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}>
       {props.currentState.map((item) => (
-       <div key={item} className={flagMoveItens&&'handle divBlur'}>
+       <div key={item.id} className={flagMoveItens&&'divBlur'}>
         <CardItem 
           handleOpen={props.handleOpen}
           key={item.id} 

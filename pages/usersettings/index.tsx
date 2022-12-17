@@ -226,7 +226,7 @@ const Usersettings: NextPage = (props) => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography>Definições</Typography>
+          <Typography>Variáveis globais</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ mt: 0 }}>
           <Box ml={1} >
@@ -236,7 +236,7 @@ const Usersettings: NextPage = (props) => {
             </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion>
+      {/* <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
@@ -253,7 +253,7 @@ const Usersettings: NextPage = (props) => {
                     <Avatar>
                       {(item.key=='/')?
                       <HomeIcon/>:
-                      <Folder  onClick={() => itemEdit(index)}/>
+                      <Folder onClick={() => itemEdit(index)}/>
                       }
                     </Avatar>
                   </ListItemAvatar>
@@ -277,7 +277,7 @@ const Usersettings: NextPage = (props) => {
             </ListItem>
           </List>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
     </div>
        
       </Container>

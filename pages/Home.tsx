@@ -39,7 +39,7 @@ type ss = {
 function Copyright(props: any) {
   return (
     <>
-      <Typography mt={15} mb={10} variant="body2" color="text.secondary" align="center" {...props}>
+      <Typography mt={15} mb={10} variant="body2" component={'span'} color="text.secondary" align="center" {...props}>
         {'Copyright © '}
         <Link color="inherit" href="">
           ZenBase
@@ -144,7 +144,7 @@ const Home: NextPage<Props> = () => {
   }
   
   const foldersListUpdate_ = (data: any) => {
-    data = [{id:'/', key:'/', value: 'Home'}, ...data]
+    // data = [{id:'/', key:'/', value: 'Home'}, ...data]
     user.folders = data
     setFolders(data)
     console.log(data);
@@ -175,13 +175,14 @@ const Home: NextPage<Props> = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         >
-        <DialogTitle id="alert-dialog-title">
-          {"Pasta"}
+        <DialogTitle id="alert-dialog-title" component="span">
+          Pasta
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <FormControl fullWidth>
+          <DialogContentText id="alert-dialog-description" component="span">
+            <FormControl component="span">
               <TextField
+                fullWidth
                 name="formCardFolder_value"
                 value={formCardFolder.value}
                 placeholder="Nova pasta"
@@ -210,18 +211,19 @@ const Home: NextPage<Props> = () => {
      <ReactSortable 
       handle=".handle"
       className="grid-container3"
-      list={folders.filter((item: any) => item.value.toLowerCase()!=='home').map((item: any)=>{ return {...item, id: item.key}})} 
+      list={folders.map((item: any)=>{ return {...item, id: item.key}})} 
       setList={(newlist) => foldersListUpdate_(newlist)}
       onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}
       >
-      {folders.filter((item: any) => item.value.toLowerCase()!=='home').map((item: any, index: number) => {
+      {folders.map((item: any, index: number) => {
         return (
           <Box key={item.key} className={flagMoveItens&&'handle'}>
             <Card 
-              cls={flagMoveItens&&'trimiliqui'}
+              // cls={flagMoveItens&&'trimiliqui'}
+              sx_={flagMoveItens&&{border: 2, borderColor: 'orange', borderRadius: '10px'}}
               width='170'
               title={item.value} 
-              img='https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/directory-150354_640.png?alt=media&token=9f7a9035-2b55-4287-a0b3-36084aeba27d' 
+              img={'https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/directory-150354_640.png?alt=media&token=9f7a9035-2b55-4287-a0b3-36084aeba27d'}
               // body='texto completo'
               cmdImage={()=>flagMoveItens||go(item.value)}
               cmdTitle={()=>flagMoveItens||itemEdit(index)}

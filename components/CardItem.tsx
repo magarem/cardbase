@@ -121,9 +121,9 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
     )
   }else{
     return (  
-      <Box sx={flagMoveItens?{border:2, borderColor: 'orange'}:{"padding": "0px"}} >
+      <Box >
       <Card raised >
-        {/* {user&&
+        {/* {flagMoveItens&&
         <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
           <Grid container m={0}>
             <Grid item xs={6} sm={6} md={6}>
@@ -154,6 +154,9 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
             <Grid item md={10}>
               <Typography variant="h6" color="text.secondary" onClick = {() => {flagMoveItens||handleOpen({...item})}} >
                 {/* {user.isLogged&&<Button  style={{marginLeft:'-15px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}><DragIndicatorIcon /></Button>} */}
+                {flagMoveItens&&<IconButton style={{marginLeft:'-10px', marginRight:'5px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
+                  <DragIndicator className="handle" fontSize="small" color='primary'/>
+                </IconButton>}
                 {item.title}
               </Typography>
               <Typography variant="h6" color="text.secondary" onClick = {() => {flagMoveItens||handleOpen({...item})}} >

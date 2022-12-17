@@ -37,7 +37,7 @@ export default function Layout({ children }: any) {
   }
 
   function capitalizeFirstLetter(str: string) {
-    if (str == 'Home') str = 'Início'
+    // if (str == 'Home') str = 'Início'
     return str?.charAt(0).toUpperCase() + str?.slice(1)
   }
 
@@ -65,6 +65,16 @@ export default function Layout({ children }: any) {
         <ListItem>
             <ListItemText primary="Pastas" />
         </ListItem>
+        <ListItem key='home' disablePadding onClick={()=>golink('/', 'Home')}>
+            <ListItemButton>
+              <ListItemIcon>
+                <Avatar>
+                  <HomeIcon/>
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText primary={capitalizeFirstLetter('Início')} />
+            </ListItemButton>
+          </ListItem>
         {user.folders&&user.folders.map((item: any, index: any) => (
           <ListItem key={item.value} disablePadding onClick={()=>golink(item.key, item.value)}>
             <ListItemButton>

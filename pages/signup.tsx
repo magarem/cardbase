@@ -57,7 +57,8 @@ const Signup = () => {
       const user = userCredential.uid
       const data2 = {uid: user, email: data.email, username: userNameDef}
       await CardDataService.userAdd(data2)
-      CardDataService.setUserFolders(user, {0:{key: '/', value: 'Home', order: 0}, 1:{key: 'principal', value: 'Principal', order: 1}})
+      // CardDataService.setUserFolders(user, {0:{key: '/', value: 'Home', order: 0}, 1:{key: 'principal', value: 'Principal', order: 1}})
+      CardDataService.setUserFolders(user, {0:{key: 'principal', value: 'Principal', order: 0}})
       return userNameDef
     }else{
       alert("Esse email já está cadastrado")

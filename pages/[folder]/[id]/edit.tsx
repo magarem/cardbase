@@ -67,7 +67,7 @@ const Create: NextPage<Props> = (props) => {
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "", card_id: "", img: [{}], folder: "", title: "", body: "", tags: "", order: -1 };
+  const cardObj = {id: "Novo", card_id: "", img: [{}], folder: "", title: "Novo", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
@@ -251,6 +251,7 @@ const Create: NextPage<Props> = (props) => {
               name="title"
               label="Titulo"
               variant="outlined"
+              fullWidth
               onChange={handleChange}
               value={state.title.substring(0,100)}
             /><br/><br/>
