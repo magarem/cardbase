@@ -72,5 +72,29 @@ a {
 
 .divBlur {
   opacity: .7;
- 
+ }
+
+ .container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+ .container .btnHandleDrag {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: rgb(233, 127, 41);
+  /* color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px; */
+  text-align: center;
+}
+
+.hide {
+  visibility: hidden;
 }

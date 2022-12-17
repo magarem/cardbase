@@ -10,9 +10,14 @@ import Link from 'next/link';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
+import IconButton from '@mui/material/IconButton';
+
 export default function MediaCard(props: any) {
   return (
-    <Card className={props.cls||''} sx={{ width: '100%', height: 185, backgroundColor: "rgba(0, 0, 0, .7)"}}>
+    <>
+        
+    <Card className={props.cls||''} sx={{ width: '100%', height: 160, backgroundColor: "rgba(0, 0, 0, .7)"}}>
+    <div className="container">
       <CardMedia
       sx={props.sx_||{}}
         onClick={props.cmdImage}
@@ -20,15 +25,13 @@ export default function MediaCard(props: any) {
         width={props.width}
         image={props.img}
       />
+            <IconButton className={props.flagAction?'btnHandleDrag handle':'btnHandleDrag hide'}><OpenWithIcon /></IconButton></div>
+
       <CardContent>
-        <Typography gutterBottom variant="h6" component="div" sx={{marginLeft:-2, marginTop:-1}}>
+        <Typography onClick={props.cmdTitle} align="center"  variant="subtitle1" component="div" sx={{marginTop:-1}}>
         {/* <MoreVertIcon fontSize='small'/> */}
-        <Button onClick={props.cmdTitle}
-            // startIcon={<MoreVertIcon className='handle' fontSize='small'/>}
-            // fullWidth={true}
-            style={{justifyContent: "flex-start"}}>
+      
             {props.title}
-        </Button>
           {/* <DragIndicatorIcon className='handle'/>
           <Button onClick={props.cmdTitle}>
             {props.title} 
@@ -46,5 +49,7 @@ export default function MediaCard(props: any) {
         <Button size="small">Learn More</Button>
       </CardActions>  */}
     </Card>
+   
+    </>
   );
 }

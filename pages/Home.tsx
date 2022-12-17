@@ -13,7 +13,10 @@ import { SxProps } from '@mui/system';
 import { ReactSortable } from "react-sortablejs";
 import { AnyMxRecord } from "dns";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-
+import OpenWithIcon from '@mui/icons-material/OpenWith';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 interface Props {
   setuser: Function,
   currentState2?: {
@@ -182,6 +185,7 @@ const Home: NextPage<Props> = () => {
           <DialogContentText id="alert-dialog-description" component="span">
             <FormControl component="span">
               <TextField
+                autoFocus
                 fullWidth
                 name="formCardFolder_value"
                 value={formCardFolder.value}
@@ -191,10 +195,12 @@ const Home: NextPage<Props> = () => {
             </FormControl>
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setFlgDialogSetOpen(false)}>Cancelar</Button>
-          {formCardFolder.key&&<Button onClick={() => itemRemove(formCardFolder)}>Excluir</Button>}
-          <Button onClick={() => folderAdd()}>Salvar</Button>
+        <DialogActions style={{ justifyContent: "center" }}>
+          {/* <Button variant="outlined"  onClick={() => setFlgDialogSetOpen(false)}>Cancelar</Button> */}
+          {formCardFolder.key&&<Button variant="outlined" onClick={() => itemRemove(formCardFolder)} startIcon={<DeleteIcon />}>Excluir</Button>}
+        
+        
+          <Button variant="outlined" onClick={() => folderAdd()} startIcon={<SaveIcon/>}>Salvar</Button>
         </DialogActions>
       </Dialog>
       {/* {JSON.stringify(user)}<br/>
@@ -217,10 +223,12 @@ const Home: NextPage<Props> = () => {
       >
       {folders.map((item: any, index: number) => {
         return (
-          <Box key={item.key} className={flagMoveItens&&'handle'}>
+          <Box key={item.key} >{/*className={flagMoveItens&&'handle'}*/}
+            {/* <div className="container"> */}
             <Card 
+              flagAction={flagMoveItens}
               // cls={flagMoveItens&&'trimiliqui'}
-              sx_={flagMoveItens&&{border: 2, borderColor: 'orange', borderRadius: '10px'}}
+              // sx_={flagMoveItens&&{border: 2, borderColor: 'orange', borderRadius: '10px'}}
               width='170'
               title={item.value} 
               img={'https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/directory-150354_640.png?alt=media&token=9f7a9035-2b55-4287-a0b3-36084aeba27d'}
@@ -229,6 +237,7 @@ const Home: NextPage<Props> = () => {
               cmdTitle={()=>flagMoveItens||itemEdit(index)}
             >
             </Card>
+            {/* <IconButton className={flagMoveItens?'btnHandleDrag handle':'btnHandleDrag hide'}><OpenWithIcon /></IconButton></div> */}
           </Box>
         )})
       }

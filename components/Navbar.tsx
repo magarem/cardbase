@@ -186,18 +186,17 @@ const Navbar = (props: any) => {
         </IconButton>
         }
         <Grid sx={{mt: -1.4}} container rowSpacing={2} columnSpacing={2}>
-          <Grid item xs={4} sm={4} md={4} style={{textAlign: "left", paddingTop:22}}>
+          <Grid item xs={5} sm={5} md={5} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
               <SiteTitle />
             </Typography>
           </Grid>
-          <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
-           
-             {user.isLogged&&['/Home','/[folder]'].includes(router.pathname)&&<FormControlLabel   labelPlacement="top" control={<Switch {...label} checked={flagMoveItens}
-              onChange={handleChange} size="small"  />} label="Mover" />}
+          <Grid item xs={2} sm={2} md={2} style={{textAlign: "center", paddingTop:20}} >
+             {user.isLogged&&['/Home','/[folder]'].includes(router.pathname)&&<Switch {...label} checked={flagMoveItens}
+              onChange={handleChange} size="small"  />}
           </Grid>
 
-          <Grid item xs={4} sm={4} md={4} style={{textAlign: "right", paddingTop:22}} >
+          <Grid item xs={5} sm={5} md={5} style={{textAlign: "right"}} >
             <UserOptions />
           </Grid>
         </Grid>
