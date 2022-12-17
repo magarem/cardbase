@@ -40,6 +40,7 @@ export const AuthContextProvider = ({
   })
   const [loading, setLoading] = useState<boolean>(true)
   const [stateFolder, setStateFolder] = React.useState([{key: null, value: null, order:0}])
+  const [flagMoveItens, setFlagMoveItens] = React.useState(false)
   // const [cookie, setCookie] = useCookies(["user"])
   const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]', '/[folder]/[id]/index', '/usersettings']
   
@@ -234,7 +235,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
+    <AuthContext.Provider value={{user, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )

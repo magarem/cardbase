@@ -16,10 +16,12 @@ import FullScreenDialog from "./DialogFullScreen";
 import { Container } from '@mui/system';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 import Image from "material-ui-image";
+import { useAuth } from '../context/AuthContext';
 let images: { label: any; imgPath: any; }[] = [];
 
 function SwipeableTextMobileStepper(props: any) {
   const [open, setOpen] = React.useState(false);
+  const { flagMoveItens } = useAuth()
   
   // useEffect(() => {
     images=[]
@@ -127,7 +129,7 @@ function SwipeableTextMobileStepper(props: any) {
          
             {Math.abs(activeStep - index) <= 2 ? (
               <> 
-              <CardMedia height={props.height} component="img" image={step.imgPath} onClick={() => handleClickOpen(step.imgPath)}/>
+              <CardMedia height={props.height} component="img" image={step.imgPath} onClick={() => flagMoveItens||handleClickOpen(step.imgPath)}/>
               {/* <Box
                 component="img"
                 sx={{

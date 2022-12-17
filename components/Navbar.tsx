@@ -16,14 +16,15 @@ import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { PhotoLibrary } from '@material-ui/icons/';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
+import Switch from '@mui/material/Switch';
+import { FormControlLabel } from '@mui/material';
 interface obj1 {
   user: string
 }
-
+const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 const Navbar = (props: any) => {
 
-  const { user, logout } = useAuth();
+  const { user, flagMoveItens, setFlagMoveItens, logout } = useAuth();
   console.log(props)
   const router = useRouter()
   // const user = props.user
@@ -162,6 +163,12 @@ const Navbar = (props: any) => {
       )
     }
   }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFlagMoveItens(event.target.checked);
+  };
+  console.log(router.pathname)
+  console.log(router.query)
+  console.log(router.asPath)
   return (
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="fixed">
@@ -179,12 +186,18 @@ const Navbar = (props: any) => {
         </IconButton>
         }
         <Grid sx={{mt: -1.4}} container rowSpacing={2} columnSpacing={2}>
-          <Grid item xs={6} sm={6} md={6} style={{textAlign: "left"}}>
+          <Grid item xs={4} sm={4} md={4} style={{textAlign: "left"}}>
             <Typography variant="h6" component="div" >
               <SiteTitle />
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}} >
+          <Grid item xs={4} sm={4} md={4} style={{textAlign: "center"}} >
+            <div style={{marginBottom: 5, fontSize: '70%'}}></div>
+             {user.isLogged&&['/Home','/[folder]'].includes(router.pathname)&&<FormControlLabel control={<Switch {...label} checked={flagMoveItens}
+              onChange={handleChange} size="small"  />} label="Mover" />}
+          </Grid>
+
+          <Grid item xs={4} sm={4} md={4} style={{textAlign: "right"}} >
             <UserOptions />
           </Grid>
         </Grid>

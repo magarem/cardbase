@@ -6,11 +6,12 @@ import CardDataService from "../../services/services";
 import { useRouter } from "next/router";
 import CardsGrid from '../../components/CardsGrid'
 import { useAuth } from '../../context/AuthContext'
-import { Dialog, DialogContent, Grid, Link, Fab } from "@mui/material";
+import { Dialog, DialogContent, Grid, Link, Fab, Button, IconButton } from "@mui/material";
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { SxProps } from '@mui/system';
-
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 interface Props {
   setuser: Function,
   currentState2?: {
@@ -208,7 +209,8 @@ const List: NextPage<Props> = (props) => {
       {/* {JSON.stringify(user)}<br/>
       {JSON.stringify(stateFolder)} */}
        <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
-        <Link onClick={()=>{router.push('/Home')}} style={{textDecoration: 'none'}}>‹</Link> {folder}
+        <Link onClick={()=>{router.push('/Home')}} style={{textDecoration: 'none'}}>
+          <IconButton size="small" ><ChevronLeftIcon fontSize="small"/></IconButton></Link>{folder}
       </Typography>
      
       {/* {JSON.stringify(currentState)} */}

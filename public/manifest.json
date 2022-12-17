@@ -1,7 +1,7 @@
 {
     "theme_color": "#252322",
     "background_color": "#201f1d",
-    "display": "fullscreen",
+    "display": "minimal-ui",
     "scope": "/",
     "start_url": "/",
     "name": "zenbase",

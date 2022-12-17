@@ -8,10 +8,11 @@ import Typography from '@mui/material/Typography';
 import { maxHeight } from '@mui/system';
 import Link from 'next/link';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
 export default function MediaCard(props: any) {
   return (
-    <Card sx={{ width: '100%', backgroundColor: "rgba(0, 0, 0, .7)"}}>
+    <Card className={props.cls||''} sx={{ width: '100%', height: 185, backgroundColor: "rgba(0, 0, 0, .7)"}}>
       <CardMedia
         
         onClick={props.cmdImage}
@@ -21,11 +22,11 @@ export default function MediaCard(props: any) {
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div" sx={{marginLeft:-2, marginTop:-1}}>
-        
+        {/* <MoreVertIcon fontSize='small'/> */}
         <Button onClick={props.cmdTitle}
-            startIcon={<DragIndicatorIcon className='handle' fontSize='small'/>}
-            fullWidth={true}
-            style={{justifyContent: "flex-start", width: props.width}}>
+            // startIcon={<MoreVertIcon className='handle' fontSize='small'/>}
+            // fullWidth={true}
+            style={{justifyContent: "flex-start"}}>
             {props.title}
         </Button>
           {/* <DragIndicatorIcon className='handle'/>

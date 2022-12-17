@@ -76,7 +76,7 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
   const [expanded, setExpanded] = React.useState(false);
   const [folder, setFolder] = useState("");
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, flagMoveItens } = useAuth()
   console.log(user);
 
   const callLink = (link: string) =>{
@@ -121,8 +121,8 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
     )
   }else{
     return (  
-      <Box style={{"padding": "0px"}}>
-      <Card raised  >
+      <Box sx={flagMoveItens?{border:2, borderColor: 'orange'}:{"padding": "0px"}} >
+      <Card raised >
         {/* {user&&
         <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
           <Grid container m={0}>
@@ -145,18 +145,18 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
        
         {item.img[0]?.value&&
         // <CardMedia height={300}  component="img" image={item.img[0]?.value} onClick = {() => {handleOpen({...item})}}/>
-        <div onClick = {() => {handleOpen({...item})}}>
+        <div onClick = {() => {flagMoveItens||handleOpen({...item})}}>
           <SwipeableTextMobileStepper height={300} position='top' key={item.img} imgs={item.img}/>
         </div>
       }
         <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2} >
             <Grid item md={10}>
-              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
-                {user.isLogged&&<Button className="handle" style={{marginLeft:'-15px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}><DragIndicatorIcon /></Button>}
+              <Typography variant="h6" color="text.secondary" onClick = {() => {flagMoveItens||handleOpen({...item})}} >
+                {/* {user.isLogged&&<Button  style={{marginLeft:'-15px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}><DragIndicatorIcon /></Button>} */}
                 {item.title}
               </Typography>
-              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
+              <Typography variant="h6" color="text.secondary" onClick = {() => {flagMoveItens||handleOpen({...item})}} >
                 {!item.img && <div dangerouslySetInnerHTML={{ __html: item.body.substring(0, 178) }}></div>}
               </Typography>
             </Grid>

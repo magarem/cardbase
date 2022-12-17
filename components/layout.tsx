@@ -32,10 +32,12 @@ export default function Layout({ children }: any) {
     // const pos = router.asPath.indexOf('/',1)
     // const pathRest = (pos>0)?router.asPath.substring(pos):""
     // console.log({pos, pathRest})
+    // if (value=='Início') value = 'Home'
     router.push('/' + value)
   }
 
   function capitalizeFirstLetter(str: string) {
+    if (str == 'Home') str = 'Início'
     return str?.charAt(0).toUpperCase() + str?.slice(1)
   }
 

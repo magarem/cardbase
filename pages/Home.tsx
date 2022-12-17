@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { SxProps } from '@mui/system';
 import { ReactSortable } from "react-sortablejs";
 import { AnyMxRecord } from "dns";
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 
 interface Props {
   setuser: Function,
@@ -62,7 +63,7 @@ const fabStyle = {
 
 const fabs = [{
     color: 'primary' as 'primary', sx: fabStyle as SxProps,
-    icon: <AddIcon />, label: 'Add',
+    icon: <CreateNewFolderIcon />, label: 'Add',
 }]
 interface folderItem {
   key: string | null;
@@ -71,7 +72,7 @@ interface folderItem {
 }
 const Home: NextPage<Props> = () => {
   const router = useRouter()
-  const { user, folderReload, getUserFolders, foldersListUpdate, folderReloadByGuest } = useAuth()
+  const { user, flagMoveItens, setFlagMoveItens, folderReload, getUserFolders, foldersListUpdate, folderReloadByGuest } = useAuth()
   // let folder = router.query.folder
   console.log({user});
   const [open, setOpen] = useState(false);
@@ -98,23 +99,26 @@ const Home: NextPage<Props> = () => {
   const handleClickOpen = () => {
     setFormCardFolder({key: null, value: null, order: 1})
     setFlgDialogSetOpen(true);
-  };
+  }
+
   const generateId = () => {
     return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36)
   }
-  const itemRemove = (obj: {key: string|null, value: string|null}) => {
-    
+
+  const itemRemove = (obj: {key: string|null, value: string|null}) => { 
     if (confirm('Excluir pasta ' + obj.value + '?')){
       user.folders = user.folders.filter((item: any) => item.key !== (obj.key as any))
       save(user.folders)
       setFlgDialogSetOpen(false)
     }
   }
+
   const save = (data: object) => {
     CardDataService.setUserFolders(user.uid, data)
     .then((x) => {console.log("Created new item successfully!");})
     .catch((e) => {console.log(e);});
   }
+
   const folderAdd = () => {  
     if (formCardFolder.value){
       var array = user.folders
@@ -140,46 +144,19 @@ const Home: NextPage<Props> = () => {
   }
   
   const foldersListUpdate_ = (data: any) => {
+    data = [{id:'/', key:'/', value: 'Home'}, ...data]
     user.folders = data
     setFolders(data)
     console.log(data);
-    // alert('foldersListUpdate_')
-    // foldersListUpdate(data)
   }
 
   React.useEffect(() => {
-    if (user.uid){
-      folderReload()
-    }
+    if (user.uid) folderReload()
   },[]) 
 
   React.useEffect(() => {
-    if (user.uid){
-       
-      
-        setFolders(user.folders.filter((item: any) => item.value.toLowerCase()!=='home'))
-      
-    }
-    // CardDataService.readUserData(null, location.href.split('//')[1].split('.')[0]).then((ret: any)=>{
-    //   console.log(ret);
-    //   // setUserDataByGuest(ret)
-    //   // loadData(ret)
-    //   console.log(user.folders);
-    //   setFolders(user.folders)
-    // })
+    if (user.uid) setFolders(user.folders)
   },[user.folders]) 
-  
-  // React.useEffect(() => {
-  //   console.log(user.folders);
-  //   setFolders(user.folders.filter((item: any) => item.value.toLowerCase()!=='home'))
-  //   // CardDataService.readUserData(null, location.href.split('//')[1].split('.')[0]).then((ret: any)=>{
-  //   //   console.log(ret);
-  //   //   // setUserDataByGuest(ret)
-  //   //   // loadData(ret)
-  //   //   console.log(user.folders);
-  //   //   setFolders(user.folders)
-  //   // })
-  // },[])
 
   const onDragDropEnds = (oldIndex: any, newIndex: any) => {
     if (oldIndex !== newIndex){
@@ -192,7 +169,7 @@ const Home: NextPage<Props> = () => {
   // if (folder=='Home') folder='Início'
   return (
     <>
-       <Dialog
+      <Dialog
         open={flgDialogSetOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -229,23 +206,25 @@ const Home: NextPage<Props> = () => {
      
      {/* {JSON.stringify(user.folders)} */}
      <br/>
+     {/* {JSON.stringify(flagMoveItens)} */}
      <ReactSortable 
       handle=".handle"
       className="grid-container3"
-      list={folders.map((item: any)=>{ return {...item, id: item.key}})} 
+      list={folders.filter((item: any) => item.value.toLowerCase()!=='home').map((item: any)=>{ return {...item, id: item.key}})} 
       setList={(newlist) => foldersListUpdate_(newlist)}
       onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}
       >
-      {folders.map((item: any, index: number) => {
+      {folders.filter((item: any) => item.value.toLowerCase()!=='home').map((item: any, index: number) => {
         return (
-          <Box key={item.key}  >
+          <Box key={item.key} className={flagMoveItens&&'handle'}>
             <Card 
+              cls={flagMoveItens&&'trimiliqui'}
               width='170'
               title={item.value} 
               img='https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/directory-150354_640.png?alt=media&token=9f7a9035-2b55-4287-a0b3-36084aeba27d' 
               // body='texto completo'
-              cmdImage={()=>go(item.value)}
-              cmdTitle={()=>itemEdit(index)}
+              cmdImage={()=>flagMoveItens||go(item.value)}
+              cmdTitle={()=>flagMoveItens||itemEdit(index)}
             >
             </Card>
           </Box>
