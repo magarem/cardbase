@@ -48,7 +48,18 @@ export const AuthContextProvider = ({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log('onAuthStateChanged', stateFolder);
-     
+      // alert('auth')
+      if ( location.href == process.env.NEXT_PUBLIC_DOMAIN){
+        setUser({
+          uid: null,
+          email: null,
+          username: null,
+          folders: [{key: '', value: ''}],
+          isLogged: false
+        })
+        router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+      }
+      
       if (user) {
         dataServices.readUserData(user.uid, null).then((ret) => {
           console.log(ret);
@@ -61,18 +72,21 @@ export const AuthContextProvider = ({
           })
         })
       } else {
-        let username = location.href.split('//')[1].split('.')[0]
-          console.log(username);
-          dataServices.readUserData(null, username).then((ret: any)=>{
-            console.log(ret);
-            setUser({ ...ret, isLogged: false });
+        
+          let username = location.href.split('//')[1].split('.')[0]
+          if (username !== process.env.NEXT_PUBLIC_DOMAIN?.split('//')[1].split('.')[0]){
+            console.log(username);
+            dataServices.readUserData(null, username).then((ret: any)=>{
+              console.log(ret);
+              setUser({ ...ret, isLogged: false });
+              
+              // user.uid = ret.uid
+              // user.username = ret.username
+              // user.email = ret.email
             
-            // user.uid = ret.uid
-            // user.username = ret.username
-            // user.email = ret.email
-          
-            // folderReload()
-          })
+              // folderReload()
+            })
+          }
       }
     });
     setLoading(false);

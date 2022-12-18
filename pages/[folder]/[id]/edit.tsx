@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import AlertDialog from '../../../components/AlertDialog'
 import React from 'react';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
 import { TagsInput } from "react-tag-input-component";
@@ -329,7 +330,7 @@ const Create: NextPage<Props> = (props) => {
             setValue(newValue);
           }}
           >
-          <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveAltIcon />} />
+          <BottomNavigationAction label="Salvar" disabled={desableSaveButton} onClick={state.id?updateCard:saveCard} icon={<SaveIcon />} />
           <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
         </BottomNavigation>
         <br/>

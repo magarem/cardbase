@@ -22,6 +22,8 @@ interface obj1 {
   user: string
 }
 const label = { inputProps: { 'aria-label': 'Size switch demo' } };
+
+
 const Navbar = (props: any) => {
 
   const { user, flagMoveItens, setFlagMoveItens, logout } = useAuth();
@@ -41,44 +43,13 @@ const Navbar = (props: any) => {
     // }
     console.log(title);
     return (
-      <>{title}</>
+      <Link href="#" underline="none" color="inherit" onClick={()=>{router.push('/Home')}} >{title}</Link>
     )
   }
 
   interface obj2 {
     user: {
       displayName: string;
-    }
-  }
-  
-  const PageMenu = () => {
-    const router = useRouter()
-    let folder = router.asPath.split('/')[1]
-    // const user = props.user
-    if (user) {
-      return (
-        <Container sx={{width:120}}>
-          <Grid container  direction="row" spacing={1} justifyContent="center" alignItems="center" >
-            <Grid item md={6}>
-              <IconButton size="small" aria-label="edit" onClick={() => {
-                  router.push("/" + folder + "/new/edit")
-                  }}>
-                <AddCircleOutlineIcon />
-              </IconButton>
-            </Grid>
-            <Grid item md={6}>
-              <IconButton size="small" aria-label="list" onClick={() => {
-                  if (folder=='usersettings') folder = 'home'
-                  router.push("/" + folder )
-                  }}>
-                <PhotoLibrary />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Container>
-      )
-    }else{
-      return null
     }
   }
   
@@ -96,12 +67,12 @@ const Navbar = (props: any) => {
       setAnchorEl(null);
     };
     
-    useEffect(() => {
-      if (user){
-        console.log(user);
-        // setUserName(user.username)
-      }
-    },[])
+    // useEffect(() => {
+    //   if (user){
+    //     console.log(user);
+    //     // setUserName(user.username)
+    //   }
+    // },[])
   
     const goToLogin = () => {
       console.log(user);
@@ -114,13 +85,15 @@ const Navbar = (props: any) => {
     }
     
     const goHome = () => {
-      router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
+      router.push(process.env.NEXT_PUBLIC_DOMAIN + '/login' as string);
     }
   
     if (true) {
       return (
         <div>
           <Typography variant="h6" noWrap component="div" align="right" >
+               {/* {alert(JSON.stringify(user,null,2))} */}
+               {user.uid&&
                 <Button
                   color='success'
                   startIcon={<AccountCircleIcon />}
@@ -133,6 +106,7 @@ const Navbar = (props: any) => {
                 >
                 {user.username} 
                 </Button>
+                }
                 <Menu
                   id="basic-menu"
                   anchorEl={anchorEl}
@@ -177,9 +151,9 @@ const Navbar = (props: any) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFlagMoveItens(event.target.checked);
   };
-  console.log(router.pathname)
-  console.log(router.query)
-  console.log(router.asPath)
+  // console.log(router.pathname)
+  // console.log(router.query)
+  // console.log(router.asPath)
   return (
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="fixed">

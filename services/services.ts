@@ -88,7 +88,6 @@ class CardDataService {
       docSnap.forEach((doc) => {
         a = doc.data()
       });
-
       uid = a.uid
     }
 
