@@ -33,12 +33,12 @@ const Navbar = (props: any) => {
   const SiteTitle = () => {
     let title = "ZenBase"
     console.log(user?.isLogged);
-    if (!user?.isLogged && 
-      location.href.substring(7).split('/')[1]!='login' && 
-      location.href.substring(7).split('/')[1]!='signup' &&
-      !location.href.substring(7).split('/')[1].includes('login2')) {
-      title = location.hostname.split('.')[0]
-    }
+    // if (!user?.isLogged && 
+    //   location.href.substring(7).split('/')[1]!='login' && 
+    //   location.href.substring(7).split('/')[1]!='signup' &&
+    //   !location.href.substring(7).split('/')[1].includes('login2')) {
+    //   title = location.hostname.split('.')[0]
+    // }
     console.log(title);
     return (
       <>{title}</>
@@ -105,10 +105,11 @@ const Navbar = (props: any) => {
   
     const goToLogin = () => {
       console.log(user);
-      const url = window.location.protocol + '//' + window.location.host + '/login'
-      console.log(url);
+      // alert(window.location.host)
+      // const url = window.location.protocol + '//' + window.location.host + '/login'
+      // console.log(url);
       // router.push(url + '?email=' + user.email)
-      router.push(url)
+      router.push('/login2?email='+user.email)
       // router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
     }
     
@@ -116,7 +117,7 @@ const Navbar = (props: any) => {
       router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
     }
   
-    if (user.isLogged) {
+    if (true) {
       return (
         <div>
           <Typography variant="h6" noWrap component="div" align="right" >
@@ -141,16 +142,26 @@ const Navbar = (props: any) => {
                   MenuListProps={{
                     'aria-labelledby': 'basic-button',
                   }}>
-                   <MenuItem onClick={() => {
-                    router.push({
-                      pathname: '/usersettings'
-                  }, '/usersettings');
-                    }}>Definições</MenuItem>
-  
-                  <MenuItem  onClick={() => {
-                    logout()
-                    goHome()
-                    }}>Sair</MenuItem>
+                  {user.isLogged?
+                    <div>
+                      <MenuItem onClick={() => {
+                        router.push({
+                          pathname: '/usersettings'
+                      }, '/usersettings');
+                        }}>Definições
+                      </MenuItem>
+      
+                      <MenuItem  onClick={() => {
+                        logout()
+                        goHome()
+                        }}>Sair
+                      </MenuItem>
+                    </div>
+                    :
+                    <MenuItem onClick={() => {router.push('/login2?email='+user.email)}}>
+                        Entrar
+                    </MenuItem>
+                  }
               </Menu>
           </Typography>
         </div>)

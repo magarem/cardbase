@@ -6,7 +6,8 @@ import { useAuth } from "../../context/AuthContext";
 import CardDataService from "../../services/services";
 import HomeIcon from '@mui/icons-material/Home';
 import { Create, DeleteForever, Folder } from "@material-ui/icons";
-import router from "next/router";
+import { Router, useRouter } from "next/router";
+
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import { margin } from "@mui/system";
 import '@fontsource/roboto/300.css';
@@ -42,7 +43,7 @@ const Usersettings: NextPage = (props) => {
   const { user, getFolders, setFolders } = useAuth()
   const [flgDialogSetOpen, setFlgDialogSetOpen] = React.useState(false);
   const [state, setState] = React.useState([{key:"", value:""}]);
-
+  const router = useRouter()
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
     ref,
@@ -63,6 +64,7 @@ const Usersettings: NextPage = (props) => {
   };
 
   useEffect(() => {
+   if(!user.isLogged) router.push('/Home')
    if (user.uid){
     console.log(user.uid);
     

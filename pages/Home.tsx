@@ -154,11 +154,17 @@ const Home: NextPage<Props> = () => {
   }
 
   React.useEffect(() => {
-    if (user.uid) folderReload()
+    if (user.uid) {
+      console.log(user.uid);
+      folderReload()
+    }
   },[]) 
 
   React.useEffect(() => {
-    if (user.uid) setFolders(user.folders)
+    console.log(user.uid);
+    if (user.uid) {
+      setFolders(user.folders)
+    }
   },[user.folders]) 
 
   const onDragDropEnds = (oldIndex: any, newIndex: any) => {
@@ -232,7 +238,7 @@ const Home: NextPage<Props> = () => {
               img={'https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/directory-150354_640.png?alt=media&token=9f7a9035-2b55-4287-a0b3-36084aeba27d'}
               // body='texto completo'
               cmdImage={()=>flagMoveItens||go(item.value)}
-              cmdTitle={()=>itemEdit(index)}
+              cmdTitle={()=>user.isLogged&&itemEdit(index)}
             >
             </Card>
             {/* <IconButton className={flagMoveItens?'btnHandleDrag handle':'btnHandleDrag hide'}><OpenWithIcon /></IconButton></div> */}

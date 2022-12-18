@@ -48,6 +48,7 @@ export const AuthContextProvider = ({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log('onAuthStateChanged', stateFolder);
+     
       if (user) {
         dataServices.readUserData(user.uid, null).then((ret) => {
           console.log(ret);
@@ -60,7 +61,18 @@ export const AuthContextProvider = ({
           })
         })
       } else {
-        setUser({ email: null, uid: null, username: null, folders: null, isLogged: false });
+        let username = location.href.split('//')[1].split('.')[0]
+          console.log(username);
+          dataServices.readUserData(null, username).then((ret: any)=>{
+            console.log(ret);
+            setUser({ ...ret, isLogged: false });
+            
+            // user.uid = ret.uid
+            // user.username = ret.username
+            // user.email = ret.email
+          
+            // folderReload()
+          })
       }
     });
     setLoading(false);

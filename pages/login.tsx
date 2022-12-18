@@ -42,11 +42,11 @@ const Login = () => {
     }
   }
 
-  useEffect(() => {
-    if ( location.href !== process.env.NEXT_PUBLIC_DOMAIN ){
-      router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
-    }
-  },[])
+  // useEffect(() => {
+  //   if ( location.href !== process.env.NEXT_PUBLIC_DOMAIN ){
+  //     router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+  //   }
+  // },[])
   
   return (
       <Container component="main" maxWidth="xs">

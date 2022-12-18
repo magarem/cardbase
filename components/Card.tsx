@@ -11,8 +11,11 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
 import IconButton from '@mui/material/IconButton';
+import { useAuth } from '../context/AuthContext'
+
 
 export default function MediaCard(props: any) {
+  const { user } = useAuth()
   return (
     <>
         
