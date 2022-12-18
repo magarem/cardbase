@@ -69,8 +69,8 @@ const fabs = [{
     icon: <CreateNewFolderIcon />, label: 'Add',
 }]
 interface folderItem {
-  key: string | null;
-  value: string | null;
+  key: string;
+  value: string;
   order: number;
 }
 const Home: NextPage<Props> = () => {
@@ -100,7 +100,7 @@ const Home: NextPage<Props> = () => {
   }
 
   const handleClickOpen = () => {
-    setFormCardFolder({key: null, value: null, order: 1})
+    setFormCardFolder({key: '', value: '', order: 1})
     setFlgDialogSetOpen(true);
   }
 
@@ -198,8 +198,6 @@ const Home: NextPage<Props> = () => {
         <DialogActions style={{ justifyContent: "center" }}>
           {/* <Button variant="outlined"  onClick={() => setFlgDialogSetOpen(false)}>Cancelar</Button> */}
           {formCardFolder.key&&<Button variant="outlined" onClick={() => itemRemove(formCardFolder)} startIcon={<DeleteIcon />}>Excluir</Button>}
-        
-        
           <Button variant="outlined" onClick={() => folderAdd()} startIcon={<SaveIcon/>}>Salvar</Button>
         </DialogActions>
       </Dialog>
@@ -234,7 +232,7 @@ const Home: NextPage<Props> = () => {
               img={'https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/directory-150354_640.png?alt=media&token=9f7a9035-2b55-4287-a0b3-36084aeba27d'}
               // body='texto completo'
               cmdImage={()=>flagMoveItens||go(item.value)}
-              cmdTitle={()=>flagMoveItens||itemEdit(index)}
+              cmdTitle={()=>itemEdit(index)}
             >
             </Card>
             {/* <IconButton className={flagMoveItens?'btnHandleDrag handle':'btnHandleDrag hide'}><OpenWithIcon /></IconButton></div> */}

@@ -16,16 +16,16 @@ export default function MediaCard(props: any) {
   return (
     <>
         
-    <Card className={props.cls||''} sx={{ width: '100%', height: 160, backgroundColor: "rgba(0, 0, 0, .7)"}}>
+    <Card className={props.cls||''} sx={{ width: '100%', minHeight: {xs:170, sm:190, md:150}, backgroundColor: "rgba(0, 0, 0, .7)"}}>
     <div className="container">
       <CardMedia
-      sx={props.sx_||{}}
-        onClick={props.cmdImage}
-        component="img"
-        width={props.width}
-        image={props.img}
+        sx={props.sx_||{}}
+          onClick={props.cmdImage}
+          component="img"
+          // width={props.width}
+          image={props.img}
       />
-            <IconButton className={props.flagAction?'btnHandleDrag handle':'btnHandleDrag hide'}><OpenWithIcon /></IconButton></div>
+      <IconButton className={props.flagAction?'btnHandleDrag handle':'btnHandleDrag hide'}><OpenWithIcon/></IconButton></div>
 
       <CardContent>
         <Typography onClick={props.cmdTitle} align="center"  variant="subtitle1" component="div" sx={{marginTop:-1}}>

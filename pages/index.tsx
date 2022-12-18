@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   const { user } = useAuth()
   const router = useRouter()
   if (user) {
-    router.push("/login  ")
+    router.push("/Home")
   } else {
     router.push("/login")
   }
