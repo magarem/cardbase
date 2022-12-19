@@ -34,9 +34,9 @@ const Login2 = () => {
   const ref = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if (user.isLogged) {
-      // folderReload().then(()=>{
+      folderReload().then(()=>{
         router.push('Home')
-      // })
+      })
     }
   },[user])
 
@@ -58,6 +58,7 @@ const Login2 = () => {
           setData({...data, password:''})
           ref.current?.focus();
         }
+        // router.push('/Home')
         // if (authOk) {
         //   setCookie("user", JSON.stringify(user), {
         //     path: "/",

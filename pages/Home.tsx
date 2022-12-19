@@ -155,12 +155,15 @@ const Home: NextPage<Props> = () => {
 
   React.useEffect(() => {
     if (user.uid) {
+      // alert('-1->'+user.uid)
       console.log(user.uid);
       folderReload()
     }
-  },[]) 
+  },[user.uid]) 
 
   React.useEffect(() => {
+    // alert('-2->'+user.uid)
+    // alert('-2->'+user.folders)
     console.log(user.uid);
     if (user.uid) {
       setFolders(user.folders)

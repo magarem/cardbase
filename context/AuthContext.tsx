@@ -46,23 +46,26 @@ export const AuthContextProvider = ({
   
 
   useEffect(() => {
+    // if ( location.href == process.env.NEXT_PUBLIC_DOMAIN+'/'){
+    //   setUser({
+    //     uid: null,
+    //     email: null,
+    //     username: null,
+    //     folders: [{key: '', value: ''}],
+    //     isLogged: false
+    //   })
+    //   router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+    // }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log('onAuthStateChanged', stateFolder);
       // alert('auth')
-      if ( location.href == process.env.NEXT_PUBLIC_DOMAIN){
-        setUser({
-          uid: null,
-          email: null,
-          username: null,
-          folders: [{key: '', value: ''}],
-          isLogged: false
-        })
-        router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
-      }
+     
       
       if (user) {
+        // alert(user?.uid)
         dataServices.readUserData(user.uid, null).then((ret) => {
           console.log(ret);
+          // alert(ret)
           setUser({
             uid: user.uid,
             email: user.email,
@@ -78,6 +81,10 @@ export const AuthContextProvider = ({
             console.log(username);
             dataServices.readUserData(null, username).then((ret: any)=>{
               console.log(ret);
+              if (!ret){
+                alert('Este usuário não foi encontrado')
+                router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+              }
               setUser({ ...ret, isLogged: false });
               
               // user.uid = ret.uid
@@ -86,6 +93,9 @@ export const AuthContextProvider = ({
             
               // folderReload()
             })
+          }else{
+            // alert(3)
+            router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
           }
       }
     });
@@ -261,7 +271,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
+    <AuthContext.Provider value={{user, setUser, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )

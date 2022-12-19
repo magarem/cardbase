@@ -148,6 +148,7 @@ const Navbar = (props: any) => {
       )
     }
   }
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFlagMoveItens(event.target.checked);
   };

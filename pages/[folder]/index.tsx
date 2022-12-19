@@ -99,6 +99,9 @@ const List: NextPage<Props> = (props) => {
           setCurrentState(data3)
           console.log(data3)
         })
+      }else{
+        router.push('/notfound')
+        // alert("nao existe")
       }
     }else{
       userByGuest()
@@ -127,7 +130,18 @@ const List: NextPage<Props> = (props) => {
   
 
   useEffect(() => {
-    if (true) {
+    
+    var host = window.location.host
+    var subdomain = host.split('.')[0]
+    var system_subdomain = process.env.NEXT_PUBLIC_DOMAIN?.split('.')[0].split('//')[1]
+    // alert(subdomain + ' - ' + system_subdomain)
+    // alert(subdomain == process.env.NEXT_PUBLIC_DOMAIN?.split('.')[0].split('//')[1])
+    if (subdomain == system_subdomain) {
+      
+      // router.push('/login')
+    }
+   else {
+      // alert('oi--' + location.href.split('//')[1].split('.')[0])
       console.log(location.href.split('//')[1].split('.')[0]);
       CardDataService.readUserData(null, location.href.split('//')[1].split('.')[0]).then((ret: any)=>{
         console.log(ret);

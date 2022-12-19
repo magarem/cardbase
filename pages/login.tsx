@@ -25,7 +25,7 @@ function Copyright(props: any) {
 const Login = () => {
 
   const router = useRouter()
-  const { userReadDataByEmail } = useAuth()
+  const { user, userReadDataByEmail } = useAuth()
   const [data, setData] = useState({ email: '', password: '', })
 
   const callLogin2 = async () => {
@@ -41,63 +41,93 @@ const Login = () => {
       }
     }
   }
-
+ 
+  useEffect(() => {
+    // alert(JSON.stringify(user))
+    const subscription = () => {
+      
+      var host = window.location.host
+      var subdomain = host.split('.')[0]
+      var system_subdomain = process.env.NEXT_PUBLIC_DOMAIN?.split('.')[0].split('//')[1]
+      // alert(user.email)
+      // alert(subdomain == process.env.NEXT_PUBLIC_DOMAIN?.split('.')[0].split('//')[1])
+      if (subdomain !== system_subdomain) {
+        router.push('/login2?email=' + user.email)
+      }
+      if (user.isLogged) router.push('/Home');
+    }
+    return () => {
+      // Clean up the subscription
+      subscription();
+    };
+  });
   // useEffect(() => {
-  //   if ( location.href !== process.env.NEXT_PUBLIC_DOMAIN ){
-  //     router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+  //   var host = window.location.host
+  //   var subdomain = host.split('.')[0]
+  //   var system_subdomain = process.env.NEXT_PUBLIC_DOMAIN?.split('.')[0].split('//')[1]
+  //   alert(user.email)
+  //   // alert(subdomain == process.env.NEXT_PUBLIC_DOMAIN?.split('.')[0].split('//')[1])
+  //   if (subdomain !== system_subdomain) {
+  //     router.push('/login2?email=' + user.email)
   //   }
-  // },[])
+  //   if (user.isLogged) router.push('/Home');
+    
+  //   // alert(location.href + ' - ' + process.env.NEXT_PUBLIC_DOMAIN)
+  //   // if ( location.href !== process.env.NEXT_PUBLIC_DOMAIN ){
+  //   //   router.push('/login2?email=' + user.email );
+  //   // }
+  // },[user])
   
   return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}>
-          <Typography component="h1" variant="h5" mt={5}>
-            Entrar
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+        <Typography component="h1" variant="h5" mt={5}>
+          Entrar
+        </Typography>
+        <Box component="form"  noValidate sx={{ mt: 1 }}>
+          <TextField
+            autoFocus={true}
+            variant="filled" 
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
+            onChange={(e: any) =>
+              setData({
+                ...data,
+                email: e.target.value.toLowerCase(),
+              })
+            }
+            value={data.email}/>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={callLogin2}>
+            Próximo
+          </Button>
+          <Typography align="center">
+            <Link href="#" variant="body2">
+                Esqueceu sua senha?
+            </Link><br/><br/>
+            <Link href="/signup" variant="body2">
+              Criar nova conta
+            </Link>
           </Typography>
-          <Box component="form"  noValidate sx={{ mt: 1 }}>
-            <TextField
-              autoFocus={true}
-              variant="filled" 
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              onChange={(e: any) =>
-                setData({
-                  ...data,
-                  email: e.target.value.toLowerCase(),
-                })
-              }
-              value={data.email}/>
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={callLogin2}>
-              Próximo
-            </Button>
-            <Typography align="center">
-              <Link href="#" variant="body2">
-                  Esqueceu sua senha?
-              </Link><br/><br/>
-              <Link href="/signup" variant="body2">
-                Criar nova conta
-              </Link>
-            </Typography>
-          </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
+      </Box>
+      <Copyright sx={{ mt: 8, mb: 4 }} />
+    </Container>
   )
 }
 

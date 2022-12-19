@@ -66,7 +66,6 @@ class CardDataService {
 
   async readUserData(uid: string|null, userName: string|null) {
     let a: any
-
     if (uid) {
       console.log(1,uid);
       const col = query(collection(db, 'users'), where("uid", "==", uid))
@@ -77,6 +76,7 @@ class CardDataService {
       // console.log(list);
       // return list[0]
       a = list[0]
+      return a
     }
 
     if (userName) {
@@ -88,22 +88,26 @@ class CardDataService {
       docSnap.forEach((doc) => {
         a = doc.data()
       });
-      uid = a.uid
-    }
-
-    await this.readById(uid as string, "folders").then((data: any) => {
-      if (data){
-        console.log(data)
-        console.log(Object.values(data))
-        const folders = Object.values(data) as Array<any>
-        console.log(folders);
-        a = {...a, folders}
+      if (a) {
+        uid = a.uid
+        await this.readById(uid as string, "folders").then((data: any) => {
+          if (data){
+            console.log(data)
+            console.log(Object.values(data))
+            const folders = Object.values(data) as Array<any>
+            console.log(folders);
+            a = {...a, folders}
+            console.log(a);
+            // return aa
+          }
+        })
         console.log(a);
-        // return aa
+        return a
+      } else {
+        // alert('usuário não encontrado: ' + userName)
+        return false
       }
-    })
-    console.log(a);
-    return a
+    }
   }
 
 
