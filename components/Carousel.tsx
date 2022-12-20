@@ -129,7 +129,7 @@ function SwipeableTextMobileStepper(props: any) {
          
             {Math.abs(activeStep - index) <= 2 ? (
               <> 
-              <CardMedia height={props.height} component="img" image={step.imgPath} onClick={() => flagMoveItens||handleClickOpen(step.imgPath)}/>
+              <CardMedia height={props.height} component="img" image={step.imgPath} onClick={() => handleClickOpen(step.imgPath)}/>
               {/* <Box
                 component="img"
                 sx={{

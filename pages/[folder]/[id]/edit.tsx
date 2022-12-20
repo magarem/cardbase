@@ -64,11 +64,12 @@ const Create: NextPage<Props> = (props) => {
   const router = useRouter()
   let folder = router.query.folder
   if (folder == 'usersettings') folder = 'Home'
+  const folder_key = getFolderKeyByValue(folder)
   const original_card_id = router.query.id
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "Novo", card_id: "", img: [{}], folder: "", title: "Novo", body: "", tags: "", order: -1 };
+  const cardObj = {id: "Novo", card_id: "", img: [{}], folder: folder_key, title: "Novo", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
@@ -177,29 +178,26 @@ const Create: NextPage<Props> = (props) => {
     setState({...state, [field]: ''})
   }
 
-  useEffect(() => {
-    if (id!==state.id) {
-      console.log(id);
-      const folder_key = getFolderKeyByValue(folder)
-      setState({...state, folder: folder_key})
-      if (id!=='new'){
-        CardDataService.readById(user.uid, id as string).then((data) => {
-          console.log(data)
-          if (data) {
-            setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
-            if (data.img=='') data.img = []
-            if (!Array.isArray(data.img)) data.img = [{value:data.img}]
-            
-            setStateImg(data.img)
-            setBodyValue(data.body)
-            setSelected(data.tags?.split(','))
-            if (!data.extra) data.extra = [{key: "", value: ""}] 
-            setStateExtra(data.extra)
+  const cardUpdate = () => {
+    CardDataService.readById(user.uid, id as string).then((data) => {
+      console.log(data)
+      if (data) {
+        setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
+        if (data.img=='') data.img = []
+        if (!Array.isArray(data.img)) data.img = [{value:data.img}]
+        
+        setStateImg(data.img)
+        setBodyValue(data.body)
+        setSelected(data.tags?.split(','))
+        if (!data.extra) data.extra = [{key: "", value: ""}] 
+        setStateExtra(data.extra)
 
-          }
-        })
       }
+    })
   }
+
+  useEffect(() => {
+    if (id!==(state.id||'new')) cardUpdate()
   }, [])
 
   const handleChange2 =
@@ -231,7 +229,7 @@ const Create: NextPage<Props> = (props) => {
                 value={state.folder}
                 label="Pasta"
                 onChange={handleChange}>
-                  {getFolders().map((item: any)=>{
+                  {user.folders.map((item: any)=>{
                     return (
                       <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>
                     )

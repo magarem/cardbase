@@ -124,16 +124,16 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
     return (  
       <Box >
       <Card raised >
-        {/* {flagMoveItens&&
+        {flagMoveItens&&
         <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
           <Grid container m={0}>
             <Grid item xs={6} sm={6} md={6}>
-              <IconButton aria-label="Edit" onClick={() => callLink("/" + folder + "/" + item.id + "/edit")}>
+              {/* <IconButton aria-label="Edit" onClick={() => callLink("/" + folder + "/" + item.id + "/edit")}>
                 <EditIcon fontSize="small"/>
               </IconButton>
               <IconButton aria-label="Delete" onClick={() => delete_card(user.uid, item.id)}>
                 <DeleteForeveIcon fontSize="small"/>
-              </IconButton>
+              </IconButton> */}
               </Grid>
               <Grid item xs={6} sm={6} md={6} style={{textAlign: "right"}}>
               <IconButton>
@@ -142,25 +142,25 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
             </Grid>
           </Grid>
         </CardActions>
-        } */}
+        }
        
         {item.img[0]?.value&&
         // <CardMedia height={300}  component="img" image={item.img[0]?.value} onClick = {() => {handleOpen({...item})}}/>
-        <div onClick = {() => {flagMoveItens||handleOpen({...item})}}>
+        <div onClick = {() => {handleOpen({...item})}}>
           <SwipeableTextMobileStepper height={300} position='top' key={item.img} imgs={item.img}/>
         </div>
       }
         <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2} >
             <Grid item md={10}>
-              <Typography variant="h6" color="text.secondary" onClick = {() => {flagMoveItens||handleOpen({...item})}} >
+              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
                 {/* {user.isLogged&&<Button  style={{marginLeft:'-15px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}><DragIndicatorIcon /></Button>} */}
-                {flagMoveItens&&<IconButton style={{marginLeft:'-10px', marginRight:'5px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
+                {/* {flagMoveItens&&<IconButton style={{marginLeft:'-10px', marginRight:'5px', marginTop:'-3px', maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
                   <DragIndicator className="handle" fontSize="small" color='primary'/>
-                </IconButton>}
+                </IconButton>} */}
                 {item.title}
               </Typography>
-              <Typography variant="h6" color="text.secondary" onClick = {() => {flagMoveItens||handleOpen({...item})}} >
+              <Typography variant="h6" color="text.secondary" onClick = {() => {handleOpen({...item})}} >
                 {!item.img && <div dangerouslySetInnerHTML={{ __html: item.body.substring(0, 178) }}></div>}
               </Typography>
             </Grid>
