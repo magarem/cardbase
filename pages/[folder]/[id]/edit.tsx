@@ -114,8 +114,12 @@ const Create: NextPage<Props> = (props) => {
   
   const saveCard = () => {
     setDesableSaveButton(true)
-    let data = { img: stateImg, folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: -1 };
     const timestamp = new Date().getTime()
+    let data = { img: stateImg, folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: timestamp };
+    console.log(data);
+    
+    
+   
     let card_id = state.card_id
     if (card_id == '') card_id = timestamp.toString()
     CardDataService.setCard(user.uid, card_id, data)
@@ -174,27 +178,27 @@ const Create: NextPage<Props> = (props) => {
   }
 
   useEffect(() => {
-    if (user.uid) {
-    console.log(router.query.id);
-    const folder_key = getFolderKeyByValue(folder)
-    setState({...state, folder: folder_key})
-    if (id!=='new'){
-      CardDataService.readById(user.uid, router.query.id as string).then((data) => {
-        console.log(data)
-        if (data) {
-          setState({ id: router.query.id, card_id: router.query.id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
-          if (data.img=='') data.img = []
-          if (!Array.isArray(data.img)) data.img = [{value:data.img}]
-          
-          setStateImg(data.img)
-          setBodyValue(data.body)
-          setSelected(data.tags?.split(','))
-          if (!data.extra) data.extra = [{key: "", value: ""}] 
-          setStateExtra(data.extra)
+    if (id!==state.id) {
+      console.log(id);
+      const folder_key = getFolderKeyByValue(folder)
+      setState({...state, folder: folder_key})
+      if (id!=='new'){
+        CardDataService.readById(user.uid, id as string).then((data) => {
+          console.log(data)
+          if (data) {
+            setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
+            if (data.img=='') data.img = []
+            if (!Array.isArray(data.img)) data.img = [{value:data.img}]
+            
+            setStateImg(data.img)
+            setBodyValue(data.body)
+            setSelected(data.tags?.split(','))
+            if (!data.extra) data.extra = [{key: "", value: ""}] 
+            setStateExtra(data.extra)
 
-        }
-      })
-    }
+          }
+        })
+      }
   }
   }, [])
 

@@ -99,9 +99,12 @@ const Create: NextPage<Props> = () => {
       <><Typography>{url}</Typography><img src={url} /></>
     )
   }
+console.log(data);
 
-  useEffect(() => {
-    if (router.query.id) {
+  // useEffect(() => {
+    if (data.id !== router.query.id) {
+      console.log(router.query.id);
+      
       const folder_key = getFolderKeyByValue(folder)
       const username = location.href.split('//')[1].split('.')[0]
       CardDataService.readUserData(null, username).then(async (ret: any)=>{
@@ -110,7 +113,7 @@ const Create: NextPage<Props> = () => {
         CardDataService.readById(uid, router.query.id as string).then((data: any) => {
           console.log(data)
           if (data) {
-            setData(data)
+            setData({...data, id: router.query.id})
             console.log(data.extra);
             data.extra.map((item: any)=>{
                 rows.push([item.key, item.value])
@@ -121,7 +124,8 @@ const Create: NextPage<Props> = () => {
         })
       })
     }
-  }, [router.query.id])
+  // }, [router.query.id])
+  
   const matches = useMediaQuery('(min-width:600px)');
   return (
     <Container>

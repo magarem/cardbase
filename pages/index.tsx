@@ -29,7 +29,7 @@ const Home: NextPage = () => {
     })
   }
 
-  useEffect(() => {
+  // useEffect(() => {
     if (user.isLogged) {
       if (location.href !== process.env.NEXT_PUBLIC_DOMAIN+'/'){
         router.push("/Home")
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
     // }else{
     //   router.push("/Home")
     // }
-  },[])
+  // },[])
   // router.push("/Home")
   // if (user.isLogged) {
   //   router.push("/Home")

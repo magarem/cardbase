@@ -75,7 +75,7 @@ interface folderItem {
 }
 const Home: NextPage<Props> = () => {
   const router = useRouter()
-  const { user, flagMoveItens, setFlagMoveItens, folderReload, getUserFolders, foldersListUpdate, folderReloadByGuest } = useAuth()
+  const { user, setUser, flagMoveItens, setFlagMoveItens, folderReload, getUserFolders, foldersListUpdate, folderReloadByGuest } = useAuth()
   // let folder = router.query.folder
   console.log({user});
   const [open, setOpen] = useState(false);
@@ -92,7 +92,7 @@ const Home: NextPage<Props> = () => {
   const [currentState, setCurrentState] = useState<ss[]>([]);
   const [currentState2, setCurrentState2] = useState<ss>();
   const [userDataByGuest, setUserDataByGuest] = useState({});
-  const [folders, setFolders] = useState<folderItem[]>([]);
+  // const [folders, setFolders] = useState<folderItem[]>([]);
   const [formCardFolder, setFormCardFolder] = useState<folderItem>({key:"", value:"", order: 0})
 
   const go = (url: string) => {
@@ -134,7 +134,8 @@ const Home: NextPage<Props> = () => {
       console.log(array);
       // setFolders(array)
       user.folders = array
-      setFolders(array)
+      // setFolders(array)
+      setUser({...user, folders: array})
       save(array)
       setFlgDialogSetOpen(false)
     }
@@ -149,31 +150,35 @@ const Home: NextPage<Props> = () => {
   const foldersListUpdate_ = (data: any) => {
     // data = [{id:'/', key:'/', value: 'Home'}, ...data]
     user.folders = data
-    setFolders(data)
+    // setFolders(data)
+    setUser({...user, folders: data})
     console.log(data);
   }
 
-  React.useEffect(() => {
-    if (user.uid) {
-      // alert('-1->'+user.uid)
-      console.log(user.uid);
-      folderReload()
-    }
-  },[user.uid]) 
+  // React.useEffect(() => {
+  //   if (user.uid) {
+  //     // alert('-1->'+user.uid)
+  //     console.log(user.uid);
+  //     folderReload()
+  //   }
+  // },[user.uid]) 
 
-  React.useEffect(() => {
-    // alert('-2->'+user.uid)
-    // alert('-2->'+user.folders)
-    console.log(user.uid);
-    if (user.uid) {
-      setFolders(user.folders)
-    }
-  },[user.folders]) 
+  console.log(user);
+  
+  // React.useEffect(() => {
+  //   // alert('-2->'+user.uid)
+  //   // alert('-2->'+user.folders)
+  //   console.log(user.uid);
+  //   if (user.uid) {
+  //     setFolders(user.folders)
+  //   }
+  // },[user.folders]) 
 
   const onDragDropEnds = (oldIndex: any, newIndex: any) => {
     if (oldIndex !== newIndex){
-      console.log(folders);
-      foldersListUpdate(folders)
+      console.log(user.folders);
+      // setUser({...user, folders: data})
+      foldersListUpdate(user.folders)
     }
   }
 
@@ -224,11 +229,11 @@ const Home: NextPage<Props> = () => {
      <ReactSortable 
       handle=".handle"
       className="grid-container3"
-      list={folders.map((item: any)=>{ return {...item, id: item.key}})} 
+      list={user.folders.map((item: any)=>{ return {...item, id: item.key}})} 
       setList={(newlist) => foldersListUpdate_(newlist)}
       onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}
       >
-      {folders.map((item: any, index: number) => {
+      {user.folders.map((item: any, index: number) => {
         return (
           <Box key={item.key} >{/*className={flagMoveItens&&'handle'}*/}
             {/* <div className="container"> */}

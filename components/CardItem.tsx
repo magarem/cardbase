@@ -98,10 +98,11 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
     setExpanded(!expanded);
   };
 
-  useEffect(() => {
-    const folder = router.asPath.split('/')[1]
-    setFolder(folder)
-  }, [])
+  // useEffect(() => {
+  //   const folder = router.asPath.split('/')[1]
+  //   setFolder(folder)
+  // }, [])
+
   if (false) {
     return (
       <>

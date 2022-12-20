@@ -32,11 +32,17 @@ const Login2 = () => {
   const { user, login, folderReload } = useAuth()
   const [data, setData] = useState({ email: '', password: '' })
   const ref = useRef<HTMLInputElement>(null)
+  
+  console.log('0');
+  
+  // if (user.isLogged) router.push('Home')
   useEffect(() => {
+    console.log(user.isLogged);
+    
     if (user.isLogged) {
-      folderReload().then(()=>{
+      // folderReload().then(()=>{
         router.push('Home')
-      })
+      // })
     }
   },[user])
 
@@ -58,13 +64,11 @@ const Login2 = () => {
           setData({...data, password:''})
           ref.current?.focus();
         }
-        // router.push('/Home')
-        // if (authOk) {
-        //   setCookie("user", JSON.stringify(user), {
-        //     path: "/",
-        //     sameSite: true,
-        //   })
-        // }
+        console.log(2);
+        
+        // setData({...data, password:''})
+        // if (user.isLogged) router.push('/Home')
+        
       })
     } catch (err) {
       console.log(1)

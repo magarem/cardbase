@@ -41,10 +41,12 @@ const Login = () => {
       }
     }
   }
+ console.log(1);
  
-  useEffect(() => {
+  // useEffect(() => {
     // alert(JSON.stringify(user))
     const subscription = () => {
+      console.log(1);
       
       var host = window.location.host
       var subdomain = host.split('.')[0]
@@ -56,11 +58,11 @@ const Login = () => {
       }
       if (user.isLogged) router.push('/Home');
     }
-    return () => {
+    // return () => {
       // Clean up the subscription
       subscription();
-    };
-  });
+    // };
+  // },[]);
   // useEffect(() => {
   //   var host = window.location.host
   //   var subdomain = host.split('.')[0]

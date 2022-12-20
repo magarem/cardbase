@@ -60,7 +60,7 @@ export const AuthContextProvider = ({
       console.log('onAuthStateChanged', stateFolder);
       // alert('auth')
      
-      
+      // alert(user)
       if (user) {
         // alert(user?.uid)
         dataServices.readUserData(user.uid, null).then((ret) => {
@@ -69,13 +69,14 @@ export const AuthContextProvider = ({
           setUser({
             uid: user.uid,
             email: user.email,
-            username: ret?.data.username,
+            username: ret?.username,
             folders: ret.folders,
             isLogged: true
           })
+          setLoading(false);
         })
-      } else {
-        
+
+      } else {      
           let username = location.href.split('//')[1].split('.')[0]
           if (username !== process.env.NEXT_PUBLIC_DOMAIN?.split('//')[1].split('.')[0]){
             console.log(username);
@@ -83,25 +84,33 @@ export const AuthContextProvider = ({
               console.log(ret);
               if (!ret){
                 alert('Este usuário não foi encontrado')
-                router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
-              }
-              setUser({ ...ret, isLogged: false });
-              
+                // router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+                if (router.asPath!=='/login')
+                  location.href = process.env.NEXT_PUBLIC_DOMAIN + '/login'
+              }else{
+                 setUser({ ...ret, isLogged: false });
+                 setLoading(false);
               // user.uid = ret.uid
               // user.username = ret.username
               // user.email = ret.email
             
               // folderReload()
+              }
+             
             })
           }else{
             // alert(3)
-            router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+            setLoading(false)
+            if (router.asPath!=='/login')
+              router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
           }
       }
+      
     });
-    setLoading(false);
-    return () => unsubscribe();
-  }, []);
+    // setLoading(false);
+    return () => 
+    unsubscribe();
+  },[]);
 
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -174,16 +183,16 @@ export const AuthContextProvider = ({
   //     alert(JSON.stringify(stateFolder))
   // }, [stateFolder[0].key])
   
-  React.useEffect(() => {
-      console.log('AuthContext');
-      if (user.uid){
-        // setStateFolder(null)
-        console.log(user.uid);
-        // folderReload()
-        console.log(stateFolder);
-      }
+  // React.useEffect(() => {
+  //     console.log('AuthContext');
+  //     if (user.uid){
+  //       // setStateFolder(null)
+  //       console.log(user.uid);
+  //       // folderReload()
+  //       console.log(stateFolder);
+  //     }
   
-  }, [])
+  // }, [])
 
   const userReadData = async (uid: string)=> {
     console.log(uid);
@@ -263,7 +272,7 @@ export const AuthContextProvider = ({
     setUser({ email: null, uid: null, username: null, folders: null, isLogged: false })
     signOut(auth).then(() => {
       console.log('logout');
-      // router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
+      router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
     }).catch((error) => {
       console.log('Error logout');
     });
@@ -271,7 +280,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, setUser, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>
+    <AuthContext.Provider value={{user, setUser, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>  
       {loading ? null : children}
     </AuthContext.Provider>
   )

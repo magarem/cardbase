@@ -64,50 +64,96 @@ class CardDataService {
     return x
   }
 
+  // async readUserData(uid: string|null, userName: string|null) {
+  //   let a: any
+  //   if (uid) {
+  //     console.log(1,uid);
+  //     const col = query(collection(db, 'users'), where("uid", "==", uid))
+  //     const snap = await getDocs(col);
+  //     const list = snap.docs.map(doc => {
+  //         return {id: doc.id, data: doc.data()}
+  //     });
+  //     // console.log(list);
+  //     // return list[0]
+  //     a = list[0]
+  //     return a
+  //   }
+
+  //   if (userName) {
+  //     console.log({ userName });
+  //     // const docRef = doc(db, 'users', user);
+  //     const docRef = query(collection(db, "users"), where("username", "==", userName));
+  //     const docSnap = await getDocs(docRef);
+       
+  //     docSnap.forEach((doc) => {
+  //       a = doc.data()
+  //     });
+  //     if (a) {
+  //       uid = a.uid
+  //       await this.readById(uid as string, "folders").then((data: any) => {
+  //         if (data){
+  //           console.log(data)
+  //           console.log(Object.values(data))
+  //           const folders = Object.values(data) as Array<any>
+  //           console.log(folders);
+  //           a = {...a, folders}
+  //           console.log(a);
+  //           // return aa
+  //         }
+  //       })
+  //       console.log(a);
+  //       return a
+  //     } else {
+  //       // alert('usuário não encontrado: ' + userName)
+  //       return false
+  //     }
+  //   }
+  // }
+  
   async readUserData(uid: string|null, userName: string|null) {
     let a: any
+    console.log(uid, userName);
+    let col: any
+    
     if (uid) {
-      console.log(1,uid);
-      const col = query(collection(db, 'users'), where("uid", "==", uid))
-      const snap = await getDocs(col);
-      const list = snap.docs.map(doc => {
-          return {id: doc.id, data: doc.data()}
-      });
-      // console.log(list);
-      // return list[0]
-      a = list[0]
-      return a
+      col = query(collection(db, 'users'), where("uid", "==", uid))
+    }
+    if (userName) {
+        col = query(collection(db, "users"), where("username", "==", userName));
     }
 
-    if (userName) {
-      console.log({ userName });
-      // const docRef = doc(db, 'users', user);
-      const docRef = query(collection(db, "users"), where("username", "==", userName));
-      const docSnap = await getDocs(docRef);
-       
-      docSnap.forEach((doc) => {
-        a = doc.data()
-      });
-      if (a) {
-        uid = a.uid
-        await this.readById(uid as string, "folders").then((data: any) => {
-          if (data){
-            console.log(data)
-            console.log(Object.values(data))
-            const folders = Object.values(data) as Array<any>
-            console.log(folders);
-            a = {...a, folders}
-            console.log(a);
-            // return aa
-          }
-        })
+    const snap = await getDocs(col);
+    console.log(snap.docs.length);
+    
+    if (!snap.docs.length) return false
+    
+    const list = snap.docs.map(doc => {
+        return {id: doc.id, data: doc.data()}
+    });
+
+    a = list[0].data
+    console.log(a);
+
+    await this.readById(a.uid as string, "folders").then((data: any) => {
+      if (data){
+        console.log(data)
+        console.log(Object.values(data))
+        const folders = Object.values(data) as Array<any>
+        console.log(folders);
+        a = {...a, folders}
         console.log(a);
-        return a
-      } else {
-        // alert('usuário não encontrado: ' + userName)
-        return false
+        // return aa
       }
+    })
+
+    if (a) {
+      console.log(a);
+      
+      return a
+    }else{
+      return false
     }
+    
   }
 
 
@@ -154,7 +200,7 @@ class CardDataService {
   async read (user: string, folder: string){
     console.log(user, folder);
     // if (user.includes("/")) user = user.split("/")[0]
-    const col = query(collection(db, user), orderBy('order'))
+    const col = query(collection(db, user), orderBy('order', "desc"))
     const snap = await getDocs(col);
     const list = snap.docs.map(doc => {
         return {id: doc.id, folder: doc.data().folder, ...doc.data()}
@@ -202,6 +248,7 @@ class CardDataService {
       if (docSnap.data()){ 
         card_id = card_id + '-' + new Date().getTime()
       }
+      console.log( user, card_id, data)
       await setDoc(doc(db, user, card_id), data);
     } 
     catch (err) {
