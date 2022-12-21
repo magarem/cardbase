@@ -17,11 +17,12 @@ import { DragIndicator } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
 import { SnippetFolder } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
-import { Box, Button, ListItem, ListItemText } from '@mui/material';
+import { Box, Button, ListItem, ListItemText, Stack } from '@mui/material';
 import Image from 'next/image'
 import Switch from '@mui/material/Switch';
 import SwipeableTextMobileStepper from './Carousel'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import MagaSlide from './MagaSlide'
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -77,7 +78,6 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
   const [folder, setFolder] = useState("");
   const router = useRouter()
   const { user, flagMoveItens } = useAuth()
-  console.log(user);
 
   const callLink = (link: string) =>{
     router.push(link)
@@ -128,6 +128,9 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
         <CardActions  sx={{ p: 0.5, '&:last-child': { pb: 10 }}}>
           <Grid container m={0}>
             <Grid item xs={6} sm={6} md={6}>
+              {/* <Typography style={{padding:7}} variant="inherit" color="text.secondary" onClick = {() => {handleOpen({...item})}}>
+                <Box>ID: {item.id}</Box>
+                </Typography> */}
               {/* <IconButton aria-label="Edit" onClick={() => callLink("/" + folder + "/" + item.id + "/edit")}>
                 <EditIcon fontSize="small"/>
               </IconButton>
@@ -143,13 +146,22 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
           </Grid>
         </CardActions>
         }
+        
+        {(item.img.length==1&&item.img[0].value!=='')&&
+          <CardMedia
+            component="img"
+            height="200"
+            image={item.img[0].value}
+          />
+        }
+
+        {(item.img.length>1)&&
+          <CardMedia key={item.img} >
+            <MagaSlide imgs={item.img} />
+          </CardMedia>
+        }
+      
        
-        {item.img[0]?.value&&
-        // <CardMedia height={300}  component="img" image={item.img[0]?.value} onClick = {() => {handleOpen({...item})}}/>
-        <div onClick = {() => {handleOpen({...item})}}>
-          <SwipeableTextMobileStepper height={300} position='top' key={item.img} imgs={item.img}/>
-        </div>
-      }
         <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2} >
             <Grid item md={10}>

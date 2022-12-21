@@ -44,7 +44,7 @@ export default function FullScreenDialog(props: any) {
       >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
-            <IconButton
+            <IconButton sx={{ marginLeft: "auto" }}
               edge="start"
               color="inherit"
               onClick={props.handleClose}

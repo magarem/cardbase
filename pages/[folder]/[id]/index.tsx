@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, ImageList, ImageListItem, InputLabel, Link, MenuItem, Paper, Radio, RadioGroup, Select, ThemeProvider, Typography, useMediaQuery } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, ImageList, ImageListItem, InputLabel, Link, MenuItem, Paper, Radio, RadioGroup, Select, Stack, ThemeProvider, Typography, useMediaQuery } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -21,6 +21,10 @@ import MagaTable from "../../../components/table"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import '@fontsource/roboto/300.css';
 import SwipeableTextMobileStepper from "../../../components/Carousel"
+import MagaSlide from "../../../components/MagaSlide"
+import { AnyCnameRecord } from "dns";
+import FullScreenDialog from "../../../components/DialogFullScreen";
+
 interface Props {
   setuser: Function
   user: {
@@ -54,6 +58,7 @@ const Create: NextPage<Props> = () => {
   const cardObj = {id: "", card_id: "", img: [], folder: "", title: "", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1[]>([cardObj])
   const [data, setData] = useState<Obj1>(cardObj)
+  const [open, setOpen] = useState("")
  
   const tblObj = [{key: "", value: ""}];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]>(tblObj)
@@ -72,6 +77,10 @@ const Create: NextPage<Props> = () => {
       handleRemove(id)
     }
   }
+
+  const handleClose = () => {
+    setOpen("");
+  };
 
   const cols: any[] = ['', '']
   const rows: any[] = []
@@ -92,143 +101,135 @@ const Create: NextPage<Props> = () => {
     },
   });
 
-  const imageZoom = (url: string) => {
-    console.log(url);
-    
+  const ImageZoom = () => {
     return (
-      <><Typography>{url}</Typography><img src={url} /></>
+      <>
+      <FullScreenDialog state={open.length>0} handleClose={handleClose} >
+      <Box
+        sx={{marginTop:{md:3}}}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        // minHeight="100vh"
+      >
+      <Box
+        component="img"
+        sx={{
+          // height: 233,
+          width: '100%',
+           maxHeight: { xs: '100%', md: 600},
+           maxWidth: { xs: '100%', md: 500 },
+        }}
+        src={open}
+        />
+      </Box>
+      <br/>
+        <Container><br/>
+          <TextField
+            id="outlined-textarea"
+            label="Endereço da imagem"
+            placeholder="Placeholder"
+            fullWidth
+            value={open}
+            multiline
+          />
+        </Container>
+        </FullScreenDialog>
+      </>
     )
   }
-console.log(data);
 
   // useEffect(() => {
-    if (data.id !== router.query.id) {
-      console.log(router.query.id);
-      
-      const folder_key = getFolderKeyByValue(folder)
-      const username = location.href.split('//')[1].split('.')[0]
-      CardDataService.readUserData(null, username).then(async (ret: any)=>{
-        const uid = ret.uid
-        console.log(uid, router.query.id)
-        CardDataService.readById(uid, router.query.id as string).then((data: any) => {
-          console.log(data)
-          if (data) {
-            setData({...data, id: router.query.id})
-            console.log(data.extra);
-            data.extra.map((item: any)=>{
-                rows.push([item.key, item.value])
-            })
-            setState(rows)
-            console.log(rows);
-          }
-        })
+  if (data.id !== router.query.id) {
+    console.log(router.query.id);
+    const folder_key = getFolderKeyByValue(folder)
+    const username = location.href.split('//')[1].split('.')[0]
+    CardDataService.readUserData(null, username).then(async (ret: any)=>{
+      const uid = ret.uid
+      console.log(uid, router.query.id)
+      CardDataService.readById(uid, router.query.id as string).then((data: any) => {
+        console.log(data)
+        if (data) {
+          setData({...data, id: router.query.id})
+          console.log(data.extra);
+          data.extra.map((item: any)=>{
+              rows.push([item.key, item.value])
+          })
+          setState(rows)
+          console.log(rows);
+        }
       })
-    }
+    })
+  }
   // }, [router.query.id])
-  
   const matches = useMediaQuery('(min-width:600px)');
   return (
-    <Container>
+    <>{  open ? <ImageZoom/> : null }
       <Box justifyContent="center">
-      <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
-        <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
-      </Typography>
-      <Box sx={{
-          xs: {width: '100%'},
-          md: {width: '50%'}
-        }}>
-        {/* <h4><Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link> {'›'} {data.title}</h4><br/> */}
-        {data.img[0]?.value&&
-        <Container disableGutters
-          sx={{
-            padding: 0,
-            width: '100%',
-            maxWidth: '100%',
-            alignContent: 'center'
-          }}
-        >
-            {/* <Carousel >
-              {
-                items.map( (item, i) => <img src={data.img[i]?.value} style={{ maxWidth: '100%', zIndex: '0 !important'}}/> )
-              }
-            </Carousel> */}
-            <Box sx={{ width: {md:'60%', sm: '100%'} }}>
-              <SwipeableTextMobileStepper height={500} position="static" imgs={data.img} />
-            </Box>
-            {/* <ImageList sx={{ width: '100%', height: 350 }} cols={matches ? 3 : 1} rowHeight={350}>
-              {data.img.map((item: any) => (
-                <ImageListItem key={item.value}>
-                  <img
-                    src={`${item.value}?w=164&h=164&fit=crop&auto=format`}
-                    srcSet={`${item.value}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                    loading="lazy"
-                    style={{ maxHeight: 350 }}
-                  />
-                </ImageListItem>
-              ))}
-            </ImageList> */}
-          <Box
-          sx={{
-            padding: 0,
-            width: {
-              md: '50%',
-              lg: '50%',
-              xs: '100%'
-            }
-            ,
-            maxWidth: '100%',
-            alignContent: 'center'
-          }}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-          
+        <Box justifyContent="center" sx={{paddingBottom:20}}>
+          <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
+            <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
+          </Typography>
+          {data.img.length==1&&
+          <img src={`${data.img[0].value}`} style={{maxWidth:'100%', marginBottom: 17}}/>
+        //   <CardMedia
+        //   component="img"
+        //   height="200"
+        //   image={`${data.img[0].value}`}
+        //   onClick={()=>{setOpen(data.img[0].value)}}
+        // />
 
-            {/* <img src={data.img[0]?.value} style={{ maxWidth: '100%'}}/> */}
-          </Box>
-        </Container>
-       }
-       <br/>
-        <ThemeProvider theme={theme}>
-          <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.body }}/>
-        </ThemeProvider>
-        <MagaTable cols={cols} rows={state}/>
-        <br/><br/><br/><br/><br/><br/>
+          }
+          {data.img.length>1&&
+            <Box sx={{ width: '100%'}}>
+              <ImageList variant="masonry" sx={{ width: '100%', height: 'auto' }} cols={3} >
+                {data.img.map((item: any) => (
+                  <ImageListItem key={item.value} >
+                    <img 
+                      src={`${item.value}`}
+                      srcSet={`${item.value}`}
+                      loading="lazy"
+                      onClick={()=>{setOpen(item.value)}}
+                    />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </Box>  
+          }
+          <ThemeProvider theme={theme}>
+            <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.body }}/>
+          </ThemeProvider>
+          <MagaTable cols={cols} rows={state}/>
+        </Box>
         {user.isLogged&&
-        <>
-        <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
-        <BottomNavigation sx={{ 
-          zIndex: 5000,
-          bgcolor: '#121212',
-            '& .Mui-selected': {
-              '& .MuiBottomNavigationAction-label': {
-                fontSize: theme => theme.typography.caption,
-                transition: 'none',
-                fontWeight: 'bold',
-                lineHeight: '20px'
-              },
-              '& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label': {
-                color: theme => theme.palette.secondary.main
+          <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
+          <BottomNavigation sx={{ 
+            zIndex: 5000,
+            bgcolor: '#121212',
+              '& .Mui-selected': {
+                '& .MuiBottomNavigationAction-label': {
+                  fontSize: theme => theme.typography.caption,
+                  transition: 'none',
+                  fontWeight: 'bold',
+                  lineHeight: '20px'
+                },
+                '& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label': {
+                  color: theme => theme.palette.secondary.main
+                }
               }
-            }
-          }}
-          showLabels
-          >
-          <BottomNavigationAction label="Editar" disabled={false} onClick={() => callLink("/" + folder + "/" + router.query.id + "/edit")} icon={<EditIcon />} />
-          <BottomNavigationAction label="Excluir" onClick={() => delete_card(user.uid, router.query.id as string)}  icon={<DeleteIcon />}  />
-          <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
-        
-        </BottomNavigation>
-        <br/>
-      </Paper>
-      </>
+            }}
+            showLabels
+            >
+            <BottomNavigationAction label="Editar" disabled={false} onClick={() => callLink("/" + folder + "/" + router.query.id + "/edit")} icon={<EditIcon />} />
+            <BottomNavigationAction label="Excluir" onClick={() => delete_card(user.uid, router.query.id as string)}  icon={<DeleteIcon />}  />
+            <BottomNavigationAction label="Voltar" onClick={() => router.back()} icon={<ArrowBackIcon />} />
+          
+          </BottomNavigation>
+          <br/>
+          </Paper>
         }
-        </Box>
-        </Box>
-        
-    </Container>
-   
+      </Box>
+    </>
   );
 } 
 

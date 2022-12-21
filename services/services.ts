@@ -267,11 +267,11 @@ class CardDataService {
   }
 
   async update (user: string, id: string, data: { img: Array<any>; title: string; body: string; order: number; }) {
-    console.log(user, id, data)
+    // console.log(user, id, data)
     const docRef = doc(db, user, id);
     await updateDoc(docRef, data)
     .then(docRef => {
-        console.log("A New Document Field has been added to an existing document");
+        // console.log("A New Document Field has been added to an existing document");
     })
     .catch(error => {
         console.log(error);

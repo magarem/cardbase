@@ -68,7 +68,7 @@ const List: NextPage<Props> = (props) => {
   const router = useRouter()
   const { user, stateFolder, folderReload, getFolderKeyByValue, folderReloadByGuest } = useAuth()
   let folder = router.query.folder
-  console.log({user, folder});
+  // console.log({user, folder});
   const [open, setOpen] = useState(false);
  
   const handleOpen = (obj: ss) => {

@@ -5,11 +5,13 @@ import CardDataService from "../services/services";
 import { ReactSortable } from "react-sortablejs";
 import { useAuth } from '../context/AuthContext';
 import { Box } from '@mui/material';
+
 function CardsGrid(props){
   const { user, flagMoveItens } = useAuth()
-  console.log(user);
+
   // Drag and Drop Handler
   const onDragDropEnds = (oldIndex, newIndex) => {
+    console.log('parou de mover');
     props.currentState.slice(0).reverse().map((item, index) => {
       if (item.cardSession == undefined) item.cardSession = ""
       const objToUpdate = {id: item.id, ...item, order: index}
@@ -23,10 +25,14 @@ function CardsGrid(props){
     <h3></h3>:
     <ReactSortable 
       handle=".handle"
+      animation={200}
       className="grid-container"
       list={props.currentState} 
       setList={(newlist) => props.setCurrentState(newlist)}
-      onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}>
+      onEnd={({ oldIndex, newIndex }) => onDragDropEnds(oldIndex, newIndex)}   
+      onChoose={(x)=>{console.log(x.item.getAttribute('data-id'))}}
+      // onMove={()=>{console.log("11111")}}
+      >
       {props.currentState.map((item) => (
        <div key={item.id} >{/*className={flagMoveItens&&'divBlur'}*/}
         <CardItem 
