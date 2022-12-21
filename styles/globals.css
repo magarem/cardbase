@@ -133,3 +133,84 @@ a {
   padding: 0;
   margin: 0;
 }
+
+.M_img{
+ 
+  /* display: block; */
+  height: 100%; width: 100%; object-fit: cover
+  /* margin-left: auto;
+  margin-right: auto; */
+}
+.M_box{
+  display: block;
+  background: transparent;
+  text-align: center;
+  align-content: center;
+  align-items: center;
+ 
+  border: 0px solid red;
+}    
+
+.carousel .carousel-control-prev,
+.carousel .carousel-control-next
+{
+    visibility: hidden;
+    opacity: 1;
+}
+
+.carousel:hover .carousel-control-prev,
+.carousel:hover .carousel-control-next
+{
+    visibility: visible;
+    animation-duration: 1s;
+    transition-timing-function: linear;
+}
+
+.carousel:hover .carousel-control-prev
+{
+    animation-name: FadeInPrev;
+}
+
+.carousel:hover .carousel-control-next
+{
+    animation-name: FadeInNext;
+}
+
+@keyframes FadeInPrev
+{
+    0%
+    {
+        opacity: 0;
+        padding-left: 40px;
+    }
+    100%
+    {
+        opacity: 1;
+        padding-left: 0px;
+    }
+}
+
+@keyframes FadeInNext
+{
+    0%
+    {
+        opacity: 0;
+        padding-right: 40px;
+    }
+    100%
+    {
+        opacity: 1;
+        padding-right: 0px;
+    }
+}
+.carousel-indicators li
+{
+  display: none;
+}
+
+/* .box.large{
+  height: 300px;
+}
+.box.small{
+  height: 100px;
+} */

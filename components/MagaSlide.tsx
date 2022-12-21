@@ -3,7 +3,7 @@ import Carousel from 'react-bootstrap/Carousel';
 
 function UncontrolledExample(props: any) {
   return (
-    <Carousel >
+    <Carousel interval={null}>
 
 
             {props.imgs.map((i: any)=>(
