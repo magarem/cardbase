@@ -24,7 +24,7 @@ import SwipeableTextMobileStepper from "../../../components/Carousel"
 import MagaSlide from "../../../components/MagaSlide"
 import { AnyCnameRecord } from "dns";
 import FullScreenDialog from "../../../components/DialogFullScreen";
-
+import YouTube from "react-youtube";
 interface Props {
   setuser: Function
   user: {
@@ -46,6 +46,22 @@ interface Obj2 {
   key: any;
   value: any;
 }
+
+interface ObjMidia {
+  id: number;
+  key: string;
+  value: string;
+  type: string;
+  cover: string;
+}
+
+const opts = {
+  height: "390",
+  width: "640",
+  playerVars: {
+    autoplay: false,
+  },
+};
 const Create: NextPage<Props> = () => {
   const { user, getFolderKeyByValue } = useAuth()
 
@@ -58,7 +74,8 @@ const Create: NextPage<Props> = () => {
   const cardObj = {id: "", card_id: "", img: [], folder: "", title: "", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1[]>([cardObj])
   const [data, setData] = useState<Obj1>(cardObj)
-  const [open, setOpen] = useState("")
+  const midiaObj = {id:0, key:'', value:'', type: '', cover:''}
+  const [open, setOpen] = useState<ObjMidia>(midiaObj)
  
   const tblObj = [{key: "", value: ""}];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]>(tblObj)
@@ -79,7 +96,7 @@ const Create: NextPage<Props> = () => {
   }
 
   const handleClose = () => {
-    setOpen("");
+    setOpen(midiaObj);
   };
 
   const cols: any[] = ['', '']
@@ -104,7 +121,7 @@ const Create: NextPage<Props> = () => {
   const ImageZoom = () => {
     return (
       <>
-      <FullScreenDialog state={open.length>0} handleClose={handleClose} >
+      <FullScreenDialog state={JSON.stringify(open)!==JSON.stringify(midiaObj)} handleClose={handleClose} >
       <Box
         sx={{marginTop:{md:3}}}
         display="flex"
@@ -112,6 +129,9 @@ const Create: NextPage<Props> = () => {
         alignItems="center"
         // minHeight="100vh"
       >
+        {open.type=='youtube'?
+        <YouTube videoId={open.value.split('be/')[1]} opts={opts} onReady={_onReady} />
+      :
       <Box
         component="img"
         sx={{
@@ -120,17 +140,19 @@ const Create: NextPage<Props> = () => {
            maxHeight: { xs: '100%', md: 600},
            maxWidth: { xs: '100%', md: 500 },
         }}
-        src={open}
+        src={open.value}
         />
+      }
       </Box>
       <br/>
         <Container><br/>
+        
           <TextField
             id="outlined-textarea"
             label="Endereço da imagem"
             placeholder="Placeholder"
             fullWidth
-            value={open}
+            value={open.value as string}
             multiline
           />
         </Container>
@@ -181,10 +203,24 @@ const Create: NextPage<Props> = () => {
     return orientation;
 
   }
-  let ww1 = '300px'
-  let ww2 = '600px'
-  let hh1 = '300px'
-  let hh2 = '600px'
+  function _onReady(event: any) {
+    event.target.pauseVideo();
+  }
+  const showMedia = (src: string) => {
+    console.log(src);
+    if (src.includes('you')){
+      return (
+        <img src={src} style={{maxWidth:'100%', marginBottom: 17}}/>
+        // <YouTube videoId={src.split('be/')[1]} 
+        //     opts={opts} onReady={_onReady} />
+      )
+    }else{
+      return (
+        <img src={src} style={{maxWidth:'100%', marginBottom: 17}}/>
+      )
+    }
+  } 
+ 
   return (
     <>{  open ? <ImageZoom/> : null }
       <Box justifyContent="center">
@@ -192,17 +228,8 @@ const Create: NextPage<Props> = () => {
           <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
             <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
           </Typography>
-          {data.img.length==1&&
-          <img src={`${data.img[0].value}`} style={{maxWidth:'100%', marginBottom: 17}}/>
-        //   <CardMedia
-        //   component="img"
-        //   height="200"
-        //   image={`${data.img[0].value}`}
-        //   onClick={()=>{setOpen(data.img[0].value)}}
-        // />
-
-          }
-          {data.img.length>1&&
+        
+          {data.id.length>1&&
             <Box sx={{ width: '100%'}}>
 
 
@@ -210,11 +237,10 @@ const Create: NextPage<Props> = () => {
   {data.img.map((item: any) => (
     <ImageListItem key={item.value}>
      <CardMedia
-          
           component="img"
           height="250"
-          image={`${item.value}?w=164&h=164&fit=crop&auto=format`}
-          onClick={()=>{setOpen(item.value)}}
+          image={`${item.cover||item.value}`}
+          onClick={()=>{setOpen(item)}}
         />
       {/* <div className="M_box"  style={{width: isLandscape(item.value)?'600px':'300px',  height: isLandscape(item.value)?'300px':'600px'}}> */}
         {/* <img

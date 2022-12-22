@@ -1,6 +1,5 @@
 import '../styles/globals.css'
 import '../styles/styles.scss'
-import '../styles/edit_input_tags.css'
 import type { AppProps } from 'next/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { createTheme, ThemeProvider } from '@mui/material/styles';

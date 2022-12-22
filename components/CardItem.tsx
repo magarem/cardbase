@@ -98,6 +98,7 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
     setExpanded(!expanded);
   };
 
+ 
   // useEffect(() => {
   //   const folder = router.asPath.split('/')[1]
   //   setFolder(folder)
@@ -148,11 +149,7 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
         }
         
         {(item.img.length==1&&item.img[0].value!=='')&&
-          <CardMedia
-            component="img"
-            height="200"
-            image={item.img[0].value}
-          />
+          <CardMedia image={item.img[0].cover||item.img[0].value} sx={{ height: 200 }}/>
         }
 
         {(item.img.length>1)&&

@@ -21,6 +21,7 @@ import { VisibilityOff, Visibility } from "@material-ui/icons";
 import HighlightOff from '@mui/icons-material/HighlightOff';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
+import { async } from "@firebase/util";
 interface Props {
   setuser: Function,
   user: {
@@ -40,10 +41,13 @@ interface Obj1 {
 }
 
 interface Obj2 {
-  id: any,
-  key: any;
-  value: any;
+  id: number;
+  key: string;
+  value: string;
+  type: string;
+  cover: string;
 }
+
 const Create: NextPage<Props> = (props) => {
   const { user, getFolderKeyByValue, getFolders } = useAuth()
   const [desableSaveButton, setDesableSaveButton] = useState(false);
@@ -71,11 +75,10 @@ const Create: NextPage<Props> = (props) => {
   const [uploadRefresh, setUploadRefresh] = useState(0);
   const cardObj = {id: "Novo", card_id: "", img: [{}], folder: folder_key, title: "Novo", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
-  const [stateFolder, setStateFolder] = useState([{key: String, value: String}])
   const [mostra, setMostra] = useState(false)
   
   const tblObj: Obj2[] | (() => Obj2[] | undefined) | undefined = [];
-  const tblObj2: Obj2[] = [{id:0, key:'', value:''}];
+  const tblObj2: Obj2[] = [{id:0, key:'', value:'', type:'', cover:''}];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]| undefined>(tblObj)
   const [stateImg, setStateImg] = React.useState<Obj2[]>(tblObj2)
 
@@ -112,15 +115,32 @@ const Create: NextPage<Props> = (props) => {
      
     }
   };
+
+  const checkMidiaType = (src: string) => {
+    console.log(src);
+    if (src.includes('you')){
+      // let cover = 'https://img.youtube.com/vi/'+src.split('be/')[1]+'/maxresdefault.jpg'
+      return 'youtube'
+    }else{
+      return 'image'
+    }
+  }
   
   const saveCard = () => {
     setDesableSaveButton(true)
     const timestamp = new Date().getTime()
+
+    setStateImg(stateImg.map((item)=>{
+      item.cover=item.value
+      item.type = checkMidiaType(item.value)
+      if (item.type=='youtube') {
+        item.cover='https://img.youtube.com/vi/'+item.value.split('be/')[1]+'/maxresdefault.jpg'
+      }
+      return item
+    }))
+
     let data = { img: stateImg, folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: timestamp };
     console.log(data);
-    
-    
-   
     let card_id = state.card_id
     if (card_id == '') card_id = timestamp.toString()
     CardDataService.setCard(user.uid, card_id, data)
@@ -137,9 +157,21 @@ const Create: NextPage<Props> = (props) => {
         console.log(e);
       });
   }
-  
-  const updateCard = () => {
+
+  const updateCard =  () => {
     setDesableSaveButton(true)
+    setStateImg(stateImg.map((item)=>{
+      item.cover=item.value
+      item.type = checkMidiaType(item.value)
+      if (item.type=='youtube') {
+        let cover_default = 'https://img.youtube.com/vi/'+item.value.split('be/')[1]+'/sddefault.jpg'
+        // let cover_sddefault = 'https://img.youtube.com/vi/'+item.value.split('be/')[1]+'/sddefault.jpg'
+        // item.cover = await tryRequire(cover_sddefault)?cover_sddefault:cover_default
+        item.cover = cover_default
+      }
+      return item
+    }))
+
     let data = {
       img: stateImg,
       title: state.title,
@@ -184,6 +216,8 @@ const Create: NextPage<Props> = (props) => {
       if (data) {
         setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
         if (data.img=='') data.img = []
+
+
         if (!Array.isArray(data.img)) data.img = [{value:data.img}]
         
         setStateImg(data.img)

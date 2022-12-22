@@ -19,7 +19,7 @@ function UncontrolledExample(props: any) {
           
           component="img"
           height="200"
-          image={i.value}
+          image={i.cover||i.value}
         />
 {/* <Carousel.Caption>
   <h3>First slide label</h3>
