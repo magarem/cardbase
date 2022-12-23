@@ -148,13 +148,13 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
         </CardActions>
         }
         
-        {(item.img.length==1&&item.img[0].value!=='')&&
+        {/* {(item.img.length==1&&item.img[0].value!=='')&&
           <CardMedia image={item.img[0].cover||item.img[0].value} sx={{ height: 200 }}/>
-        }
+        } */}
 
-        {(item.img.length>1)&&
+        {(item.img.length>0&&item.img[0].value!=="")&&
           <CardMedia key={item.img} >
-            <MagaSlide imgs={item.img} />
+            <MagaSlide imgs={item.img} onClickMidia={() => {handleOpen({...item})}}/>
           </CardMedia>
         }
       

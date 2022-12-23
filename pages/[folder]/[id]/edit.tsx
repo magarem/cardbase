@@ -119,9 +119,11 @@ const Create: NextPage<Props> = (props) => {
   const checkMidiaType = (src: string) => {
     console.log(src);
     if (src.includes('you')){
-      // let cover = 'https://img.youtube.com/vi/'+src.split('be/')[1]+'/maxresdefault.jpg'
       return 'youtube'
-    }else{
+    } 
+    if (src.includes('fb.watch')){
+      return 'facebook'
+    } else{
       return 'image'
     }
   }
@@ -135,6 +137,9 @@ const Create: NextPage<Props> = (props) => {
       item.type = checkMidiaType(item.value)
       if (item.type=='youtube') {
         item.cover='https://img.youtube.com/vi/'+item.value.split('be/')[1]+'/maxresdefault.jpg'
+      } 
+      if (item.type=='facebook') {
+        item.cover='https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/videoPlaceholder.jpg?alt=media&token=a858d0f4-db7f-46e9-9b3b-0d8f574ee882'
       }
       return item
     }))
@@ -165,9 +170,10 @@ const Create: NextPage<Props> = (props) => {
       item.type = checkMidiaType(item.value)
       if (item.type=='youtube') {
         let cover_default = 'https://img.youtube.com/vi/'+item.value.split('be/')[1]+'/sddefault.jpg'
-        // let cover_sddefault = 'https://img.youtube.com/vi/'+item.value.split('be/')[1]+'/sddefault.jpg'
-        // item.cover = await tryRequire(cover_sddefault)?cover_sddefault:cover_default
         item.cover = cover_default
+      }
+      if (item.type=='facebook') {
+        item.cover='https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/videoPlaceholder.jpg?alt=media&token=a858d0f4-db7f-46e9-9b3b-0d8f574ee882'
       }
       return item
     }))

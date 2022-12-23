@@ -25,6 +25,7 @@ import MagaSlide from "../../../components/MagaSlide"
 import { AnyCnameRecord } from "dns";
 import FullScreenDialog from "../../../components/DialogFullScreen";
 import YouTube from "react-youtube";
+import ReactPlayer from 'react-player'
 interface Props {
   setuser: Function
   user: {
@@ -129,9 +130,10 @@ const Create: NextPage<Props> = () => {
         alignItems="center"
         // minHeight="100vh"
       >
-        {open.type=='youtube'?
-        <YouTube videoId={open.value.split('be/')[1]} opts={opts} onReady={_onReady} />
-      :
+        {(open.type=='youtube'||open.type=='facebook')?
+        // <YouTube videoId={open.value.split('be/')[1]} opts={opts} onReady={_onReady} />
+        <ReactPlayer url={open.value}/>
+        :
       <Box
         component="img"
         sx={{
@@ -146,13 +148,12 @@ const Create: NextPage<Props> = () => {
       </Box>
       <br/>
         <Container><br/>
-        
           <TextField
             id="outlined-textarea"
             label="Endereço da imagem"
             placeholder="Placeholder"
             fullWidth
-            value={open.value as string}
+            value={(open.value) as string}
             multiline
           />
         </Container>

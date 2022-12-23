@@ -88,7 +88,8 @@ const Home: NextPage<Props> = () => {
   // const handleClose = () => setOpen(false);
   const handleClose = (event: any, reason: string) => {
     setFlgDialogSetOpen(false);
-}
+  }
+
   const [currentState, setCurrentState] = useState<ss[]>([]);
   const [currentState2, setCurrentState2] = useState<ss>();
   const [userDataByGuest, setUserDataByGuest] = useState({});
@@ -163,7 +164,7 @@ const Home: NextPage<Props> = () => {
   //   }
   // },[user.uid]) 
 
-  console.log(user);
+  // console.log(user);
   
   // React.useEffect(() => {
   //   // alert('-2->'+user.uid)
@@ -186,46 +187,35 @@ const Home: NextPage<Props> = () => {
   // if (folder=='Home') folder='Início'
   return (
     <>
-      <Dialog
-        open={flgDialogSetOpen}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        >
-        <DialogTitle id="alert-dialog-title" component="span">
-          Pasta
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description" component="span">
-            <FormControl component="span">
-              <TextField
-                autoFocus
-                fullWidth
-                name="formCardFolder_value"
-                value={formCardFolder.value}
-                placeholder="Nova pasta"
-                onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.substring(0,28).replace(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
-              />
-            </FormControl>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ justifyContent: "center" }}>
-          {/* <Button variant="outlined"  onClick={() => setFlgDialogSetOpen(false)}>Cancelar</Button> */}
-          {formCardFolder.key&&<Button variant="outlined" onClick={() => itemRemove(formCardFolder)} startIcon={<DeleteIcon />}>Excluir</Button>}
-          <Button variant="outlined" onClick={() => folderAdd()} startIcon={<SaveIcon/>}>Salvar</Button>
-        </DialogActions>
-      </Dialog>
-      {/* {JSON.stringify(user)}<br/>
-      {JSON.stringify(stateFolder)} */}
-       {/* <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
-         Início
-       </Typography> */}
-       {/* <Box className="grid-container3"> */}
-     {/* {JSON.stringify(user.folders)} */}
-     
-     {/* {JSON.stringify(user.folders)} */}
-     <br/>
-     {/* {JSON.stringify(flagMoveItens)} */}
+     <Dialog
+      open={flgDialogSetOpen}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      >
+      <DialogTitle id="alert-dialog-title" component="span">
+        Pasta
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description" component="span">
+          <FormControl component="span">
+            <TextField
+              autoFocus
+              fullWidth
+              name="formCardFolder_value"
+              value={formCardFolder.value}
+              placeholder="Nova pasta"
+              onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.substring(0,28).replace(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
+            />
+          </FormControl>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions style={{ justifyContent: "center" }}>
+        {/* <Button variant="outlined"  onClick={() => setFlgDialogSetOpen(false)}>Cancelar</Button> */}
+        {formCardFolder.key&&<Button variant="outlined" onClick={() => itemRemove(formCardFolder)} startIcon={<DeleteIcon />}>Excluir</Button>}
+        <Button variant="outlined" onClick={() => folderAdd()} startIcon={<SaveIcon/>}>Salvar</Button>
+      </DialogActions>
+     </Dialog>
      <ReactSortable 
       handle=".handle"
       className="grid-container3"
@@ -236,11 +226,8 @@ const Home: NextPage<Props> = () => {
       {user.folders.map((item: any, index: number) => {
         return (
           <Box key={item.key} >{/*className={flagMoveItens&&'handle'}*/}
-            {/* <div className="container"> */}
             <Card 
               flagAction={flagMoveItens}
-              // cls={flagMoveItens&&'trimiliqui'}
-              // sx_={flagMoveItens&&{border: 2, borderColor: 'orange', borderRadius: '10px'}}
               width='170'
               title={item.value} 
               img={'https://firebasestorage.googleapis.com/v0/b/receitas-5968d.appspot.com/o/directory-150354_640.png?alt=media&token=9f7a9035-2b55-4287-a0b3-36084aeba27d'}
@@ -249,22 +236,17 @@ const Home: NextPage<Props> = () => {
               cmdTitle={()=>user.isLogged&&itemEdit(index)}
             >
             </Card>
-            {/* <IconButton className={flagMoveItens?'btnHandleDrag handle':'btnHandleDrag hide'}><OpenWithIcon /></IconButton></div> */}
           </Box>
         )})
       }
       </ReactSortable>
-     {/* </Box> */}
-      {/* {JSON.stringify(currentState)} */}
-      {/* <CardsGrid user={user} handleOpen={handleOpen} currentState={currentState} setCurrentState={setCurrentState} /> */}
       {user.isLogged&&
-      <>
       <Fab sx={fabs[0].sx} aria-label={fabs[0].label} color={fabs[0].color} onClick={() => {
           handleClickOpen()
           }}>
         {fabs[0].icon}
       </Fab>
-      </>}
+      }
       <br/><br/><br/><br/><br/><br/>
       {/* <Copyright /> */}
     </>
