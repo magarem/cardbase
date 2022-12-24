@@ -17,6 +17,7 @@ import OpenWithIcon from '@mui/icons-material/OpenWith';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import { makeStyles } from '@material-ui/styles'
 interface Props {
   setuser: Function,
   currentState2?: {
@@ -73,6 +74,9 @@ interface folderItem {
   value: string;
   order: number;
 }
+
+
+
 const Home: NextPage<Props> = () => {
   const router = useRouter()
   const { user, setUser, flagMoveItens, setFlagMoveItens, folderReload, getUserFolders, foldersListUpdate, folderReloadByGuest } = useAuth()
@@ -89,7 +93,17 @@ const Home: NextPage<Props> = () => {
   const handleClose = (event: any, reason: string) => {
     setFlgDialogSetOpen(false);
   }
+  
 
+  const useStyles = makeStyles({
+    dialog: {
+      position: 'absolute',
+      left: '50v',
+      top: 50
+    }
+  });
+
+  const classes = useStyles();
   const [currentState, setCurrentState] = useState<ss[]>([]);
   const [currentState2, setCurrentState2] = useState<ss>();
   const [userDataByGuest, setUserDataByGuest] = useState({});
@@ -185,9 +199,14 @@ const Home: NextPage<Props> = () => {
 
   const mw = currentState2?.img ? "md" : "sm"
   // if (folder=='Home') folder='Início'
+
+
   return (
     <>
      <Dialog
+     classes={{
+      paper: classes.dialog
+    }}
       open={flgDialogSetOpen}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
@@ -204,9 +223,18 @@ const Home: NextPage<Props> = () => {
               fullWidth
               name="formCardFolder_value"
               value={formCardFolder.value}
-              placeholder="Nova pasta"
-              onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.substring(0,28).replace(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
-            />
+              placeholder="Nome da nova pasta"
+              // onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.substring(0,28).replace(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
+              onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value, order: formCardFolder.order})}}
+              onKeyPress={(ev) => {
+                console.log(`Pressed keyCode ${ev.key}`);
+                if (ev.key === 'Enter') {
+                  // Do code here
+                  ev.preventDefault();
+                  folderAdd()
+                }
+              }}
+           />
           </FormControl>
         </DialogContentText>
       </DialogContent>

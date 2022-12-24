@@ -92,7 +92,7 @@ const Create: NextPage<Props> = (props) => {
     }));
     console.log(state)
     if (name == 'folder') {
-      const innerText = getFolders().find((item: { key: any; }) => item.key === value)?.value
+      const innerText = user.folders.find((item: { key: any; }) => item.key === value)?.value
       console.log('inner text: ', innerText);
       // router.push( '/' + innerText + '/' + id + '/edit' )
       router.push(`/${innerText}/${id}/edit`)
@@ -260,7 +260,7 @@ const Create: NextPage<Props> = (props) => {
           <DialogContentText id="alert-dialog-description">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Pasta</InputLabel>
-              {JSON.stringify(user.folders, null, 2)}
+              {/* {JSON.stringify(user.folders, null, 2)} */}
               <Select
                 fullWidth
                 name="folder"
@@ -312,7 +312,7 @@ const Create: NextPage<Props> = (props) => {
           <br/>
         </div>
         <div data-tab="tab2">
-          <Box >
+          <Box>
             <FullFeaturedCrudGrid width={'760'} user={user} optColumKey={false} stateExtra={stateImg} setStateExtra={setStateImg}/>
           </Box>
         </div>
@@ -330,7 +330,7 @@ const Create: NextPage<Props> = (props) => {
               value={state.order}
               hidden
             /><br/>
-          <TextField 
+            <TextField 
               id="outlined-basic"
               name="card_id"
               label="Código"

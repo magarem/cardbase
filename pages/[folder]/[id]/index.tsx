@@ -221,71 +221,29 @@ const Create: NextPage<Props> = () => {
       )
     }
   } 
- 
   return (
-    <>{  open ? <ImageZoom/> : null }
+    <>{ open ? <ImageZoom/> : null }
       <Box justifyContent="center">
         <Box justifyContent="center" sx={{paddingBottom:20}}>
           <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
             <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
-          </Typography>
-        
+          </Typography>       
           {data.id.length>1&&
             <Box sx={{ width: '100%'}}>
-
-
-<ImageList sx={{ width: '100%'}} cols={isMd?5:2} rowHeight={250}>
-  {data.img.map((item: any) => (
-    <ImageListItem key={item.value}>
-      {(item.cover||item.value)&&
-      <CardMedia
-          component="img"
-          height="250"
-          image={`${item.cover||item.value}`}
-          onClick={()=>{setOpen(item)}}
-        />
-      }
-     
-      {/* <div className="M_box"  style={{width: isLandscape(item.value)?'600px':'300px',  height: isLandscape(item.value)?'300px':'600px'}}> */}
-        {/* <img
-          src={`${item.value}?w=164&h=164&fit=crop&auto=format`}
-          srcSet={`${item.value}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-        
-          loading="lazy"
-        /> */}
-      {/* </div> */}
-    </ImageListItem>
-  ))}
-</ImageList>
-
-
-              {/* <ImageList sx={{ width: '1210px', height: 'auto' }}
-                variant="quilted"
-                cols={4}
-                rowHeight={300} >
-                {data.img.map((item: any, index: number, array: any) => (
-                  <ImageListItem key={item.value} cols={isLandscape(item.value)?2:1} rows={isLandscape(item.value)?1:2}   > 
-                  
-                   <div className="M_box"  style={{width: isLandscape(item.value)?'600px':'300px',  height: isLandscape(item.value)?'300px':'600px'}}>
-                    <img 
-
-                      className="M_img"
-                      // style={{width: isLandscape(item.value)?'398':'200px',  height: isLandscape(item.value)?'200px':'398px'}}
-                      src={`${item.value}`}
-                      srcSet={`${item.value}`}
-                      
-                      // style={{width:'100%'}}
-                      // sizes="(max-width: 710px) 50px,
-                      //        (max-width: 991px) 50px,
-                      //        50px"
-                      loading="lazy"
-                      onClick={()=>{setOpen(item.value)}}
-                     
-                    />
-                    </div>
+              <ImageList sx={{ width: '100%'}} cols={isMd?5:2} >
+                {data.img.map((item: any) => (
+                  <ImageListItem key={item.value}>
+                    {(item.cover||item.value)&&
+                      <CardMedia
+                        component="img"
+                        height="250"
+                        image={`${item.cover||item.value}`}
+                        onClick={()=>{setOpen(item)}}
+                      />
+                    }
                   </ImageListItem>
                 ))}
-              </ImageList> */}
+              </ImageList>
             </Box>  
           }
           <ThemeProvider theme={theme}>
