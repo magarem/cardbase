@@ -32,7 +32,7 @@ interface pp {
 const Signup = () => {
 
   const router = useRouter()
-  const { signup, logout } = useAuth()
+  const { signup, logout, getSubDomain } = useAuth()
 
   interface ttt {email:string; password: string; confirmpassword: string}
 
@@ -43,7 +43,8 @@ const Signup = () => {
   const [buttonCreateAccount, setButtonCreateAccount] = React.useState(false);
 
   useEffect(() => {
-    if (location.href !== process.env.NEXT_PUBLIC_DOMAIN){
+    console.log(getSubDomain());
+    if (getSubDomain()!==''){
       router.push(process.env.NEXT_PUBLIC_DOMAIN + '/signup');
     }
   },[])

@@ -9,19 +9,12 @@ import Collapse from '@mui/material/Collapse';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeveIcon from '@mui/icons-material/DeleteForever';
 import CardDataService from "../services/services";
 import { Router, useRouter } from "next/router";
 import { DragIndicator } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
-import { SnippetFolder } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { Box, Button, ListItem, ListItemText, Stack } from '@mui/material';
-import Image from 'next/image'
-import Switch from '@mui/material/Switch';
-import SwipeableTextMobileStepper from './Carousel'
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import MagaSlide from './MagaSlide'
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -103,25 +96,6 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
   //   const folder = router.asPath.split('/')[1]
   //   setFolder(folder)
   // }, [])
-
-  if (false) {
-    return (
-      <>
-        <ListItem
-          key={item.id}
-          disableGutters
-         > 
-          <ListItemText primary={item.title} />
-          <div >
-            <img
-            src={item.img}
-            style={{width: '150px'}}
-          /></div>
-          
-        </ListItem>
-      </>
-    )
-  }else{
     return (  
       <Box >
       <Card raised >
@@ -148,17 +122,17 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
         </CardActions>
         }
         
-        {/* {(item.img.length==1&&item.img[0].value!=='')&&
-          <CardMedia image={item.img[0].cover||item.img[0].value} sx={{ height: 200 }}/>
-        } */}
+        {(item.img.length==1&&item.img[0].value!=='')&&
+          <CardMedia image={item.img[0].cover||item.img[0].value} sx={{ height: 200 }} onClick={() => {handleOpen({...item})}}/>
+        }
 
-        {(item.img.length>0&&item.img[0].value!=="")&&
+        {(item.img.length>1&&item.img[0].value!=="")&&
           <CardMedia key={item.img} >
             <MagaSlide imgs={item.img} onClickMidia={() => {handleOpen({...item})}}/>
           </CardMedia>
         }
       
-       
+        
         <CardContent sx={{ pt:1.5, '&:last-child': { pb: 0.4 }}}>
           <Grid container rowSpacing={2} columnSpacing={2} >
             <Grid item md={10}>
@@ -184,7 +158,7 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
                 <ExpandMoreIcon fontSize="small" />
               </ExpandMore>
             </Grid>
-           
+            
           </Grid>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -196,5 +170,4 @@ export default function CardItem({item, currentState, setCurrentState, handleOpe
       </Box>
     )
   }
-}
 

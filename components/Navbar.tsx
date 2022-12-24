@@ -12,25 +12,17 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
-import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
-import { PhotoLibrary } from '@material-ui/icons/';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Switch from '@mui/material/Switch';
-import { FormControlLabel } from '@mui/material';
 interface obj1 {
   user: string
 }
 const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 
-
 const Navbar = (props: any) => {
 
   const { user, flagMoveItens, setFlagMoveItens, logout } = useAuth();
-  console.log(props)
   const router = useRouter()
-  // const user = props.user
-  console.log(user);
 
   const SiteTitle = () => {
     let title = "ZenBase"
@@ -47,12 +39,6 @@ const Navbar = (props: any) => {
     )
   }
 
-  interface obj2 {
-    user: {
-      displayName: string;
-    }
-  }
-  
   const UserOptions = () => {
   
     const router = useRouter()
@@ -66,23 +52,6 @@ const Navbar = (props: any) => {
     const handleClose = () => {
       setAnchorEl(null);
     };
-    
-    // useEffect(() => {
-    //   if (user){
-    //     console.log(user);
-    //     // setUserName(user.username)
-    //   }
-    // },[])
-  
-    const goToLogin = () => {
-      console.log(user);
-      // alert(window.location.host)
-      // const url = window.location.protocol + '//' + window.location.host + '/login'
-      // console.log(url);
-      // router.push(url + '?email=' + user.email)
-      router.push('/login2?email='+user.email)
-      // router.push(process.env.NEXT_PUBLIC_DOMAIN as string);
-    }
     
     const goHome = () => {
       router.push(process.env.NEXT_PUBLIC_DOMAIN + '/login' as string);
@@ -152,21 +121,13 @@ const Navbar = (props: any) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFlagMoveItens(event.target.checked);
   };
-  // console.log(router.pathname)
-  // console.log(router.query)
-  // console.log(router.asPath)
   return (
-    <Box sx={{ flexGrow: 1 }}>
+  <Box sx={{ flexGrow: 1 }}>
     <AppBar position="fixed">
       <Toolbar>
       {user.isLogged&&
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 0 }}
-          onMouseOver={props.toggleDrawer('left', true)}
+        <IconButton size="large" edge="start" color="inherit" aria-label="menu"
+          sx={{ mr: 0 }} onMouseOver={props.toggleDrawer('left', true)}
           onClick={props.toggleDrawer('left', true)}>
           <MenuIcon />
         </IconButton>
@@ -179,9 +140,8 @@ const Navbar = (props: any) => {
           </Grid>
           <Grid item xs={2} sm={2} md={2} style={{textAlign: "center", paddingTop:20}} >
              {user.isLogged&&['/Home','/[folder]'].includes(router.pathname)&&<Switch {...label} checked={flagMoveItens}
-              onChange={handleChange} size="small"  />}
+              onChange={handleChange} size="small" />}
           </Grid>
-
           <Grid item xs={5} sm={5} md={5} style={{textAlign: "right"}} >
             <UserOptions />
           </Grid>

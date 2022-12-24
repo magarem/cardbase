@@ -109,9 +109,20 @@ export default function BasicTable(props: { width: string | number; user: any; o
       {props.stateExtra.map((row: any, index: number, arr: any) => { 
         return (
             <Stack key={'box_'+index} direction="column" justifyContent="top" style={{width: '250px', backgroundColor: '#171717'}}>
+              <TextField 
+                    style = {{maxWidth: 250}}
+                    fullWidth
+                    placeholder='Link'
+                    key={'link_'+index}
+                    id="outlined-basic"
+                    name="cover"
+                    variant="outlined"
+                    onChange={updateFieldChanged(index)}
+                    value={props.stateExtra[index].cover}
+                    />
               {props.optColumKey&&
                 <>
-                <TextField 
+                  <TextField 
                     key={'id_'+index}
                     id="outlined-basic"
                     fullWidth
@@ -121,17 +132,19 @@ export default function BasicTable(props: { width: string | number; user: any; o
                     value={props.stateExtra[index].id}
                     hidden
                     />
+                  
                   <TextField 
-                    style = {{width: 250}}
+                    style = {{maxWidth: 250}}
+                    fullWidth
                     placeholder='Chave'
                     key={'key_'+index}
                     id="outlined-basic"
-                    fullWidth
                     name="key"
                     variant="outlined"
                     onChange={updateFieldChanged(index)}
                     value={props.stateExtra[index].key}
                     />
+                 
                 </>
               }
               {(props.stateExtra[index].value)&&
@@ -143,7 +156,8 @@ export default function BasicTable(props: { width: string | number; user: any; o
               }
               {!isImage(props.stateExtra[index].value)&&
                 <TextField 
-                  style = {{width: 250}}
+                  style = {{maxWidth: 250}}
+                  fullWidth
                   placeholder='Valor'
                   key={'value_'+index}
                   id="outlined-basic"

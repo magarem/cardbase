@@ -73,7 +73,7 @@ const Create: NextPage<Props> = (props) => {
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "Novo", card_id: "", img: [{}], folder: folder_key, title: "Novo", body: "", tags: "", order: -1 };
+  const cardObj = {id: "sem_titulo", card_id: "", img: [{}], folder: folder_key, title: "Sem título", body: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [mostra, setMostra] = useState(false)
   
@@ -260,10 +260,11 @@ const Create: NextPage<Props> = (props) => {
           <DialogContentText id="alert-dialog-description">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Pasta</InputLabel>
+              {JSON.stringify(user.folders, null, 2)}
               <Select
                 fullWidth
                 name="folder"
-                defaultValue="/"
+                defaultValue="principal"
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={state.folder}
@@ -279,12 +280,8 @@ const Create: NextPage<Props> = (props) => {
           </DialogContentText>
         </DialogContent>
       </Dialog>
-      {/* <main className="py-10"> */}
-        <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
-        {/* {state.id?<h2 style={{marginLeft:20, marginTop:100}}>Editar</h2>:<h2>Criar</h2>}<br/> */}
-      {/* </main> */}
+      <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
       <Typography variant="h5" gutterBottom mt={11} ml={1} mb={3}>
-        {/* <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} <Link onClick={()=>router.push('/'+folder+'/'+state.card_id)} underline="hover">{state.title.substring(0,100)}</Link> {' › '} {state.id?<span>[Editar]</span>:<span>[Criar]</span>} */}
         <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {state.id.substring(0,100)} {' › '} <EditIcon fontSize='small' sx={{marginTop:-1}}/>
       </Typography>
       <MagaTabs>
@@ -297,25 +294,22 @@ const Create: NextPage<Props> = (props) => {
               fullWidth
               onChange={handleChange}
               value={state.title.substring(0,100)}
-            /><br/><br/>
-              <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
-        <Box sx={{ marginTop: 2, marginLeft: 0,  marginRight: 0}}>
-
-              <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>Extra</Typography>
-        </AccordionSummary>
-        <AccordionDetails >
-            <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
-        </AccordionDetails>
-      </Accordion>
-      </Box>
-            
-        <br/>
+          /><br/><br/>
+          <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
+          <Box sx={{ marginTop: 2, marginLeft: 0, marginRight: 0}}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header" >
+                <Typography>Variáveis</Typography>
+              </AccordionSummary>
+              <AccordionDetails >
+                <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
+              </AccordionDetails>
+            </Accordion>
+          </Box>
+          <br/>
         </div>
         <div data-tab="tab2">
           <Box >

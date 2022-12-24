@@ -52,8 +52,8 @@ export default function BasicTabs({children}: any) {
       <Box sx={{ borderBottom: 1, borderColor: 'divider', margin: 0 }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Texto" {...a11yProps(0)} />
-          <Tab label="Imagem" {...a11yProps(1)} />
-          <Tab label="Extras" {...a11yProps(2)} />
+          <Tab label="Mídia" {...a11yProps(1)} />
+          <Tab label="Info" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <div>
@@ -96,15 +96,6 @@ export default function BasicTabs({children}: any) {
             }
         })}
       </div>
-      {/* <TabPanel value={value} index={0}>
-      
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel> */}
     </Box>
   );
 }

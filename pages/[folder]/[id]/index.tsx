@@ -237,12 +237,15 @@ const Create: NextPage<Props> = () => {
 <ImageList sx={{ width: '100%'}} cols={isMd?5:2} rowHeight={250}>
   {data.img.map((item: any) => (
     <ImageListItem key={item.value}>
-     <CardMedia
+      {(item.cover||item.value)&&
+      <CardMedia
           component="img"
           height="250"
           image={`${item.cover||item.value}`}
           onClick={()=>{setOpen(item)}}
         />
+      }
+     
       {/* <div className="M_box"  style={{width: isLandscape(item.value)?'600px':'300px',  height: isLandscape(item.value)?'300px':'600px'}}> */}
         {/* <img
           src={`${item.value}?w=164&h=164&fit=crop&auto=format`}

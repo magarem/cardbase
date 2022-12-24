@@ -31,41 +31,32 @@ export const AuthContextProvider = ({
   children: React.ReactNode
 }) => {
   const router = useRouter()
-  const [user, setUser] = useState<UserType>({
+  const userParansInit = {
     uid: null,
     email: null,
     username: null,
     folders: [{key: '', value: ''}],
     isLogged: false
-  })
+  }
+  const [user, setUser] = useState<UserType>(userParansInit)
   const [loading, setLoading] = useState<boolean>(true)
   const [stateFolder, setStateFolder] = React.useState([{key: null, value: null, order:0}])
   const [flagMoveItens, setFlagMoveItens] = React.useState(false)
   // const [cookie, setCookie] = useCookies(["user"])
   const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]', '/[folder]/[id]/index', '/usersettings']
   
+  const getSubDomain = () => {
+    let domain = (process.env.NEXT_PUBLIC_DOMAIN||'').split('//')[1]
+    let subdomain = location.host.replace(domain,'');
+    if (subdomain.length>0) subdomain = subdomain.substring(0, subdomain.length-1)
+    return subdomain
+  }
 
   useEffect(() => {
-    // if ( location.href == process.env.NEXT_PUBLIC_DOMAIN+'/'){
-    //   setUser({
-    //     uid: null,
-    //     email: null,
-    //     username: null,
-    //     folders: [{key: '', value: ''}],
-    //     isLogged: false
-    //   })
-    //   router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
-    // }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log('onAuthStateChanged', stateFolder);
-      // alert('auth')
-     
-      // alert(user)
       if (user) {
-        // alert(user?.uid)
         dataServices.readUserData(user.uid, null).then((ret) => {
-          console.log(ret);
-          // alert(ret)
           setUser({
             uid: user.uid,
             email: user.email,
@@ -75,33 +66,23 @@ export const AuthContextProvider = ({
           })
           setLoading(false);
         })
-
-      } else {      
-          let username = location.href.split('//')[1].split('.')[0]
-          if (username !== process.env.NEXT_PUBLIC_DOMAIN?.split('//')[1].split('.')[0]){
-            console.log(username);
+      } else {  
+          if (getSubDomain().length>0) {
+            let username = getSubDomain()
             dataServices.readUserData(null, username).then((ret: any)=>{
-              console.log(ret);
               if (!ret){
                 alert('Este usuário não foi encontrado')
-                // router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
                 if (router.asPath!=='/login')
                   location.href = process.env.NEXT_PUBLIC_DOMAIN + '/login'
               }else{
-                 setUser({ ...ret, isLogged: false });
+                 setUser(userParansInit);
                  setLoading(false);
-              // user.uid = ret.uid
-              // user.username = ret.username
-              // user.email = ret.email
-            
-              // folderReload()
               }
              
             })
           }else{
-            // alert(3)
             setLoading(false)
-            if (router.asPath!=='/login')
+            if (router.asPath!=='/login' && router.asPath!=='/signup')
               router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
           }
       }
@@ -272,7 +253,7 @@ export const AuthContextProvider = ({
     setUser({ email: null, uid: null, username: null, folders: null, isLogged: false })
     signOut(auth).then(() => {
       console.log('logout');
-      router.push(process.env.NEXT_PUBLIC_DOMAIN+'/login');
+      // router.push(process.env.NEXT_PUBLIC_DOMAIN + '/login');
     }).catch((error) => {
       console.log('Error logout');
     });
@@ -280,7 +261,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, setUser, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>  
+    <AuthContext.Provider value={{user, setUser, getSubDomain, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>  
       {loading ? null : children}
     </AuthContext.Provider>
   )
