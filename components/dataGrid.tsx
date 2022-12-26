@@ -112,7 +112,7 @@ export default function BasicTable(props: { width: string | number; user: any; o
               <TextField 
                     style = {{maxWidth: 250}}
                     fullWidth
-                    placeholder='Link'
+                    placeholder='Ancora'
                     key={'link_'+index}
                     id="outlined-basic"
                     name="cover"

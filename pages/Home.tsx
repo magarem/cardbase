@@ -17,7 +17,8 @@ import OpenWithIcon from '@mui/icons-material/OpenWith';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-import { makeStyles } from '@material-ui/styles'
+// import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@material-ui/core/styles'
 interface Props {
   setuser: Function,
   currentState2?: {

@@ -127,7 +127,7 @@ const Navbar = (props: any) => {
       <Toolbar>
       {user.isLogged&&
         <IconButton size="large" edge="start" color="inherit" aria-label="menu"
-          sx={{ mr: 0 }} onMouseOver={props.toggleDrawer('left', true)}
+          sx={{ mr: 0 }} 
           onClick={props.toggleDrawer('left', true)}>
           <MenuIcon />
         </IconButton>

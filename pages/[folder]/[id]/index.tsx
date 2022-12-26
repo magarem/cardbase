@@ -26,6 +26,7 @@ import { AnyCnameRecord } from "dns";
 import FullScreenDialog from "../../../components/DialogFullScreen";
 import YouTube from "react-youtube";
 import ReactPlayer from 'react-player'
+
 interface Props {
   setuser: Function
   user: {
@@ -40,6 +41,7 @@ interface Obj1 {
   folder: string,
   title: string;
   body: string;
+  bodyHtml: string;
   order: number;
 }
 
@@ -72,7 +74,7 @@ const Create: NextPage<Props> = () => {
   const original_card_id = router.query.id
   const id = router.query.id
 
-  const cardObj = {id: "", card_id: "", img: [], folder: "", title: "", body: "", tags: "", order: -1 };
+  const cardObj = {id: "", card_id: "", img: [], folder: "", title: "", body: "", bodyHtml: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1[]>([cardObj])
   const [data, setData] = useState<Obj1>(cardObj)
   const midiaObj = {id:0, key:'', value:'', type: '', cover:''}
@@ -247,7 +249,9 @@ const Create: NextPage<Props> = () => {
             </Box>  
           }
           <ThemeProvider theme={theme}>
-            <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.body }}/>
+          
+              <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.bodyHtml }}/>
+           
           </ThemeProvider>
           <MagaTable cols={cols} rows={state}/>
         </Box>

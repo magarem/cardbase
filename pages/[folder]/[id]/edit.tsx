@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router'
-import { Accordion, AccordionDetails, AccordionSummary, BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, Link, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, Link, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Snackbar, Typography } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
 import TextField from '@mui/material/TextField';
@@ -14,7 +14,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
-import { TagsInput } from "react-tag-input-component";
+// import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
 import MagaTabs from "../../../components/Tabs"
 import { VisibilityOff, Visibility } from "@material-ui/icons";
@@ -22,6 +22,14 @@ import HighlightOff from '@mui/icons-material/HighlightOff';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import { async } from "@firebase/util";
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import * as linkify from "linkifyjs";
+import linkifyHtml from "linkify-html";
+
+import TagsInput from 'react-tagsinput'
+
+import 'react-tagsinput/react-tagsinput.css'
+
 interface Props {
   setuser: Function,
   user: {
@@ -37,6 +45,7 @@ interface Obj1 {
   folder: string,
   title: string;
   body: string;
+  bodyHtml: string;
   order: number;
 }
 
@@ -73,7 +82,7 @@ const Create: NextPage<Props> = (props) => {
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "sem_titulo", card_id: "", img: [{}], folder: folder_key, title: "Sem título", body: "", tags: "", order: -1 };
+  const cardObj = {id: "sem_titulo", card_id: "", img: [{}], folder: folder_key, title: "Sem título", body: "", bodyHtml: "", tags: "", order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [mostra, setMostra] = useState(false)
   
@@ -81,6 +90,7 @@ const Create: NextPage<Props> = (props) => {
   const tblObj2: Obj2[] = [{id:0, key:'', value:'', type:'', cover:''}];
   const [stateExtra, setStateExtra] = React.useState<Obj2[]| undefined>(tblObj)
   const [stateImg, setStateImg] = React.useState<Obj2[]>(tblObj2)
+  const [stateAlertDialog, setStateAlertDialog] = React.useState({mostra: false, body: ''})
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     handleClose()
@@ -104,10 +114,11 @@ const Create: NextPage<Props> = (props) => {
       state.card_id = '111'
      
     }
+   
     if (name == 'title') {
       state.title = value.substring(0,30)
-     
     }
+
     if (name == 'title' && router.query.id=='new') {
       state.card_id = value.substring(0,30).replaceAll(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, "")// + '-' + new Date().getTime()
       console.log('inner text: ', state.card_id);
@@ -127,6 +138,12 @@ const Create: NextPage<Props> = (props) => {
       return 'image'
     }
   }
+
+  const bodyHtmlGen = () => {
+    return linkifyHtml(state.body.replace(/\n/g, "<br />"), {
+      target: {
+        url: "_blank"}})
+  }
   
   const saveCard = () => {
     setDesableSaveButton(true)
@@ -144,19 +161,20 @@ const Create: NextPage<Props> = (props) => {
       return item
     }))
 
-    let data = { img: stateImg, folder: state.folder, title: state.title, body: bodyValue, tags: selected.toString(), extra: stateExtra, order: timestamp };
+    let data = { img: stateImg, folder: state.folder, title: state.title, body: state.body, bodyHtml: bodyHtmlGen(), tags: selected.toString(), extra: stateExtra, order: timestamp };
     console.log(data);
     let card_id = state.card_id
     if (card_id == '') card_id = timestamp.toString()
     CardDataService.setCard(user.uid, card_id, data)
       .then((x) => {
         console.log("Created new item successfully!");
-        setMostra(true)
-        setTimeout(() => { setMostra(false) }, 1000)
+        // setMostra(true)
+        // setTimeout(() => { setMostra(false) }, 1000)
         setState(cardObj)
         setBodyValue('')
+        setStateAlertDialog({...stateAlertDialog, mostra: true})
         setDesableSaveButton(false)
-        router.push(`/${folder}`)
+        if (!stateAlertDialog.mostra) router.push(`/${folder}`)
       })
       .catch((e) => {
         console.log(e);
@@ -182,7 +200,8 @@ const Create: NextPage<Props> = (props) => {
       img: stateImg,
       title: state.title,
       folder: state.folder,
-      body: bodyValue||'',
+      body: state.body||'',
+      bodyHtml: bodyHtmlGen()||'',
       order: state.order,
       tags: selected.toString(),
       extra: stateExtra
@@ -196,12 +215,15 @@ const Create: NextPage<Props> = (props) => {
           console.log("Update item successfully!");
           console.log(x)
           setUploadRefresh(uploadRefresh + 1)
-          setMostra(true)
-          setTimeout(() => {
-            setMostra(false)
-          }, 1000)
+          // setMostra(true)
+          // setTimeout(() => {
+          //   setMostra(false)
+          // }, 1000)
+          setStateAlertDialog({...stateAlertDialog, mostra: true})
           setDesableSaveButton(false)
-          router.push(`/${folder}`)
+          console.log(stateAlertDialog.mostra);
+          
+          if (!stateAlertDialog.mostra) router.push(`/${folder}`)
         })
         .catch((e) => {
           console.log(e);
@@ -216,16 +238,13 @@ const Create: NextPage<Props> = (props) => {
     setState({...state, [field]: ''})
   }
 
-  const cardUpdate = () => {
+  const loadCardData = () => {
     CardDataService.readById(user.uid, id as string).then((data) => {
       console.log(data)
       if (data) {
-        setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, img: data.img, order: data.order })
+        setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, bodyHtml: data.bodyHtml, img: data.img, order: data.order })
         if (data.img=='') data.img = []
-
-
         if (!Array.isArray(data.img)) data.img = [{value:data.img}]
-        
         setStateImg(data.img)
         setBodyValue(data.body)
         setSelected(data.tags?.split(','))
@@ -237,8 +256,11 @@ const Create: NextPage<Props> = (props) => {
   }
 
   useEffect(() => {
-    if (id!==(state.id||'new')) cardUpdate()
+    let a = true
+    if (id!==(state.id||'new')&&a)loadCardData()
+    return () => {()=>{a=false}}
   }, [])
+
 
   const handleChange2 =
   (prop: keyof Obj1) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -247,6 +269,7 @@ const Create: NextPage<Props> = (props) => {
 
   return (
     <div>
+      <AlertDialog time img="" title="Erro" body="Registro salvo com sucesso" mostra={stateAlertDialog.mostra} setMostra={(x)=>setStateAlertDialog({...stateAlertDialog, mostra:x})}/>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -280,23 +303,38 @@ const Create: NextPage<Props> = (props) => {
           </DialogContentText>
         </DialogContent>
       </Dialog>
+      {/* {JSON.stringify(stateAlertDialog)} */}
+      {/* {state.bodyHtml} */}
       <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
       <Typography variant="h5" gutterBottom mt={11} ml={1} mb={3}>
         <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {state.id.substring(0,100)} {' › '} <EditIcon fontSize='small' sx={{marginTop:-1}}/>
       </Typography>
       <MagaTabs>
-        <div data-tab="tab1">
+        <div data-tab="tab1" style={{marginTop: 0}}>
           <TextField 
               id="outlined-basic"
               name="title"
-              label="Titulo"
+              label=""
               variant="outlined"
               fullWidth
               onChange={handleChange}
               value={state.title.substring(0,100)}
-          /><br/><br/>
-          <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} />
-          <Box sx={{ marginTop: 2, marginLeft: 0, marginRight: 0}}>
+              inputProps={{style: {fontSize: 20}}} 
+              sx={{marginBottom: 1.5}}
+          /><br/>
+          
+           <TextareaAutosize 
+              id="outlined-basic"
+              name="body"
+              style={{ fontSize: '18px', padding: 10, color: 'whitesmoke', width: '100%', backgroundColor: 'RGBA(18, 18, 18, 0)' }}
+              // rows={5}
+              minRows={3}
+              maxRows={11}
+              onChange={handleChange}
+              value={state.body}
+          />
+          {/* <ReactQuill theme="snow" value={bodyValue} onChange={setBodyValue} /> */}
+          <Box sx={{ marginTop: .5, marginLeft: 0, marginRight: 0}}>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -317,12 +355,13 @@ const Create: NextPage<Props> = (props) => {
           </Box>
         </div>
         <div data-tab="tab3">
-          <TagsInput
+        <TagsInput value={selected} inputProps={{placeholder: 'Incluir'}} onChange={setSelected} />
+          {/* <TagsInput
               value={selected}
               onChange={setSelected}
               name="tags"
               placeHolder="Etiquetas"
-            />
+            /> */}
             <TextField
               name="order"
               label="Order"

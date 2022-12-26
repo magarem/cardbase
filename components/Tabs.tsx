@@ -62,7 +62,7 @@ export default function BasicTabs({children}: any) {
               if (child.props['data-tab']=='tab1'){
                 return (
                   <TabPanel value={value} index={0} >
-                    <Box sx={{ marginTop: 2, marginLeft: -3,  marginRight: -3}}>
+                    <Box sx={{ marginTop: -1, marginLeft: -3,  marginRight: -3}}>
                       {child}
                     </Box>
                   </TabPanel>
@@ -71,7 +71,7 @@ export default function BasicTabs({children}: any) {
                 if (child.props['data-tab']=='tab2'){
                     return (
                       <TabPanel value={value} index={1} >
-                        <Box sx={{ marginTop: 2, marginLeft: -3,  marginRight: -3}}>
+                        <Box sx={{ marginTop: 0, marginLeft: -3,  marginRight: -3}}>
                           {child}
                         </Box>
                     </TabPanel>
@@ -80,7 +80,7 @@ export default function BasicTabs({children}: any) {
                 if (child.props['data-tab']=='tab3'){
                     return (
                       <TabPanel value={value} index={2} >
-                        <Box sx={{ marginTop: 2, marginLeft: -3,  marginRight: -3}}>
+                        <Box sx={{ marginTop: 0, marginLeft: -3,  marginRight: -3}}>
                           {child}
                         </Box>
                     </TabPanel>
