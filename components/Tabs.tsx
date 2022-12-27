@@ -53,7 +53,8 @@ export default function BasicTabs({children}: any) {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Texto" {...a11yProps(0)} />
           <Tab label="Mídia" {...a11yProps(1)} />
-          <Tab label="Info" {...a11yProps(2)} />
+          <Tab label="Anexo" {...a11yProps(2)} />
+          <Tab label="Info" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <div>
@@ -78,21 +79,24 @@ export default function BasicTabs({children}: any) {
                     )
                 }
                 if (child.props['data-tab']=='tab3'){
+                  return (
+                      <TabPanel value={value} index={2}>
+                        <Box sx={{ marginTop: 0, marginLeft: -3,  marginRight: -3}}>
+                          {child}
+                        </Box>
+                      </TabPanel>
+                  )
+                }
+                if (child.props['data-tab']=='tab4'){
                     return (
-                      <TabPanel value={value} index={2} >
+                      <TabPanel value={value} index={3} >
                         <Box sx={{ marginTop: 0, marginLeft: -3,  marginRight: -3}}>
                           {child}
                         </Box>
                     </TabPanel>
                     )
                 } 
-                if (child.props['data-tab']=='tab4'){
-                    return (
-                        <TabPanel value={value} index={3}>
-                            {child}
-                        </TabPanel>
-                    )
-                }
+                
             }
         })}
       </div>

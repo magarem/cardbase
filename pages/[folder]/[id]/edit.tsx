@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { Accordion, AccordionDetails, AccordionSummary, BottomNavigation, BottomNavigationAction, Button, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, InputLabel, Link, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Snackbar, Typography } from "@mui/material";
 import CardDataService from "../../../services/services";
 import Upload from '../../../components/Upload'
+import UploadFile from '../../../components/UploadFile'
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { useAuth } from '../../../context/AuthContext'
@@ -17,6 +18,7 @@ const ReactQuill = typeof window === 'object' ? require('react-quill') : () => f
 // import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
 import MagaTabs from "../../../components/Tabs"
+import SimpleTable from "../../../components/SimpleTable"
 import { VisibilityOff, Visibility } from "@material-ui/icons";
 import HighlightOff from '@mui/icons-material/HighlightOff';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -29,6 +31,7 @@ import linkifyHtml from "linkify-html";
 import TagsInput from 'react-tagsinput'
 
 import 'react-tagsinput/react-tagsinput.css'
+
 
 interface Props {
   setuser: Function,
@@ -46,6 +49,7 @@ interface Obj1 {
   title: string;
   body: string;
   bodyHtml: string;
+  attachedFiles: any;
   order: number;
 }
 
@@ -55,6 +59,11 @@ interface Obj2 {
   value: string;
   type: string;
   cover: string;
+}
+
+interface AttachedFilesInterface {
+  id: any;
+  value: string;
 }
 
 const Create: NextPage<Props> = (props) => {
@@ -82,7 +91,7 @@ const Create: NextPage<Props> = (props) => {
   const id = router.query.id
 
   const [uploadRefresh, setUploadRefresh] = useState(0);
-  const cardObj = {id: "sem_titulo", card_id: "", img: [{}], folder: folder_key, title: "Sem título", body: "", bodyHtml: "", tags: "", order: -1 };
+  const cardObj = {id: "sem_titulo", card_id: "", img: [{}], folder: folder_key, title: "Sem título", body: "", bodyHtml: "", tags: "", attachedFiles: [], order: -1 };
   const [state, setState] = useState<Obj1>(cardObj)
   const [mostra, setMostra] = useState(false)
   
@@ -91,6 +100,7 @@ const Create: NextPage<Props> = (props) => {
   const [stateExtra, setStateExtra] = React.useState<Obj2[]| undefined>(tblObj)
   const [stateImg, setStateImg] = React.useState<Obj2[]>(tblObj2)
   const [stateAlertDialog, setStateAlertDialog] = React.useState({mostra: false, body: ''})
+  const [attachedFiles, setAttachedFiles] = React.useState<AttachedFilesInterface[]>([{id:0, value:''},{id:1, value:''}])
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     handleClose()
@@ -204,6 +214,7 @@ const Create: NextPage<Props> = (props) => {
       bodyHtml: bodyHtmlGen()||'',
       order: state.order,
       tags: selected.toString(),
+      attachedFiles: attachedFiles,
       extra: stateExtra
     };
 
@@ -222,7 +233,6 @@ const Create: NextPage<Props> = (props) => {
           setStateAlertDialog({...stateAlertDialog, mostra: true})
           setDesableSaveButton(false)
           console.log(stateAlertDialog.mostra);
-          
           if (!stateAlertDialog.mostra) router.push(`/${folder}`)
         })
         .catch((e) => {
@@ -242,12 +252,13 @@ const Create: NextPage<Props> = (props) => {
     CardDataService.readById(user.uid, id as string).then((data) => {
       console.log(data)
       if (data) {
-        setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, bodyHtml: data.bodyHtml, img: data.img, order: data.order })
-        if (data.img=='') data.img = []
+        setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, bodyHtml: data.bodyHtml, img: data.img, attachedFiles: data.attachedFiles, order: data.order })
+        if (data.img == '') data.img = []
         if (!Array.isArray(data.img)) data.img = [{value:data.img}]
         setStateImg(data.img)
         setBodyValue(data.body)
         setSelected(data.tags?.split(','))
+        setAttachedFiles(data.attachedFiles)
         if (!data.extra) data.extra = [{key: "", value: ""}] 
         setStateExtra(data.extra)
 
@@ -266,6 +277,19 @@ const Create: NextPage<Props> = (props) => {
   (prop: keyof Obj1) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [prop]: event.target.value });
   };
+  // let rows = []
+  let rows = (attachedFiles.map((item) => {
+    console.log(Object.values(item));
+    return {col1: item.id, col2: item.value, col3: item.id, col4: item.value}
+  }))
+
+  const deleteRow = (row: any) => {
+    console.log('row: ', row);
+
+    setAttachedFiles(attachedFiles.filter(function(item) {
+        return item !== row
+    }))
+  }
 
   return (
     <div>
@@ -309,6 +333,7 @@ const Create: NextPage<Props> = (props) => {
       <Typography variant="h5" gutterBottom mt={11} ml={1} mb={3}>
         <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {state.id.substring(0,100)} {' › '} <EditIcon fontSize='small' sx={{marginTop:-1}}/>
       </Typography>
+      {/* {JSON.stringify(attachedFiles)} */}
       <MagaTabs>
         <div data-tab="tab1" style={{marginTop: 0}}>
           <TextField 
@@ -355,7 +380,12 @@ const Create: NextPage<Props> = (props) => {
           </Box>
         </div>
         <div data-tab="tab3">
-        <TagsInput value={selected} inputProps={{placeholder: 'Incluir'}} onChange={setSelected} />
+          <SimpleTable cols={['id','value']} rows={attachedFiles} deleteRow={deleteRow}/>
+          <br/>
+          <UploadFile user={user} state={attachedFiles} setState={setAttachedFiles} /><br/>
+        </div>
+        <div data-tab="tab4">
+          <TagsInput value={selected} inputProps={{placeholder: 'Incluir'}} onChange={setSelected} />
           {/* <TagsInput
               value={selected}
               onChange={setSelected}

@@ -42,6 +42,7 @@ interface Obj1 {
   title: string;
   body: string;
   bodyHtml: string;
+  attachedFiles: any,
   order: number;
 }
 
@@ -65,7 +66,8 @@ const opts = {
     autoplay: false,
   },
 };
-const Create: NextPage<Props> = () => {
+
+const ShowCard: NextPage<Props> = () => {
   const { user, getFolderKeyByValue } = useAuth()
 
   const router = useRouter()
@@ -74,7 +76,7 @@ const Create: NextPage<Props> = () => {
   const original_card_id = router.query.id
   const id = router.query.id
 
-  const cardObj = {id: "", card_id: "", img: [], folder: "", title: "", body: "", bodyHtml: "", tags: "", order: -1 };
+  const cardObj = {id: "", card_id: "", img: [], folder: "", title: "", body: "", bodyHtml: "", tags: "", attachedFiles: [], order: -1 };
   const [state, setState] = useState<Obj1[]>([cardObj])
   const [data, setData] = useState<Obj1>(cardObj)
   const midiaObj = {id:0, key:'', value:'', type: '', cover:''}
@@ -189,40 +191,6 @@ const Create: NextPage<Props> = () => {
   // }, [router.query.id])
   const isMd = useMediaQuery('(min-width:600px)');
 
-  function isLandscape(src: string) {
-
-    var orientation,
-    img = new Image();
-    img.src = src;
-
-    if (img.naturalWidth > img.naturalHeight) {
-        orientation = true;
-    } else if (img.naturalWidth < img.naturalHeight) {
-        orientation = false;
-    } else {
-        orientation = false;
-    }
-
-    return orientation;
-
-  }
-  function _onReady(event: any) {
-    event.target.pauseVideo();
-  }
-  const showMedia = (src: string) => {
-    console.log(src);
-    if (src.includes('you')){
-      return (
-        <img src={src} style={{maxWidth:'100%', marginBottom: 17}}/>
-        // <YouTube videoId={src.split('be/')[1]} 
-        //     opts={opts} onReady={_onReady} />
-      )
-    }else{
-      return (
-        <img src={src} style={{maxWidth:'100%', marginBottom: 17}}/>
-      )
-    }
-  } 
   return (
     <>{ open ? <ImageZoom/> : null }
       <Box justifyContent="center">
@@ -249,11 +217,17 @@ const Create: NextPage<Props> = () => {
             </Box>  
           }
           <ThemeProvider theme={theme}>
-          
-              <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.bodyHtml }}/>
-           
+            <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.bodyHtml }}/>
           </ThemeProvider>
           <MagaTable cols={cols} rows={state}/>
+          {/* {JSON.stringify(data.attachedFiles)} */}
+          {data.attachedFiles.map((item: any, index: number)=>{
+            return (
+              <>
+                <a key={item.value} href={item.value} target="_blank" rel="noreferrer" download>Arquivo anexo {index+1}</a><br/>
+              </>
+            )
+          })}
         </Box>
         {user.isLogged&&
           <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
@@ -287,7 +261,7 @@ const Create: NextPage<Props> = () => {
   );
 } 
 
-export default Create;
+export default ShowCard;
 
 // export async function getServerSideProps(context) {
 //   if (!context.req.cookies['user']) {
