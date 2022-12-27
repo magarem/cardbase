@@ -184,7 +184,7 @@ const Create: NextPage<Props> = (props) => {
         setBodyValue('')
         setStateAlertDialog({...stateAlertDialog, mostra: true})
         setDesableSaveButton(false)
-        if (!stateAlertDialog.mostra) router.push(`/${folder}`)
+        if (!stateAlertDialog.mostra) router.push(`/${folder}/${card_id}`)
       })
       .catch((e) => {
         console.log(e);
@@ -233,7 +233,7 @@ const Create: NextPage<Props> = (props) => {
           setStateAlertDialog({...stateAlertDialog, mostra: true})
           setDesableSaveButton(false)
           console.log(stateAlertDialog.mostra);
-          if (!stateAlertDialog.mostra) router.push(`/${folder}`)
+          if (!stateAlertDialog.mostra) router.push(`/${folder}/${state.card_id}`)
         })
         .catch((e) => {
           console.log(e);

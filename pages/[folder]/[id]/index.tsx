@@ -221,13 +221,17 @@ const ShowCard: NextPage<Props> = () => {
           </ThemeProvider>
           <MagaTable cols={cols} rows={state}/>
           {/* {JSON.stringify(data.attachedFiles)} */}
+          {data.attachedFiles&&
+          <><br/>
+          <h5 style={{marginBottom:10}}>Arquivos anexados:</h5>
           {data.attachedFiles.map((item: any, index: number)=>{
             return (
-              <>
-                <a key={item.value} href={item.value} target="_blank" rel="noreferrer" download>Arquivo anexo {index+1}</a><br/>
-              </>
+              <div key={item.value} style={{marginBottom:10}}>
+                <a   href={item.value} target="_blank" rel="noreferrer" download>{item.value.split('/').pop()}</a><br/>
+              </div>
             )
           })}
+          </>}
         </Box>
         {user.isLogged&&
           <Paper sx={{ paddingTop: '10px', bgcolor: '#000000', position: 'fixed', bottom: 0, left: 0, right: 0  }} elevation={3}>
