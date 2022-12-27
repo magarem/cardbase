@@ -100,7 +100,7 @@ const Create: NextPage<Props> = (props) => {
   const [stateExtra, setStateExtra] = React.useState<Obj2[]| undefined>(tblObj)
   const [stateImg, setStateImg] = React.useState<Obj2[]>(tblObj2)
   const [stateAlertDialog, setStateAlertDialog] = React.useState({mostra: false, body: ''})
-  const [attachedFiles, setAttachedFiles] = React.useState<AttachedFilesInterface[]>([{id:0, value:''},{id:1, value:''}])
+  const [attachedFiles, setAttachedFiles] = React.useState<AttachedFilesInterface[]>([])
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     handleClose()
@@ -171,7 +171,7 @@ const Create: NextPage<Props> = (props) => {
       return item
     }))
 
-    let data = { img: stateImg, folder: state.folder, title: state.title, body: state.body, bodyHtml: bodyHtmlGen(), tags: selected.toString(), extra: stateExtra, order: timestamp };
+    let data = { img: stateImg, folder: state.folder, title: state.title, body: state.body, bodyHtml: bodyHtmlGen(), tags: selected.toString(), extra: stateExtra, attachedFiles: attachedFiles, order: timestamp };
     console.log(data);
     let card_id = state.card_id
     if (card_id == '') card_id = timestamp.toString()
@@ -258,7 +258,9 @@ const Create: NextPage<Props> = (props) => {
         setStateImg(data.img)
         setBodyValue(data.body)
         setSelected(data.tags?.split(','))
-        setAttachedFiles(data.attachedFiles)
+        if (data.attachedFiles) {
+          setAttachedFiles(data.attachedFiles)
+        }
         if (!data.extra) data.extra = [{key: "", value: ""}] 
         setStateExtra(data.extra)
 
@@ -277,11 +279,6 @@ const Create: NextPage<Props> = (props) => {
   (prop: keyof Obj1) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [prop]: event.target.value });
   };
-  // let rows = []
-  let rows = (attachedFiles.map((item) => {
-    console.log(Object.values(item));
-    return {col1: item.id, col2: item.value, col3: item.id, col4: item.value}
-  }))
 
   const deleteRow = (row: any) => {
     console.log('row: ', row);

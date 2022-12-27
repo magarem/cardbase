@@ -59,36 +59,41 @@ export default function BasicTable(props: any) {
           target: {
             url: "_blank"}})
     }
-  return (
-    <TableContainer style={{width: '100%', overflowX: 'auto'}} component={Paper}>
-      <Table  aria-label="simple table">
-        {/* <TableHead>
-          <TableRow>
-            {props.cols.map((col: any) => (
-                <TableCell key={col}>{col}</TableCell>
-            ))}
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead> */}
-        <TableBody>
-          {props.rows.map((row: any) => (
-            <TableRow
-              key={row[props.cols[0]]}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-                <TableCell component="th" scope="row">
-                    <Button onClick={()=>{deleteRow(row)}}>X</Button>
-             </TableCell>
-             {props.cols.map((col:any)=>(
-                <TableCell key={row[col]} component="th" scope="row">
-                    <Typography variant="body1" dangerouslySetInnerHTML={{ __html: bodyHtmlGen(showRow(row[col])) }}/>
-                </TableCell>
-             ))}
-             
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+    if (true){
+        return (
+            <TableContainer style={{width: '100%', overflowX: 'auto'}} component={Paper}>
+            <Table  aria-label="simple table">
+                <TableHead>
+                <TableRow>
+                    <TableCell component="th">Excluir</TableCell>
+                    {props.cols.map((col: any) => (
+                        <TableCell component="th" key={col}>{col}</TableCell>
+                    ))}
+                    
+                </TableRow>
+                </TableHead>
+                <TableBody>
+                {props.rows.map((row: any) => (
+                    <TableRow
+                    key={row[props.cols[0]]}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                        <TableCell  scope="row">
+                            <Button onClick={()=>{deleteRow(row)}}>X</Button>
+                    </TableCell>
+                    {props.cols.map((col:any)=>(
+                        <TableCell key={row[col]} component="th" scope="row">
+                            <Typography variant="body1" dangerouslySetInnerHTML={{ __html: bodyHtmlGen(showRow(row[col])) }}/>
+                        </TableCell>
+                    ))}
+                    
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+            </TableContainer>
+        );
+    } else {
+        return null
+    }
 }

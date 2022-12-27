@@ -182,6 +182,8 @@ const ShowCard: NextPage<Props> = () => {
           data.extra.map((item: any)=>{
               rows.push([item.key, item.value])
           })
+          if (!data.attachedFiles) data.attachedFiles = []
+          // if (!data.bodyHtml) data.bodyHtml = data.body
           setState(rows)
           console.log(rows);
         }
@@ -217,7 +219,7 @@ const ShowCard: NextPage<Props> = () => {
             </Box>  
           }
           <ThemeProvider theme={theme}>
-            <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.bodyHtml }}/>
+            <Typography variant="body1" dangerouslySetInnerHTML={{ __html: data.bodyHtml||data.body }}/>
           </ThemeProvider>
           <MagaTable cols={cols} rows={state}/>
           {/* {JSON.stringify(data.attachedFiles)} */}
