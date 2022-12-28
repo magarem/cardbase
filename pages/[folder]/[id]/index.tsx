@@ -26,7 +26,7 @@ import { AnyCnameRecord } from "dns";
 import FullScreenDialog from "../../../components/DialogFullScreen";
 import YouTube from "react-youtube";
 import ReactPlayer from 'react-player'
-
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 interface Props {
   setuser: Function
   user: {
@@ -197,8 +197,8 @@ const ShowCard: NextPage<Props> = () => {
     <>{ open ? <ImageZoom/> : null }
       <Box justifyContent="center">
         <Box justifyContent="center" sx={{paddingBottom:20}}>
-          <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
-            <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {data.title}
+          <Typography variant="h5" gutterBottom mt={11} ml={0} mb={-1}>
+            <Link sx={{fontSize: 17}} onClick={()=>router.push('/'+folder)} underline="hover">{folder}{' › '}</Link><br/> {data.title}
           </Typography>       
           {data.id.length>1&&
             <Box sx={{ width: '100%'}}>
@@ -229,7 +229,8 @@ const ShowCard: NextPage<Props> = () => {
           {data.attachedFiles.map((item: any, index: number)=>{
             return (
               <div key={item.value} style={{marginBottom:10}}>
-                <a   href={item.value} target="_blank" rel="noreferrer" download>{item.value.split('/').pop()}</a><br/>
+                {/* <a   href={item.value} target="_blank" rel="noreferrer" download>{item.value.split('/').pop()}</a><br/> */}
+                <a   href={item.value} target="_blank" rel="noreferrer" download><InsertDriveFileOutlinedIcon/> {item.value.split('/').pop().split('?')[0]}</a><br/>
               </div>
             )
           })}

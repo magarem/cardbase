@@ -55,6 +55,7 @@ export const AuthContextProvider = ({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log('onAuthStateChanged', stateFolder);
+      console.log('user: ', user);
       if (user) {
         dataServices.readUserData(user.uid, null).then((ret) => {
           setUser({
@@ -67,24 +68,28 @@ export const AuthContextProvider = ({
           setLoading(false);
         })
       } else {  
-          if (getSubDomain().length>0) {
-            let username = getSubDomain()
-            dataServices.readUserData(null, username).then((ret: any)=>{
-              if (!ret){
-                alert('Este usuário não foi encontrado')
-                if (router.asPath!=='/login')
-                  location.href = process.env.NEXT_PUBLIC_DOMAIN + '/login'
-              }else{
-                 setUser(userParansInit);
-                 setLoading(false);
-              }
-             
-            })
-          }else{
-            setLoading(false)
-            if (router.asPath!=='/login' && router.asPath!=='/signup')
-              router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
-          }
+        if (getSubDomain().length>0) {
+          let username = getSubDomain()
+          console.log('username: ', username);
+          dataServices.readUserData(null, username).then((ret: any)=>{
+            console.log('ret: ', ret);
+            if (!ret){
+              alert('Este usuário não foi encontrado')
+              if (router.asPath!=='/login')
+                location.href = process.env.NEXT_PUBLIC_DOMAIN + '/login'
+            }else{
+                // setUser(userParansInit);
+                setUser(ret);
+                console.log('userParansInit: ', userParansInit);
+                setLoading(false);
+            }
+            
+          })
+        }else{
+          setLoading(false)
+          if (router.asPath!=='/login' && router.asPath!=='/signup')
+            router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
+        }
       }
       
     });

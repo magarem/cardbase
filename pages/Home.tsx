@@ -6,19 +6,15 @@ import CardDataService from "../services/services";
 import { useRouter } from "next/router";
 import Card from '../components/Card'
 import { useAuth } from '../context/AuthContext'
-import { Dialog, DialogContent, Grid, Link, Fab, Button, DialogActions, DialogContentText, DialogTitle, FormControl, TextField } from "@mui/material";
+import { Dialog, DialogContent, Link, Fab, Button, DialogActions, DialogContentText, DialogTitle, FormControl, TextField } from "@mui/material";
 import React from "react";
-import AddIcon from '@mui/icons-material/Add';
 import { SxProps } from '@mui/system';
 import { ReactSortable } from "react-sortablejs";
-import { AnyMxRecord } from "dns";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-import OpenWithIcon from '@mui/icons-material/OpenWith';
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-// import { makeStyles } from '@material-ui/styles'
 import { makeStyles } from '@material-ui/core/styles'
+
 interface Props {
   setuser: Function,
   currentState2?: {
@@ -30,17 +26,6 @@ interface Props {
     displayName: string
   }
 }
-
-type ss = {
-  id?: any;
-  img?: string;
-  folder?: string;
-  title?: string;
-  body?: string;
-  type?: string;
-  order?: number
-}
-
 function Copyright(props: any) {
   return (
     <>
@@ -55,17 +40,14 @@ function Copyright(props: any) {
     </>
   );
 }
-
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
-
 const fabStyle = {
   bottom: 40,
   right: 40,
   position: 'fixed',
 };
-
 const fabs = [{
     color: 'primary' as 'primary', sx: fabStyle as SxProps,
     icon: <CreateNewFolderIcon />, label: 'Add',
@@ -76,26 +58,17 @@ interface folderItem {
   order: number;
 }
 
-
-
 const Home: NextPage<Props> = () => {
-  const router = useRouter()
-  const { user, setUser, flagMoveItens, setFlagMoveItens, folderReload, getUserFolders, foldersListUpdate, folderReloadByGuest } = useAuth()
-  // let folder = router.query.folder
-  console.log({user});
-  const [open, setOpen] = useState(false);
-  const [flgDialogSetOpen, setFlgDialogSetOpen] = React.useState(false);
- 
-  const handleOpen = (obj: ss) => {
-    // router.push("/" + folder + "/" + obj.id)
-  }
 
-  // const handleClose = () => setOpen(false);
+  const router = useRouter()
+  const { user, setUser, flagMoveItens, foldersListUpdate } = useAuth()
+  const [flgDialogSetOpen, setFlgDialogSetOpen] = React.useState(false);
+  const [formCardFolder, setFormCardFolder] = useState<folderItem>({key:"", value:"", order: 0})
+ 
   const handleClose = (event: any, reason: string) => {
     setFlgDialogSetOpen(false);
   }
   
-
   const useStyles = makeStyles({
     dialog: {
       position: 'absolute',
@@ -105,11 +78,6 @@ const Home: NextPage<Props> = () => {
   });
 
   const classes = useStyles();
-  const [currentState, setCurrentState] = useState<ss[]>([]);
-  const [currentState2, setCurrentState2] = useState<ss>();
-  const [userDataByGuest, setUserDataByGuest] = useState({});
-  // const [folders, setFolders] = useState<folderItem[]>([]);
-  const [formCardFolder, setFormCardFolder] = useState<folderItem>({key:"", value:"", order: 0})
 
   const go = (url: string) => {
     router.push('/'+url)
@@ -164,43 +132,17 @@ const Home: NextPage<Props> = () => {
   }
   
   const foldersListUpdate_ = (data: any) => {
-    // data = [{id:'/', key:'/', value: 'Home'}, ...data]
     user.folders = data
-    // setFolders(data)
     setUser({...user, folders: data})
     console.log(data);
   }
 
-  // React.useEffect(() => {
-  //   if (user.uid) {
-  //     // alert('-1->'+user.uid)
-  //     console.log(user.uid);
-  //     folderReload()
-  //   }
-  // },[user.uid]) 
-
-  // console.log(user);
-  
-  // React.useEffect(() => {
-  //   // alert('-2->'+user.uid)
-  //   // alert('-2->'+user.folders)
-  //   console.log(user.uid);
-  //   if (user.uid) {
-  //     setFolders(user.folders)
-  //   }
-  // },[user.folders]) 
-
   const onDragDropEnds = (oldIndex: any, newIndex: any) => {
     if (oldIndex !== newIndex){
       console.log(user.folders);
-      // setUser({...user, folders: data})
       foldersListUpdate(user.folders)
     }
   }
-
-  const mw = currentState2?.img ? "md" : "sm"
-  // if (folder=='Home') folder='Início'
-
 
   return (
     <>
@@ -225,12 +167,10 @@ const Home: NextPage<Props> = () => {
               name="formCardFolder_value"
               value={formCardFolder.value}
               placeholder="Nome da nova pasta"
-              // onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value.substring(0,28).replace(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, ""), order: formCardFolder.order})}}
               onChange={(e)=>{setFormCardFolder({key: formCardFolder.key, value: e.target.value, order: formCardFolder.order})}}
               onKeyPress={(ev) => {
                 console.log(`Pressed keyCode ${ev.key}`);
                 if (ev.key === 'Enter') {
-                  // Do code here
                   ev.preventDefault();
                   folderAdd()
                 }
@@ -245,6 +185,7 @@ const Home: NextPage<Props> = () => {
         <Button variant="outlined" onClick={() => folderAdd()} startIcon={<SaveIcon/>}>Salvar</Button>
       </DialogActions>
      </Dialog>
+     {/* {JSON.stringify(user)} */}
      <ReactSortable 
       handle=".handle"
       className="grid-container3"
@@ -277,7 +218,6 @@ const Home: NextPage<Props> = () => {
       </Fab>
       }
       <br/><br/><br/><br/><br/><br/>
-      {/* <Copyright /> */}
     </>
   );
 };

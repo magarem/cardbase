@@ -145,10 +145,8 @@ class CardDataService {
         // return aa
       }
     })
-
     if (a) {
       console.log(a);
-      
       return a
     }else{
       return false

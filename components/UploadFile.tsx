@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { storage } from "../config/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { Button, IconButton, TextField } from "@mui/material";
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 function App(props: any) {
     console.log('props: ', props);
     // State to store uploaded file
@@ -83,7 +83,7 @@ function App(props: any) {
               value={url}
               hidden
             />
-            <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
+            <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
             Anexar arquivo
             <input hidden type="file" onChange={handleChange} accept="file/*" />
             </Button>{(percent>0&&percent<100)&&<>
