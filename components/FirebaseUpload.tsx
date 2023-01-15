@@ -54,19 +54,19 @@ function App(props: any) {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                     console.log(url);
                     setUrl(url)
-
+                    props.handleUpload(props.name, url)
                     // const index = props.state.findIndex((item: { id: any; }) => item.id == props.index);
                     // console.log(index);
                    
-                    const clone = props.state
-                    console.log('clone: ', clone);
-                    const newId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-                    clone.push({id: newId, value: url})
-                    console.log(clone)
-                    props.setState(clone)
-                    // props.setStateExtra([...obj])
-                    console.log(props.state);
-                    props.setState([...props.state])
+                    // const clone = props.state
+                    // console.log('clone: ', clone);
+                    // const newId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+                    // clone.push({id: newId, value: url})
+                    // console.log(clone)
+                    // props.setState(clone)
+                    // // props.setStateExtra([...obj])
+                    // console.log(props.state);
+                    // props.setState([...props.state])
 
 
 
@@ -85,8 +85,8 @@ function App(props: any) {
               value={url}
               hidden
             />
-            <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
-            Anexar arquivo
+            <Button variant="contained" component="label" sx={{paddingLeft:0, paddingRight:0}} >
+            <CloudUploadIcon />
             <input hidden type="file" onChange={handleChange} accept="file/*" />
             </Button>{(percent>0&&percent<100)&&<>
              {percent} % Enviado</>}

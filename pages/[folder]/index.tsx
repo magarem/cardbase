@@ -234,7 +234,7 @@ const List: NextPage<Props> = (props) => {
       {JSON.stringify(stateFolder)} */}
        <Typography variant="h5" gutterBottom mt={11} ml={0} mb={2}>
         <Link onClick={()=>{router.push('/Home')}} style={{textDecoration: 'none'}}>
-          <IconButton size="small" ><ChevronLeftIcon fontSize="small"/></IconButton></Link>{folder}
+          <IconButton size="small"><ChevronLeftIcon fontSize="small"/></IconButton></Link>{folder}
       </Typography>
      
       {/* {JSON.stringify(currentState)} */}

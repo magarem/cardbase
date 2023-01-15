@@ -17,7 +17,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FullFeaturedCrudGrid from "../../components/dataGrid"
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import MagaTable from "../../components/table"
+import FormTable from "../../components/SimpleCRUD/FormTable"
+import DataGridSystem from '../../components/SimpleCRUD/DataGridSystem'
+import MagaTable from '../../components/MagaTable'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,7 +39,39 @@ function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+let system = {
+  tables:{
+      variaveis_globais:{
+          label: 'Variáveis',
+          cols: [
+              {name:'id', label:'id', type: 'string', hidden: true}, 
+              {name:'chave', label:'Chave', type: 'string'}, 
+              {name:'valor', label:'Valor', type: 'string'}, 
+              {name:'imagem', label:'Imagem', type: 'file'}, 
+          ]
+      }
+  },
+  // rules: [
+  //     {
+  //         tabela_origem: 'users',
+  //         tabela_origem_id: 'id',
+  //         tabela_origem_valor:'nome',
+  //         tabela_destino: 'users_groups',
+  //         tabela_destino_field: 'user'
+  //     },
+  //     {
+  //         tabela_origem: 'groups',
+  //         tabela_origem_id: 'id',
+  //         tabela_origem_valor:'nome',
+  //         tabela_destino: 'users_groups',
+  //         tabela_destino_field: 'group'
+  //     }
+  // ]
+}
+
 const Usersettings: NextPage = (props) => {
+  const [systemState, setSystemState] = React.useState<any>(system)
+  const [ret, setRet] = React.useState<any>(system.tables)
  
   const [formCardFolder, setFormCardFolder] = useState<folderItem>({key:"", value:"", order: 0})
   const { user, getFolders, setFolders } = useAuth()
@@ -69,11 +103,16 @@ const Usersettings: NextPage = (props) => {
     console.log(user.uid);
     
     CardDataService.getSettingsDefFields(user.uid)
-    .then((x: any) => {
-      console.log(x);
+    .then((ret_: any) => {
+      console.log(ret_);
       // if (x) {
-        console.log(Object.values(x))
-        setState(Object.values(x))
+        console.log(Object.values(ret_))
+
+        let clone: any = {...system} 
+        Object.entries(ret_).map((x: any) => clone.tables[x[0]].rows = x[1])
+        setSystemState({...clone})
+
+        // setRet(Object.values(x))
         // console.log([...x.values()]);
       // }
     })
@@ -94,7 +133,7 @@ const Usersettings: NextPage = (props) => {
 
   const saveDefFields = () => {
     console.log(user.uid, state);
-    CardDataService.setSettingsDefFields(user.uid, state)
+    CardDataService.setSettingsDefFields(user.uid, ret)
     .then((x) => {
       setOpen(true)
       console.log("Created new item successfully!");
@@ -113,8 +152,6 @@ const Usersettings: NextPage = (props) => {
       console.log(e);
     });
   }
-
- 
 
   const folderAdd = () => {  
     if (formCardFolder.value){
@@ -137,16 +174,6 @@ const Usersettings: NextPage = (props) => {
     return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36)
   }
 
-  // const itemRemove = (index: number, name: string) => {
-  //   if (confirm('Excluir pasta ' + name + '?')){
-  //     var array = [...user.folders]; 
-  //     array.splice(index, 1);
-  //     user.folders = array
-  //     // setFolders(array);
-  //     save(array)
-  //   }
-  // }
-  
   const itemRemove = (obj: {key: string|null, value: string|null}) => {
     
     if (confirm('Excluir pasta ' + obj.value + '?')){
@@ -162,6 +189,7 @@ const Usersettings: NextPage = (props) => {
     setFormCardFolder({key: user.folders[index].key, value: user.folders[index].value, order: user.folders[index].order})
   }
   const cols: any[] = ['1', '2']
+  console.log(user.username);
   const rows: any[] = [['Usuário', user.username], ['E-mail', user.email], ['UID', user.uid]]
   return (
     <>
@@ -211,14 +239,10 @@ const Usersettings: NextPage = (props) => {
         >
           <Typography>Info</Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{ mt: 0 }}>
+        <AccordionDetails sx={{ mt: -3}}>
           <Box ml={0} >
           <MagaTable cols={cols} rows={rows}/>
-          {/* <Stack spacing={1}>
-            <Item>Item 1</Item>
-            <Item>Item 2</Item>
-            <Item>Item 3</Item>
-          </Stack> */}
+        
           </Box>
         </AccordionDetails>
       </Accordion>
@@ -231,55 +255,16 @@ const Usersettings: NextPage = (props) => {
           <Typography>Variáveis globais</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ mt: 0 }}>
-          <Box ml={1} >
+          <Box ml={1} sx={{overflowY: 'auto'}}>
             {/* {JSON.stringify(state)} */}
-            <FullFeaturedCrudGrid width={'100%'} optColumKey user={user} stateExtra={state} setStateExtra={setState}/>
+            {/* <FullFeaturedCrudGrid width={'100%'} optColumKey user={user} stateExtra={state} setStateExtra={setState}/> */}
+           {/* {JSON.stringify(ret)} */}
+            <DataGridSystem user={user} system={systemState} setRet={setRet}/>
+          
             <Button sx={{marginTop: 2}} onClick={saveDefFields} variant="contained">Salvar</Button>
             </Box>
         </AccordionDetails>
       </Accordion>
-      {/* <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-        >
-          <Typography>Pastas</Typography>
-        </AccordionSummary>
-        <AccordionDetails sx={{ mt: -2 }}>
-          <List dense={true}>
-            {user.folders&&user.folders.map((item: any, index: any) => {
-              return (
-                <ListItem key={item.key} sx={{ mb: .5 }}>
-                  <ListItemAvatar >
-                    <Avatar>
-                      {(item.key=='/')?
-                      <HomeIcon/>:
-                      <Folder onClick={() => itemEdit(index)}/>
-                      }
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText 
-                    // onClick={() => itemEdit(index)}
-                    onClick={()=>router.push('/'+item.value)}
-                    primaryTypographyProps={{
-                      fontSize: 16
-                    }}
-                    primary={capitalizeFirstLetter(item.value)}
-                  />
-                </ListItem>
-              )})
-            }
-            <ListItem key='novo' sx={{ mb: .5 }}>
-              <ListItemAvatar >
-                <Avatar>
-                  <ControlPointIcon onClick={handleClickOpen}/>
-                </Avatar>
-              </ListItemAvatar>
-            </ListItem>
-          </List>
-        </AccordionDetails>
-      </Accordion> */}
     </div>
        
       </Container>

@@ -26,10 +26,8 @@ const AuthContext = createContext<any>({})
 export const useAuth = () => useContext(AuthContext)
 
 export const AuthContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode
-}) => {
+  children, stateRoot, setStateRoot
+}: any) => {
   const router = useRouter()
   const userParansInit = {
     uid: null,
@@ -39,6 +37,7 @@ export const AuthContextProvider = ({
     isLogged: false
   }
   const [user, setUser] = useState<UserType>(userParansInit)
+  const [guest, setGuest] = useState<any>()
   const [loading, setLoading] = useState<boolean>(true)
   const [stateFolder, setStateFolder] = React.useState([{key: null, value: null, order:0}])
   const [flagMoveItens, setFlagMoveItens] = React.useState(false)
@@ -53,7 +52,9 @@ export const AuthContextProvider = ({
   }
 
   useEffect(() => {
+    // alert(stateRoot)
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // alert(location.href)
       console.log('onAuthStateChanged', stateFolder);
       console.log('user: ', user);
       if (user) {
@@ -78,12 +79,11 @@ export const AuthContextProvider = ({
               if (router.asPath!=='/login')
                 location.href = process.env.NEXT_PUBLIC_DOMAIN + '/login'
             }else{
-                // setUser(userParansInit);
-                setUser(ret);
-                console.log('userParansInit: ', userParansInit);
-                setLoading(false);
+              // setUser(userParansInit);
+              setUser(ret);
+              console.log('userParansInit: ', userParansInit);
+              setLoading(false);
             }
-            
           })
         }else{
           setLoading(false)
@@ -91,11 +91,11 @@ export const AuthContextProvider = ({
             router.push( process.env.NEXT_PUBLIC_DOMAIN + '/login' );
         }
       }
-      
     });
     // setLoading(false);
     return () => 
     unsubscribe();
+    
   },[]);
 
   function capitalizeFirstLetter(str: string) {
@@ -164,21 +164,6 @@ export const AuthContextProvider = ({
       }
     })
   }
-
-  // React.useEffect(() => {
-  //     alert(JSON.stringify(stateFolder))
-  // }, [stateFolder[0].key])
-  
-  // React.useEffect(() => {
-  //     console.log('AuthContext');
-  //     if (user.uid){
-  //       // setStateFolder(null)
-  //       console.log(user.uid);
-  //       // folderReload()
-  //       console.log(stateFolder);
-  //     }
-  
-  // }, [])
 
   const userReadData = async (uid: string)=> {
     console.log(uid);
@@ -266,7 +251,7 @@ export const AuthContextProvider = ({
 
 
   return (
-    <AuthContext.Provider value={{user, setUser, getSubDomain, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>  
+    <AuthContext.Provider value={{stateRoot, setStateRoot, user, setUser, guest, setGuest, getSubDomain, flagMoveItens, setFlagMoveItens, getUserFolders, stateFolder, foldersListUpdate, folderReload, getFolders, getFolderKeyByValue, folderReloadByGuest, setFolders, login, signup, userReadDataBy, userReadDataByEmail, userReadData, registerWithEmailAndPassword, logout }}>  
       {loading ? null : children}
     </AuthContext.Provider>
   )

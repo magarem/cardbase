@@ -13,8 +13,8 @@ import { ReactSortable } from "react-sortablejs";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-import { makeStyles } from '@material-ui/core/styles'
-
+// import { makeStyles } from '@material-ui/core/styles'
+// import { makeStyles } from "@mui/styles";
 interface Props {
   setuser: Function,
   currentState2?: {
@@ -61,7 +61,7 @@ interface folderItem {
 const Home: NextPage<Props> = () => {
 
   const router = useRouter()
-  const { user, setUser, flagMoveItens, foldersListUpdate } = useAuth()
+  const { stateRoot, user, setUser, flagMoveItens, foldersListUpdate } = useAuth()
   const [flgDialogSetOpen, setFlgDialogSetOpen] = React.useState(false);
   const [formCardFolder, setFormCardFolder] = useState<folderItem>({key:"", value:"", order: 0})
  
@@ -69,15 +69,15 @@ const Home: NextPage<Props> = () => {
     setFlgDialogSetOpen(false);
   }
   
-  const useStyles = makeStyles({
-    dialog: {
-      position: 'absolute',
-      left: '50v',
-      top: 50
-    }
-  });
+  // const useStyles = makeStyles({
+  //   dialog: {
+  //     position: 'absolute',
+  //     left: '50v',
+  //     top: 50
+  //   }
+  // });
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const go = (url: string) => {
     router.push('/'+url)
@@ -147,9 +147,12 @@ const Home: NextPage<Props> = () => {
   return (
     <>
      <Dialog
-     classes={{
-      paper: classes.dialog
-    }}
+     sx={{position: 'absolute',
+     left: '50v',
+     top: 50}}
+    //  classes={{
+    //   paper: classes.dialog
+    // }}
       open={flgDialogSetOpen}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
@@ -186,6 +189,7 @@ const Home: NextPage<Props> = () => {
       </DialogActions>
      </Dialog>
      {/* {JSON.stringify(user)} */}
+     {JSON.stringify(stateRoot)}
      <ReactSortable 
       handle=".handle"
       className="grid-container3"

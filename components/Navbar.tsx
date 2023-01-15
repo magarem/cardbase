@@ -93,6 +93,12 @@ const Navbar = (props: any) => {
                       }, '/usersettings');
                         }}>Definições
                       </MenuItem>
+                      <MenuItem onClick={() => {
+                        router.push({
+                          pathname: '/usersAcessAdmin'
+                      }, '/usersAcessAdmin');
+                        }}>Permições
+                      </MenuItem>
       
                       <MenuItem  onClick={() => {
                         logout()

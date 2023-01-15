@@ -13,7 +13,10 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import Head from 'next/head'
 const noAuthRequired = ['/', '/login', '/login2', '/signup', '/signup2', '/[folder]', '/[folder]/[id]/edit', '/[folder]/[id]', '/usersettings']
 import Layout from '../components/layout'
-// import { CookiesProvider } from "react-cookie"
+import { useEffect, useState } from 'react';
+import { ScatterPlotTwoTone } from '@material-ui/icons';
+import secureLocalStorage  from  "react-secure-storage";
+
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -38,8 +41,15 @@ const darkTheme = createTheme({
 });
 
 const main = {"margin": "100px;"}
+
 function MyApp({ Component, pageProps }: AppProps) {
+  const [stateRoot, setStateRoot] = useState<any>({})
+  
   const router = useRouter()
+  useEffect(()=>{
+    if (JSON.stringify(stateRoot)=="{}") setStateRoot(secureLocalStorage.getItem("guest")) //router.push('/guestLogin')
+  },[])
+  
     return (
       <>
         <Head>
@@ -70,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/icons/apple-icon.png"></link>
         <meta name="theme-color" content="#080808" />
       </Head>
-        <AuthContextProvider>
+        <AuthContextProvider stateRoot={stateRoot} setStateRoot={setStateRoot}>
           <ThemeProvider theme={darkTheme}>
           <CssBaseline />
           {/* <Navbar /> */}

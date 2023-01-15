@@ -18,7 +18,7 @@ const ReactQuill = typeof window === 'object' ? require('react-quill') : () => f
 // import { TagsInput } from "react-tag-input-component";
 import FullFeaturedCrudGrid from "../../../components/dataGrid"
 import MagaTabs from "../../../components/Tabs"
-import SimpleTable from "../../../components/SimpleTable"
+import SimpleTable from "../../../components/SimpleCRUD/SimpleTable"
 import { VisibilityOff, Visibility } from "@material-ui/icons";
 import HighlightOff from '@mui/icons-material/HighlightOff';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -27,11 +27,9 @@ import { async } from "@firebase/util";
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import * as linkify from "linkifyjs";
 import linkifyHtml from "linkify-html";
-
 import TagsInput from 'react-tagsinput'
-
 import 'react-tagsinput/react-tagsinput.css'
-
+import DataGridSystem from "../../../components/SimpleCRUD/DataGridSystem"
 
 interface Props {
   setuser: Function,
@@ -66,8 +64,43 @@ interface AttachedFilesInterface {
   value: string;
 }
 
+let tblAttachedFiles = {
+  label: 'Anexos',
+  cols: [
+    {name:'id', label:'id', type: 'string', hidden: true}, 
+    {name:'nome', label:'Nome', type: 'string'}, 
+    {name:'descricao', label:'Descrição', type: 'string'}, 
+    {name:'arquivo', label:'Aquivo', type: 'file'}, 
+  ]
+}
+
+
+let tblUserVars = {
+  label: 'variáveis',
+  cols: [
+    {name:'id', label:'id', type: 'string', hidden: true}, 
+    {name:'chave', label:'Chave', type: 'string'}, 
+    {name:'valor', label:'Valor', type: 'string'}
+  ]
+}
+
+
+let tblCardPermissions = {}
+// let tblsRelations = [
+//   {
+//       tabela_destino: 'tblCardPermissions',
+//       tabela_destino_field: 'ativo',
+//       font_origem: [[0,'não'], [1, 'sim']]
+//   }
+// ]
+
+
+
 const Create: NextPage<Props> = (props) => {
+ 
   const { user, getFolderKeyByValue, getFolders } = useAuth()
+  const [dataSource, setDataSource] = React.useState<any>({})
+
   const [desableSaveButton, setDesableSaveButton] = useState(false);
   const [bodyValue, setBodyValue] = useState('');
   const [value, setValue] = useState('');
@@ -75,6 +108,9 @@ const Create: NextPage<Props> = (props) => {
 
   const [selected, setSelected] = useState<string[]>([]);
   
+
+  
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -102,6 +138,13 @@ const Create: NextPage<Props> = (props) => {
   const [stateAlertDialog, setStateAlertDialog] = React.useState({mostra: false, body: ''})
   const [attachedFiles, setAttachedFiles] = React.useState<AttachedFilesInterface[]>([])
 
+  // const [systemState, setSystemState] = React.useState<any>(system)
+  // const [ret, setRet] = React.useState<any>(system.tables)
+
+  // const [systemState2, setSystemState2] = React.useState<any>(system2)
+  // const [ret2, setRet2] = React.useState<any>(system2.tables)
+
+
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     handleClose()
     const { name, value } = e.target;
@@ -118,7 +161,7 @@ const Create: NextPage<Props> = (props) => {
       router.push(`/${innerText}/${id}/edit`)
     }
     if (name == 'card_id') {
-      setState({...state, card_id: value.substring(0,30).replaceAll(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, "")})// + '-' + new Date().getTime()
+      setState({...state, card_id: value.substring(0,30).replaceAll(' ','_').replaceAll('/','_').normalize('NFD').replace(/[\u0300-\u036f]/g, "")})// + '-' + new Date().getTime()
       console.log('inner text: ', state.card_id);
       // router.push( '/' + innerText + '/' + id + '/edit' )
       state.card_id = '111'
@@ -130,7 +173,7 @@ const Create: NextPage<Props> = (props) => {
     }
 
     if (name == 'title' && router.query.id=='new') {
-      state.card_id = value.substring(0,30).replaceAll(' ','_').normalize('NFD').replace(/[\u0300-\u036f]/g, "")// + '-' + new Date().getTime()
+      state.card_id = value.substring(0,30).replaceAll(' ','_').replaceAll('/','_').normalize('NFD').replace(/[\u0300-\u036f]/g, "")// + '-' + new Date().getTime()
       console.log('inner text: ', state.card_id);
       // router.push( '/' + innerText + '/' + id + '/edit' )
      
@@ -171,7 +214,17 @@ const Create: NextPage<Props> = (props) => {
       return item
     }))
 
-    let data = { img: stateImg, folder: state.folder, title: state.title, body: state.body, bodyHtml: bodyHtmlGen(), tags: selected.toString(), extra: stateExtra, attachedFiles: attachedFiles, order: timestamp };
+    let data = { 
+      img: stateImg, 
+      folder: state.folder, 
+      title: state.title, 
+      body: state.body, 
+      bodyHtml: bodyHtmlGen(), 
+      tags: selected.toString(), 
+      extra: dataSource.sysUserVars.tblUserVars, 
+      attachedFiles: attachedFiles, 
+      tblCardPermissions: dataSource.sisCardPermissions.tblCardPermissions,
+      order: timestamp };
     console.log(data);
     let card_id = state.card_id
     if (card_id == '') card_id = timestamp.toString()
@@ -179,12 +232,13 @@ const Create: NextPage<Props> = (props) => {
       .then((x) => {
         console.log("Created new item successfully!");
         // setMostra(true)
-        // setTimeout(() => { setMostra(false) }, 1000)
+        // setTimeout(() = { setMostra(false) }, 1000)
         setState(cardObj)
         setBodyValue('')
         setStateAlertDialog({...stateAlertDialog, mostra: true})
         setDesableSaveButton(false)
-        if (!stateAlertDialog.mostra) router.push(`/${folder}/${card_id}`)
+        // if (!stateAlertDialog.mostra) router.push(`/${folder}/${card_id}`)
+     
       })
       .catch((e) => {
         console.log(e);
@@ -214,11 +268,10 @@ const Create: NextPage<Props> = (props) => {
       bodyHtml: bodyHtmlGen()||'',
       order: state.order,
       tags: selected.toString(),
-      attachedFiles: attachedFiles,
-      extra: stateExtra
+      attachedFiles: dataSource.tblAttachedFiles.tblAttachedFiles,
+      extra: dataSource.sysUserVars.tblUserVars,
+      tblCardPermissions: dataSource.sysCardPermissions.tblCardPermissions,
     };
-
-    console.log(user.uid, data)
 
     if (state.card_id == original_card_id) {
       CardDataService.update(user.uid, state.card_id, {...data})
@@ -226,10 +279,6 @@ const Create: NextPage<Props> = (props) => {
           console.log("Update item successfully!");
           console.log(x)
           setUploadRefresh(uploadRefresh + 1)
-          // setMostra(true)
-          // setTimeout(() => {
-          //   setMostra(false)
-          // }, 1000)
           setStateAlertDialog({...stateAlertDialog, mostra: true})
           setDesableSaveButton(false)
           console.log(stateAlertDialog.mostra);
@@ -244,26 +293,80 @@ const Create: NextPage<Props> = (props) => {
       }
   }
 
-  const clearField = (field: string) => {
-    setState({...state, [field]: ''})
+  const loadDataSource = async (id: string) => {
+    return await CardDataService.getUserData(user.uid, 'meta_UserPermissions').then((r: any)=>{
+        //Check if system ID exist in databank
+       
+        if (r[id]){
+          // console.log({[id]: r[id]});
+          // return {[id]: r[id]}
+          return r[id]
+            // setDataSource({[id]: r[id]})
+            // setDataSource({[id]: r[id]})
+        }else{
+            // setDataSource({})
+        }
+    })
   }
 
-  const loadCardData = () => {
-    CardDataService.readById(user.uid, id as string).then((data) => {
+  const loadCardData =  () => {
+    CardDataService.readById(user.uid, id as string).then(async (data) => {
       console.log(data)
       if (data) {
-        setState({ id: id, card_id: id, folder: folder_key, title: data.title, body: data.body, bodyHtml: data.bodyHtml, img: data.img, attachedFiles: data.attachedFiles, order: data.order })
+        setState({ 
+          id: id, 
+          card_id: id, 
+          folder: folder_key, 
+          title: data.title, 
+          body: data.body, 
+          bodyHtml: data.bodyHtml, 
+          img: data.img, 
+          attachedFiles: data.attachedFiles, 
+          tblCardPermissions: data.tblCardPermissions,
+          order: data.order })
         if (data.img == '') data.img = []
         if (!Array.isArray(data.img)) data.img = [{value:data.img}]
+        let b: any = {sysCardPermissions: {tblCardPermissions: data.tblCardPermissions}}
+        console.log(b);
+        setDataSource({...b})
         setStateImg(data.img)
         setBodyValue(data.body)
         setSelected(data.tags?.split(','))
+        let clone: any 
+          clone = {...dataSource}
+          clone = {...clone, sysCardPermissions: {tblCardPermissions: data.tblCardPermissions}}
         if (data.attachedFiles) {
-          setAttachedFiles(data.attachedFiles)
+          // setAttachedFiles(data.attachedFiles)
+          // alert(JSON.stringify(data.attachedFiles))
+          // clone = {...clone, ...dataSource}
+          clone = {...clone, tblAttachedFiles: {tblAttachedFiles: data.attachedFiles}}
         }
         if (!data.extra) data.extra = [{key: "", value: ""}] 
-        setStateExtra(data.extra)
+        // await loadDataSource('tblUserVars')
+        // console.log(dataSource.tblUserVars);
+        let a: any = await loadDataSource('system1')
+        console.log('a: ', a.tblGroups);
 
+        let ops = a.tblGroups.map((x: any)=>[x.id, x.nome])
+        console.log(ops);
+        
+        tblCardPermissions = {
+          label: 'Permições',
+          cols: [
+            {name:'id', label:'id', type: 'string', hidden: true}, 
+            {name:'grupo', label:'Grupo', type: 'select', options: ops }, 
+            {name:'ativo', label:'Ativo', type: 'select', options: [[0,'sim'], [1,'não']] }, 
+          ]
+        }
+
+
+
+
+
+        // console.log('loadDataSource: ', a.system1.tblGroups);
+        clone = {...clone, sysUserVars: {tblUserVars: data.extra}}
+        setDataSource({...clone})
+        
       }
     })
   }
@@ -273,12 +376,6 @@ const Create: NextPage<Props> = (props) => {
     if (id!==(state.id||'new')&&a)loadCardData()
     return () => {()=>{a=false}}
   }, [])
-
-
-  const handleChange2 =
-  (prop: keyof Obj1) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [prop]: event.target.value });
-  };
 
   const deleteRow = (row: any) => {
     console.log('row: ', row);
@@ -324,13 +421,15 @@ const Create: NextPage<Props> = (props) => {
           </DialogContentText>
         </DialogContent>
       </Dialog>
-      {/* {JSON.stringify(stateAlertDialog)} */}
+      <pre>
+        {JSON.stringify(dataSource, null, 2)}
+      </pre>
       {/* {state.bodyHtml} */}
       <AlertDialog time title="" body="" img="/static/ok.png" mostra={mostra} setMostra={setMostra}/>
       <Typography variant="h5" gutterBottom mt={11} ml={1} mb={3}>
         <Link onClick={()=>router.push('/'+folder)} underline="hover">{folder}</Link>{' › '} {state.id.substring(0,100)} {' › '} <EditIcon fontSize='small' sx={{marginTop:-1}}/>
       </Typography>
-      {/* {JSON.stringify(attachedFiles)} */}
+      {JSON.stringify(dataSource.sysCardPermissions)}
       <MagaTabs>
         <div data-tab="tab1" style={{marginTop: 0}}>
           <TextField 
@@ -365,7 +464,27 @@ const Create: NextPage<Props> = (props) => {
                 <Typography>Variáveis</Typography>
               </AccordionSummary>
               <AccordionDetails >
-                <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/>
+                {/* <FullFeaturedCrudGrid width={800} optColumKey user={user} stateExtra={stateExtra} setStateExtra={setStateExtra}/> */}
+                {/* <DataGridSystem user={user} tables={[tblAnexos]} setGridData={setRet2}/> */}
+                
+                <DataGridSystem 
+                  id="sysUserVars"
+                  user={user} 
+                  tables={{tblUserVars}} 
+                  // tblsRelacions = {}
+                  dataSource = {dataSource}
+                  setDataSource={setDataSource}/>
+                <br/>
+                <br/>
+                 {JSON.stringify(dataSource)!=="{}"&&
+                  <DataGridSystem 
+                    id="sysCardPermissions"
+                    user={user} 
+                    tables={{tblCardPermissions}} 
+                    // tblsRelacions = {tblsRelations}
+                    dataSource = {dataSource}
+                    setDataSource={setDataSource}/>
+                }
               </AccordionDetails>
             </Accordion>
           </Box>
@@ -377,9 +496,20 @@ const Create: NextPage<Props> = (props) => {
           </Box>
         </div>
         <div data-tab="tab3">
-          <SimpleTable cols={['id','value']} rows={attachedFiles} deleteRow={deleteRow}/>
+          {/* <SimpleTable cols={['id','value']} rows={attachedFiles} deleteRow={deleteRow}/> */}
+        
+          {/* <DataGridSystem user={user} system={systemState} setRet={setRet}/> */}
+
+          <DataGridSystem 
+            id="tblAttachedFiles"
+            user={user} 
+            tables={{tblAttachedFiles}} 
+            // tblsRelacions = {}
+            dataSource = {dataSource}
+            setDataSource={setDataSource}/>
+
           <br/>
-          <UploadFile user={user} state={attachedFiles} setState={setAttachedFiles} /><br/>
+          {/* <UploadFile user={user} state={attachedFiles} setState={setAttachedFiles} /><br/> */}
         </div>
         <div data-tab="tab4">
           <TagsInput value={selected} inputProps={{placeholder: 'Incluir'}} onChange={setSelected} />

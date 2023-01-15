@@ -17,7 +17,7 @@ a {
 .grid-container {
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
  
 }
 .grid-container2 {
@@ -234,4 +234,8 @@ a {
   cursor: pointer;
   border-radius: 5px; */
   text-align: center;
+}
+
+.ablock table  {
+  padding:500px;
 }

@@ -57,9 +57,9 @@ interface main {
     body: string;
     order: number;
   }
-  user: {
-    displayName: string;
-  }
+  // user: {
+  //   displayName: string;
+  // }
   currentState: Array<obj1>;
   setCurrentState: (currentState: Array<obj1>) => void;
   handleOpen: (item: object) => void;

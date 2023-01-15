@@ -4,9 +4,37 @@ import { getFirestore, getDoc, deleteDoc, where, collection, getDocs, updateDoc,
 import { NextRouter, useRouter } from 'next/router'
 class CardDataService {
 
+
+  async setUserData(user: string, x: string, data: object) {
+    try {
+      console.log(data);
+      await setDoc(doc(db, user+'/'+x), {...data});
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  }
+
+  async getUserData(user: string, x: string) {
+    console.log(user);
+    const docRef = doc(db, user, x);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return docSnap.data()
+      } else {
+        console.log("No such document!");
+      }
+  }
+
+  
+  
+
+
+
   async getSettingsDefFields(user: string) {
     console.log(user);
-    const docRef = doc(db, user, 'deffields');
+    const docRef = doc(db, user, 'meta_deffields');
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         return docSnap.data()
@@ -18,7 +46,7 @@ class CardDataService {
   async setSettingsDefFields(user: string, data: object) {
     try {
       console.log(data);
-      await setDoc(doc(db, user, "deffields"), {...data});
+      await setDoc(doc(db, user, "meta_deffields"), {...data});
       return true
     } catch (err) {
       console.log(err)
@@ -37,6 +65,8 @@ class CardDataService {
       return false
     }
   }
+
+
   getAll() {
     return db;
   }
@@ -64,51 +94,6 @@ class CardDataService {
     return x
   }
 
-  // async readUserData(uid: string|null, userName: string|null) {
-  //   let a: any
-  //   if (uid) {
-  //     console.log(1,uid);
-  //     const col = query(collection(db, 'users'), where("uid", "==", uid))
-  //     const snap = await getDocs(col);
-  //     const list = snap.docs.map(doc => {
-  //         return {id: doc.id, data: doc.data()}
-  //     });
-  //     // console.log(list);
-  //     // return list[0]
-  //     a = list[0]
-  //     return a
-  //   }
-
-  //   if (userName) {
-  //     console.log({ userName });
-  //     // const docRef = doc(db, 'users', user);
-  //     const docRef = query(collection(db, "users"), where("username", "==", userName));
-  //     const docSnap = await getDocs(docRef);
-       
-  //     docSnap.forEach((doc) => {
-  //       a = doc.data()
-  //     });
-  //     if (a) {
-  //       uid = a.uid
-  //       await this.readById(uid as string, "folders").then((data: any) => {
-  //         if (data){
-  //           console.log(data)
-  //           console.log(Object.values(data))
-  //           const folders = Object.values(data) as Array<any>
-  //           console.log(folders);
-  //           a = {...a, folders}
-  //           console.log(a);
-  //           // return aa
-  //         }
-  //       })
-  //       console.log(a);
-  //       return a
-  //     } else {
-  //       // alert('usuário não encontrado: ' + userName)
-  //       return false
-  //     }
-  //   }
-  // }
   
   async readUserData(uid: string|null, userName: string|null) {
     let a: any
